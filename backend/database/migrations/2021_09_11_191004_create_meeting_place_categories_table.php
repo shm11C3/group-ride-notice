@@ -16,7 +16,7 @@ class CreateMeetingPlaceCategoriesTable extends Migration
         Schema::create('meeting_place_categories', function (Blueprint $table) {
             $table->id();
             $table->uuid('user_uuid');
-            $table->string('name');
+            $table->string('name', 32);
             $table->timestamps();
         });
     }

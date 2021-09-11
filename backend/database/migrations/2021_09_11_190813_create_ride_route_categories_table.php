@@ -16,7 +16,7 @@ class CreateRideRouteCategoriesTable extends Migration
         Schema::create('ride_route_categories', function (Blueprint $table) {
             $table->id();
             $table->uuid('user_uuid');
-            $table->string('name');
+            $table->string('name', 32);
             $table->timestamps();
         });
     }

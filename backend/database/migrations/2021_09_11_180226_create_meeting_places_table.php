@@ -20,7 +20,7 @@ class CreateMeetingPlacesTable extends Migration
             $table->string('name', 32);
             $table->string('address');
             $table->timestamps();
-            $table->integer('publish_status')->default(0)->index();
+            $table->unsignedTinyInteger('publish_status')->default(0);
         });
     }
 

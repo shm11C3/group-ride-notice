@@ -21,7 +21,7 @@ class CreateRideRoutesTable extends Migration
             $table->unsignedTinyInteger('distance');
             $table->unsignedTinyInteger('num_of_laps')->default(0);
             $table->string('comment', 512);
-            $table->integer('publish_status')->default(0)->index();
+            $table->unsignedTinyInteger('publish_status')->default(0);
         });
     }
 

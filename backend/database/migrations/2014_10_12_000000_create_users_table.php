@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->unsignedTinyInteger('prefecture_code');
             $table->unsignedTinyInteger('error_count')->default(0);
             $table->unsignedTinyInteger('locked_flg')->default(0);
             $table->dateTime('locked_at')->nullable();

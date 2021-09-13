@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+//登録画面
+Route::get('/register', [AuthController::class,'showRegister'])->name('showRegister');
+
+//登録処理
+Route::post('/register/ctrl', [AuthController::class,'store'])->name('register');

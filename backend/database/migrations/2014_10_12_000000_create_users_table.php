@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('name', 32);
-            $table->string('email')->unique();
+            $table->string('email', 32)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedTinyInteger('prefecture_code');

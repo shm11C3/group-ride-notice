@@ -16,7 +16,7 @@ const mix = require('laravel-mix');
      sassOptions: {
        includePaths: [
          'node_modules',
-         'node_modules/bootstrap-honoka/scss'
+         'node_modules/bootstrap-umi/scss'
        ]
      }
  });

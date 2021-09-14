@@ -22,7 +22,7 @@
         "vue-template-compiler": "^2.6.14"
     },
     "dependencies": {
-        "bootstrap-honoka": "^4.4.0",
+        "bootstrap-umi": "^4.0.0",
         "jquery": "^3.6.0"
     }
 }

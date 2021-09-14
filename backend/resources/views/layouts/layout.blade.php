@@ -11,12 +11,7 @@
     <title>アプリ名/@yield('title')</title>
 </head>
 <body>
-    @guest
-    <span id="hide-right-post-btn"></span>
-    @endguest
-    <header class="fixed-top">
-       
-    </header>
+@include('layouts.header')
     <div class="container">
         @yield('content')
     </div>

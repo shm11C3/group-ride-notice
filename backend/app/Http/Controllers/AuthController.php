@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * ユーザ登録フォームを表示
      * 
@@ -20,6 +27,34 @@ class AuthController extends Controller
     public function showRegister()
     {
         return view('auth.registerForm');
+    }
+
+    /**
+     * ログインフォームを表示
+     */
+    public function showLogin()
+    {
+        return view('auth.loginForm');
+    }
+
+    /**
+     * ダッシュボードを表示
+     * 
+     * @param void
+     * @return Response
+     */
+    public function showDashboard()
+    {
+        $user = DB::table('users')
+            ->where('id', Auth::id())
+            ->get([
+                'name',
+                'email',
+                'prefecture_code',
+                'created_at',
+            ]);
+
+        return view('auth.dashboard', ['user' => $user]);
     }
 
     /**
@@ -41,7 +76,54 @@ class AuthController extends Controller
                 'prefecture_code' => $request['prefecture_code'],
                 'password' => Hash::make($request['password']),
             ]);
+
         
-        return redirect(route('dashboard'));
+        $credentials = $request->only('email','password');
+        $remember = $request['remember'];
+        
+        if (Auth::attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+        }
+
+        return redirect()->route('showLogin');
+    }
+
+    /**
+     * ログイン処理
+     * 
+     * @param LoginRequest
+     * @return redirect
+     */
+    public function login(LoginRequest $request)
+    {
+        //[todo] 総当たり攻撃対策を実装
+
+        $credentials = $request->only('email','password');
+        $remember = $request['remember'];
+
+        if (Auth::attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+
+            return redirect()->route('showLogin');
+        }
+
+        return back()->withInput();
+    }
+
+    /**
+     * ユーザーをアプリケーションからログアウトさせる
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/dashboard');
     }
 }

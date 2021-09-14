@@ -27,7 +27,7 @@ class RegisterRequest extends FormRequest
             'name'=>'required|string|max:32|',
             'email'=>'required|unique:users,email|email|max:255',
             'prefecture_code' => 'required|numeric|between:1,47',
-            'password'=>'required|regex:/^[0-9a-zA-Z]+$/|confirmed|min:6|max:32',
+            'password'=>'required|regex:/^[0-9a-zA-Z]+$/|min:6|max:32',
         ];
     }
 }

@@ -7,7 +7,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     <title>アプリ名/@yield('title')</title>
 </head>
@@ -21,6 +20,7 @@
     <div class="container">
         @yield('content')
     </div>
+    <script src="{{ mix('js/app.js') }}"></script>
 <footer>
 </footer>
 </body>

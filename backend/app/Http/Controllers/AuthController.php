@@ -54,7 +54,9 @@ class AuthController extends Controller
                 'created_at',
             ]);
 
-        return view('auth.dashboard', ['user' => $user]);
+        $prefecture =  $this->user->prefecture_arr[$user[0]->prefecture_code];
+
+        return view('auth.dashboard', ['user' => $user, 'prefecture' => $prefecture]);
     }
 
     /**

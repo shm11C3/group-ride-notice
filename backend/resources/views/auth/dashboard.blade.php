@@ -8,7 +8,7 @@
             <ul>
                 <li>名前 : {{ $user[0]->name }}</li>
                 <li>メールアドレス : {{ $user[0]->email }}</li>
-                <li>都道府県: {{ $user[0]->prefecture_code }}</li>
+                <li>都道府県: {{ $prefecture }}</li>
             </ul>
         </div>
         <div class="col-4">

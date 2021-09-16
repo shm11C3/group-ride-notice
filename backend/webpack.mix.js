@@ -21,9 +21,6 @@ const mix = require('laravel-mix');
      }
  });
 
+mix.sourceMaps().js('node_modules/popper.js/dist/popper.js', 'public/js').sourceMaps(); //popper.jsの404対策
 
-//mix.js('resources/js/app.js', 'public/js')
-//
-//    .postCss('resources/css/app.css', 'public/css', [
-//        //
-//    ]);
+mix.js('resources/js/loginForm.js', 'public/js/loginForm.js').vue();

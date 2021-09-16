@@ -15,9 +15,9 @@ use App\Http\Controllers\HttpErrorController;
 |
 */
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Route::group(['middleware' => ['guest']], function () {
 

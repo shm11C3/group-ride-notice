@@ -8,6 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
     <title>アプリ名/@yield('title')</title>
 </head>
 <body>
@@ -15,8 +16,9 @@
     <div class="container">
         @yield('content')
     </div>
-    <script src="{{ mix('js/app.js') }}"></script>
 <footer>
 </footer>
+<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ asset('js/submit.js') }}"></script>
 </body>
 </html>

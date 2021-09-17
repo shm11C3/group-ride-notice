@@ -22,14 +22,8 @@
         </div>
       </fieldset>
       <div>
-        <!--<div v-if="submitStatus">-->
           <button  v-bind:disabled="!submitStatus" type="submit" class="btn btn-primary">送信</button>
-          <a class="btn btn-outline-primary">新規登録はこちら</a>
-        <!--</div>
-        <div v-else>
-          <button type="button" class="btn btn-primary" disabled>送信</button>
           <a class="btn btn-outline-primary" href="{{ route('showRegister') }}">新規登録はこちら</a>
-        </div>-->
       </div>
   </form>
 </div>

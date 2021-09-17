@@ -1,5 +1,7 @@
 window.$ = window.jQuery = require('jquery');
 window.Popper = require('popper.js');
+import 'jquery';
+import 'popper.js';
 import './bootstrap';
 import Vue from 'vue';
 
@@ -18,7 +20,7 @@ new Vue({
     computed: {
 
         isInput: function() {
-            if(this.email && this.password && this.isInValidEmail) {
+            if(this.email && this.password>6 && this.isInValidEmail) {
                 return true;
             }else{
                 return false;

@@ -104,12 +104,15 @@ class AuthController extends Controller
         $remember = $request['remember'];
 
         if (Auth::attempt($credentials, $remember)) {
+            //ログイン成功時
             $request->session()->regenerate();
 
             return redirect()->route('showLogin');
         }
 
-        return back()->withInput();
+        
+
+        return back()->withErrors(['isInvalidPassword' => 'パスワードが違います'])->withInput();
     }
 
     /**
@@ -126,6 +129,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/dashboard');
+        return redirect()->route('showDashboard');
     }
 }

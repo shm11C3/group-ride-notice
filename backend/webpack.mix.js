@@ -11,16 +11,16 @@ const mix = require('laravel-mix');
  |
  */
 
- mix.js('resources/js/app.js', 'public/js')
- .sass('resources/sass/app.scss', 'public/css', {
-     sassOptions: {
-       includePaths: [
-         'node_modules',
-         'node_modules/bootstrap-umi/scss'
-       ]
-     }
- });
+mix.sourceMaps().js('node_modules/popper.js/dist/popper.js', 'public/js').sourceMaps();
 
-mix.sourceMaps().js('node_modules/popper.js/dist/popper.js', 'public/js').sourceMaps(); //popper.jsの404対策
+mix.js('resources/js/app.js', 'public/js')
+  .sass('resources/sass/app.scss', 'public/css', {
+      sassOptions: {
+        includePaths: [
+          'node_modules',
+          'node_modules/bootstrap-honoka/scss'
+        ]
+      }
+  });
 
 mix.js('resources/js/loginForm.js', 'public/js/loginForm.js').vue();

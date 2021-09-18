@@ -1,8 +1,3 @@
-window.$ = window.jQuery = require('jquery');
-window.Popper = require('popper.js');
-import 'jquery';
-import 'popper.js';
-import './bootstrap';
 import Vue from 'vue';
 
 new Vue({
@@ -11,10 +6,6 @@ new Vue({
         submitStatus: false,
         email: '',
         password: '',
-    },
-
-    mounted() {
-        
     },
 
     computed: {

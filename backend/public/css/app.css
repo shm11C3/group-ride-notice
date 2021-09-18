@@ -4236,10 +4236,10 @@ input[type=button].btn-block {
 }
 
 .navbar-light .navbar-brand {
-  color: #18BC9C;
+  color: rgba(0, 0, 0, 0.9);
 }
 .navbar-light .navbar-brand:hover, .navbar-light .navbar-brand:focus {
-  color: #18BC9C;
+  color: rgba(0, 0, 0, 0.9);
 }
 .navbar-light .navbar-nav .nav-link {
   color: rgba(0, 0, 0, 0.5);
@@ -4254,7 +4254,7 @@ input[type=button].btn-block {
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .nav-link.active {
-  color: #18BC9C;
+  color: rgba(0, 0, 0, 0.9);
 }
 .navbar-light .navbar-toggler {
   color: rgba(0, 0, 0, 0.5);
@@ -4267,10 +4267,10 @@ input[type=button].btn-block {
   color: rgba(0, 0, 0, 0.5);
 }
 .navbar-light .navbar-text a {
-  color: #18BC9C;
+  color: rgba(0, 0, 0, 0.9);
 }
 .navbar-light .navbar-text a:hover, .navbar-light .navbar-text a:focus {
-  color: #18BC9C;
+  color: rgba(0, 0, 0, 0.9);
 }
 
 .navbar-dark .navbar-brand {
@@ -9976,5 +9976,5 @@ h3 {
 }
 
 .navbar-light .nav-item .nav-link::before {
-  border-color: #18BC9C;
+  border-color: rgba(0, 0, 0, 0.9);
 }

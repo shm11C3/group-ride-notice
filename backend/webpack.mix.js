@@ -11,7 +11,16 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.sourceMaps().js('node_modules/popper.js/dist/popper.js', 'public/js').sourceMaps();
+
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+  .sass('resources/sass/app.scss', 'public/css', {
+      sassOptions: {
+        includePaths: [
+          'node_modules',
+          'node_modules/bootstrap-honoka/scss'
+        ]
+      }
+  });
+
+mix.js('resources/js/loginForm.js', 'public/js/loginForm.js').vue();

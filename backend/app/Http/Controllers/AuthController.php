@@ -98,21 +98,69 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        //[todo] 総当たり攻撃対策を実装
-
         $credentials = $request->only('email','password');
         $remember = $request['remember'];
+        $user =  User::where('email', '=', $credentials['email'])->first();
+
+        if(!$user){
+            return back()->withErrors(['email' => 'このメールアドレスは登録されていません']);
+        }
+
+        if($this->user->isAccountLocked($user)){
+            return back()->withInput()->withErrors([ 'account_lock' => 'アカウントはロックされています']);
+        }
 
         if (Auth::attempt($credentials, $remember)) {
             //ログイン成功時
+            if ($user->error_count > 0) {
+                $this->user->unlockAccount($user);
+            }
+
             $request->session()->regenerate();
 
             return redirect()->route('showLogin');
         }
 
-        
+        //ログイン失敗時 [todo]ログイン試行クライアントIPとロックユーザからログインを制限する
+        $error_countLimit = 6;
 
-        return back()->withErrors(['isInvalidPassword' => 'パスワードが違います'])->withInput();
+        $error_count = $user->error_count++;
+
+        if($error_count < $error_countLimit){
+            //ロック回数 未到達時
+            if($error_count < 3){
+
+                $user->save();
+                return back()->withErrors(['isInvalidPassword' => 'パスワードが違います'])->withInput();
+            }else{
+
+                $countDown = $error_countLimit - $error_count;
+                $user->save();
+    
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'isInvalidPassword' => 'パスワードが違います',
+                        'account_lock' => 'あと'.$countDown.'回のエラーでアカウントはロックされます',
+                    ]);
+            }
+            
+        }
+
+        //ユーザーロック処理
+        $this->user->lockAccount($user);
+
+        $lockTime = $this->user->lockTime($user->locked_flg);
+        $lockTime_min_sec =  $this->user->secToTime($lockTime);
+
+        return back()
+        ->withInput()
+        ->withErrors([
+            'isInvalidPassword' => 'パスワードが違います',
+            'login_error' => 'パスワードを'.$user->error_count.'回間違えました。アカウントは'.$lockTime_min_sec.'ロックされます',                        
+        ]);
+
+        
     }
 
     /**

@@ -20,10 +20,8 @@ new Vue({
     computed: {
 
         isInput: function() {
-            if(this.email && this.password>6 && this.isInValidEmail) {
+            if(this.email && this.password.length >= 6 && this.isInValidEmail) {
                 return true;
-            }else{
-                return false;
             }
         },
 

@@ -27,7 +27,7 @@
       </div>
       <div class="form-group has-danger">
         <label for="inputEmail1">メールアドレス</label>
-        <input v-model="email" type="email" name="email" v-bind:class="passwordClass" id="inputEmail1" aria-describedby="emailHelp" placeholder="Email" value="{{ old('email') }}">
+        <input v-model="email" type="email" name="email" v-bind:class="emailClass" id="inputEmail1" aria-describedby="emailHelp" placeholder="Email" value="{{ old('email') }}">
         <small id="emailHelp" class="form-text text-muted">ここで入力したメールアドレスは公開されません</small>
       </div>
       <div class="form-group has-danger">

@@ -37,10 +37,20 @@ new Vue({
             const email = this.email;
             const reg = new RegExp(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/);
 
-            if(reg.test(email) && email<255){
+            const emailValid = reg.test(email);
+
+            if(email.length == 0){
+
+                return 3;
+            }else if (!emailValid){
+                
+                return false;
+            }else if(emailValid){
+
                 return true;
             }else{
-                return false;
+                
+                return 3;
             }
         },
 
@@ -65,6 +75,9 @@ new Vue({
             }else if (this.password === this.password_confirmation){
                 this.confirmClass = 'form-control is-valid';
                 return true;
+            }else{
+                this.confirmClass = 'form-control';
+                return false;
             }
         },
     },
@@ -86,12 +99,18 @@ new Vue({
         },
 
         isValidEmail(){
-            if(this.isValidEmail){
-                this.emailClass = 'form-control is-valid';
-            }else if(!this.isValidEmail && this.email.length>0){
-                this.emailClass = 'form-control is-invalid';
-            }else{
-                this.emailClass = 'form-control';
+            switch(this.isValidEmail){
+                case true:
+                    this.emailClass = 'form-control is-valid';
+                    break;
+                
+                case false:
+                    this.emailClass = 'form-control is-invalid';
+                    break;
+                
+                case 3:
+                    this.emailClass = 'form-control';
+                    break;
             }
         },
 

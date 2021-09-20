@@ -13,14 +13,13 @@ new Vue({
         passwordClass: 'form-control',
         confirmClass: 'form-control',
         error: '',
-        isInValidPassword: false,
         passwordError: '',
     },
 
     computed: {
 
         isValidForm: function() {
-            if(this.email && this.password.length >= 6 && this.isValidEmail && this.confirmPassword) {
+            if(this.isValidName && this.isValidEmail && this.isValidPassword && this.confirmPassword) {
                 return true;
             }
         },
@@ -118,17 +117,14 @@ new Vue({
             if(this.isValidPassword){
                 this.passwordClass = 'form-control is-valid';
                 this.passwordError = '';
-                this.isInValidPassword = false;
 
             }else if(!this.isValidPassword && this.password.length>0){
                 this.passwordClass = 'form-control is-invalid';
                 this.passwordError = 'パスワードは6文字以上32文字以内で設定してください';
-                this.isInValidPassword = true;
 
             }else{
                 this.passwordClass = 'form-control';
                 this.passwordError = '';
-                this.isInValidPassword = false;
             }
         }
     },

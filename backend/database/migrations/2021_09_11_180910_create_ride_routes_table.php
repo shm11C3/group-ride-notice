@@ -19,7 +19,7 @@ class CreateRideRoutesTable extends Migration
             $table->uuid('user_uuid');
             $table->string('name', 32);
             $table->unsignedSmallInteger('elevation')->nullable();
-            $table->unsignedTinyInteger('distance');
+            $table->unsignedSmallInteger('distance');
             $table->unsignedTinyInteger('num_of_laps')->default(0);
             $table->string('comment', 512);
             $table->unsignedTinyInteger('publish_status')->default(0);

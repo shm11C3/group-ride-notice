@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\Ride\MeetingPlaceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HttpErrorController;
+use App\Http\Controllers\Api\Ride\MeetingPlaceController;
+use App\Http\Controllers\Api\Ride\RideRouteController;
+use App\Http\Controllers\Api\Ride\RideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     //POST API
     Route::post('api/createMeetingPlace', [MeetingPlaceController::class, 'createMeetingPlace'])->name('createMeetingPlace');
+
+    Route::post('api/createRideRoute', [RideRouteController::class, 'createRideRoute'])->name('createRideRoute');
+
+    Route::post('api/createRide', [RideController::class, 'createRide'])->name('createRide');
 
 });
 

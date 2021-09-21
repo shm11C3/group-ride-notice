@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Ride\MeetingPlaceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HttpErrorController;
@@ -42,6 +43,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+
+    //POST API
+    Route::post('api/createMeetingPlace', [MeetingPlaceController::class, 'createMeetingPlace'])->name('createMeetingPlace');
 
 });
 

@@ -9,7 +9,7 @@
     <meta http-equiv="Cache-Control" content="no-cache">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
-    <title>アプリ名/@yield('title')</title>
+    <title>@yield('title') / Bipokele</title>
 </head>
 <body>
 @include('layouts.header')

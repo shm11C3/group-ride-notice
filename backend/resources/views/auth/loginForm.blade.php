@@ -43,7 +43,7 @@
         </div>
       </fieldset>
       <div>
-          <button  v-bind:disabled="!submitStatus" type="submit" class="btn btn-primary">送信</button>
+          <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-primary">送信</button>
           <a class="btn btn-link" href="{{ route('showRegister') }}">新規登録はこちら</a>
       </div>
   </form>

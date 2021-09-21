@@ -69,16 +69,34 @@ class AuthController extends Controller
     {
         //[todo] 同じIPで大量のアカウントを作成できないように制限をかける
 
-        
-        DB::table('users')
-            ->insert([
-                'uuid' => Str::uuid(),
-                'name' => $request['name'],
-                'email' => $request['email'],
-                'prefecture_code' => $request['prefecture_code'],
-                'password' => Hash::make($request['password']),
-            ]);
+        DB::beginTransaction();
+        try{
 
+            $user_uuid = Str::uuid();
+
+            DB::table('users')
+                ->insert([
+                    'uuid' => $user_uuid,
+                    'name' => $request['name'],
+                    'email' => $request['email'],
+                    'prefecture_code' => $request['prefecture_code'],
+                    'password' => Hash::make($request['password']),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            
+            DB::table('user_profiles')
+                ->insert([
+                    'user_uuid' => $user_uuid,
+                    'user_intro' => '',
+                    'user_url' => '',
+                ]);
+
+            DB::commit();
+        }catch(\Throwable $e){
+            DB::rollback();
+            abort(500);
+        }
         
         $credentials = $request->only('email','password');
         $remember = $request['remember'];

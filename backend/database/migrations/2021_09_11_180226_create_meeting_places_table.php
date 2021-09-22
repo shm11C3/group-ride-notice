@@ -18,7 +18,7 @@ class CreateMeetingPlacesTable extends Migration
             $table->uuid('uuid')->unique();
             $table->uuid('user_uuid');
             $table->string('name', 32);
-            $table->string('address');
+            $table->string('address', 255);
             $table->timestamps();
             $table->unsignedTinyInteger('publish_status')->default(0);
         });

@@ -1,31 +1,52 @@
 <div class="bs-component">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <a class="navbar-brand" href="#">Bipokele</a>
+      <a class="navbar-brand" href="/">Bipokele</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
+          @if(url()->current() === 'http://www.localhost')
           <li class="nav-item active">
-            <a class="nav-link" href="#">トップ <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/">ホーム<span class="sr-only">(current)</span></a>
           </li>
+          @else
           <li class="nav-item">
-            <a class="nav-link" href="#">リンク</a>
+            <a class="nav-link" href="/">ホーム<span class="sr-only">(current)</span></a>
           </li>
+          @endif
           <li class="nav-item">
-            <a class="nav-link" href="#">リンク</a>
+            <a class="nav-link" href="#">参加予定のライド<span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              サブメニュー
+              ライドを探す
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">近日開催予定のライド</a>
               <a class="dropdown-item" href="#"></a>
-              <a class="dropdown-item" href="#"></a>
-              <a class="dropdown-item" href="#"></a>
+              <a class="dropdown-item" href="#">ライド検索</a>
             </div>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              ライド管理
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">ライドを作成</a>
+              <a class="dropdown-item" href="#">コースを作成</a>
+              <a class="dropdown-item" href="#">集合場所を作成</a>
+            </div>
+          </li>
+          @if(url()->current() === 'http://www.localhost/dashboard')
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ route('showDashboard') }}">マイプロフィール<span class="sr-only">(current)</span></a>
+          </li>
+          @else
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('showDashboard') }}">マイプロフィール<span class="sr-only">(current)</span></a>
+          </li>
+          @endif
         </ul>
         <form class="form-inline my-2 my-lg-0">
           @auth

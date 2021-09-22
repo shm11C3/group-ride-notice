@@ -69,7 +69,7 @@ class MeetingPlaceController extends Controller
      */
     public function getSavedMeetingPlace()
     {
-        $user_uuid = Auth::user()->uuid ?? 0;
+        $user_uuid = Auth::user()->uuid;
 
         $data = DB::table('saved_meeting_places')
         ->where('saved_meeting_places.user_uuid', $user_uuid)

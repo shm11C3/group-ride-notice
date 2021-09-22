@@ -66,7 +66,7 @@ class RideRouteController extends Controller
      */
     public function getSavedRideRoute()
     {
-        $user_uuid = Auth::user()->uuid ?? 0;
+        $user_uuid = Auth::user()->uuid;
 
         $data = DB::table('saved_ride_routes')
         ->where('saved_ride_routes.user_uuid', $user_uuid)

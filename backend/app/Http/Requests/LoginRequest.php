@@ -25,7 +25,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'email'=>'required|email|max:255',
-            'password'=>'required|regex:/^[0-9a-zA-Z]+$/|min:6|max:32',
+            'password'=>'required|regex:/^[0-9a-zA-Z]+$/|min:6|max:64',
             'remember'=>'boolean',
         ];
     }

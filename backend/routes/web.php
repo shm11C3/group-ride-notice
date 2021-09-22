@@ -54,7 +54,9 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     //GET API
-    Route::get('api/get/savedMeetingPlace', [MeetingPlaceController::class, 'getSavedMeetingPlace'])->whereUuid('user_id')->name('getMeetingPlace');
+    Route::get('api/get/savedMeetingPlace', [MeetingPlaceController::class, 'getSavedMeetingPlace'])->name('getSavedMeetingPlace');
+
+    Route::get('api/get/savedRideRoute', [RideRouteController::class, 'getSavedRideRoute'])->name('getSavedMeetingPlace');
 
 
     //POST API

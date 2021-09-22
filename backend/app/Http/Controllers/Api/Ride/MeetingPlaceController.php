@@ -64,7 +64,7 @@ class MeetingPlaceController extends Controller
     /**
      * 保存した集合場所を取得
      * 
-     * @param string $id
+     * @param void
      * @return object $data
      */
     public function getSavedMeetingPlace()

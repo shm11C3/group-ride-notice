@@ -20,7 +20,7 @@ class RideController extends Controller
     public function createRide(CreateRideRequest $request)
     {
         $ride_uuid = Str::uuid();
-        $user_uuid = Auth::user()->user_uuid;
+        $user_uuid = Auth::user()->uuid;
 
         DB::table('rides')
         ->insert([

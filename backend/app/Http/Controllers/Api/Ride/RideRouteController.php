@@ -20,7 +20,7 @@ class RideRouteController extends Controller
     public function createRideRoute(CreateRideRouteRequest $request)
     {
         $ride_route_uuid = Str::uuid();
-        $user_uuid = Auth::user()->user_uuid;
+        $user_uuid = Auth::user()->uuid;
 
         DB::beginTransaction();
         try{
@@ -49,6 +49,7 @@ class RideRouteController extends Controller
 
             $data = ['status' => true];
 
+            DB::commit();
         }catch(\Throwable $e){
             DB::rollback();
             abort(500);

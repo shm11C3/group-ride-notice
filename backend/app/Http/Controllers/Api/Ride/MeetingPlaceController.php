@@ -20,7 +20,7 @@ class MeetingPlaceController extends Controller
     public function createMeetingPlace(CreateMeetingPlaceRequest $request)
     {
         $meeting_place_uuid = Str::uuid();
-        $user_uuid = Auth::user()->user_uuid;
+        $user_uuid = Auth::user()->uuid;
 
         DB::beginTransaction();
         try{
@@ -30,7 +30,7 @@ class MeetingPlaceController extends Controller
                 'user_uuid' => $user_uuid,
                 'name' => $request['name'],
                 'address' => $request['address'],
-                'publish_status' => $request['publish_status']
+                'publish_status' => $request['publish_status'],
             ]);
 
             if($request['save_status']){
@@ -43,11 +43,15 @@ class MeetingPlaceController extends Controller
                     'meeting_place_category_id' => 0,
                 ]);
             }
+
+            $data = ['status' => true];
+
+            DB::commit();
         }catch(\Throwable $e){
             DB::rollback();
             abort(500);
         }
 
-        
+        return response()->json($data);
     }
 }

@@ -67,11 +67,11 @@ class MeetingPlaceController extends Controller
      * @param void
      * @return object $data
      */
-    public function getSavedMeetingPlace()
+    public function getSavedMeetingPlaces()
     {
         $user_uuid = Auth::user()->uuid;
 
-        $data = DB::table('saved_meeting_places')
+        $dbData = DB::table('saved_meeting_places')
         ->where('saved_meeting_places.user_uuid', $user_uuid)
         ->join('meeting_places','meeting_place_uuid','meeting_places.uuid')
         ->get([
@@ -80,6 +80,8 @@ class MeetingPlaceController extends Controller
             'name',
             'address',
         ]);
+
+        $data = ['data'=>$dbData, 'key'=>'saved_meeting_places'];
 
         return response()->json($data);
     }

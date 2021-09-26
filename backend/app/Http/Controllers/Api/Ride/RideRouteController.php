@@ -64,11 +64,11 @@ class RideRouteController extends Controller
      * @param void
      * @return object $data
      */
-    public function getSavedRideRoute()
+    public function getSavedRideRoutes()
     {
         $user_uuid = Auth::user()->uuid;
 
-        $data = DB::table('saved_ride_routes')
+        $dbData = DB::table('saved_ride_routes')
         ->where('saved_ride_routes.user_uuid', $user_uuid)
         ->join('ride_routes','route_uuid','ride_routes.uuid')
         ->get([
@@ -81,6 +81,8 @@ class RideRouteController extends Controller
             'comment',
             'publish_status',
         ]);
+        
+        $data = ['data'=>$dbData, 'key'=>'saved_ride_routes'];
 
         return response()->json($data);
     }

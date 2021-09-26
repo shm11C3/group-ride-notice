@@ -33,9 +33,9 @@
               ライド管理
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">ライドを作成</a>
-              <a class="dropdown-item" href="#">コースを作成</a>
-              <a class="dropdown-item" href="#">集合場所を作成</a>
+              <a class="dropdown-item" href="{{ route('createRideForm') }}">ライドを作成</a>
+              <a class="dropdown-item" href="#">コースを登録</a>
+              <a class="dropdown-item" href="#">集合場所を登録</a>
             </div>
           </li>
           @if(url()->current() === 'http://www.localhost/dashboard')

@@ -99,7 +99,7 @@
           </label>
         </div>
       </fieldset>
-      <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-primary">送信</button>
+      <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-success">送信</button>
       <a class="btn btn-link" href="{{ route('showLogin') }}">登録済みの方はこちら</a>
   </form>
 </div>

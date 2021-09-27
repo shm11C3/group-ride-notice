@@ -27,7 +27,7 @@ class CreateRideRequest extends FormRequest
             'meeting_places_uuid' => 'required|uuid|exists:meeting_places,uuid',
             'ride_routes_uuid' => 'required|uuid|exists:ride_routes,uuid',
             'name' => 'required|string|min:1|max:32',
-            'time_appoint' => 'required|date_format:Y-m-d H:i:s',
+            'time_appoint' => 'required|date_format:Y-m-d H:i',
             'intensity' => 'required|min:0|max:10',
             'comment' => 'required|string|min:1|max:1024',
             'publish_status' => 'required|min:0|max:3'

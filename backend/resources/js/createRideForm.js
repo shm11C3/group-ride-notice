@@ -8,6 +8,14 @@ window.axios = require('axios');
 new Vue({
     el: '#app',
     data: {
+        //form-control
+        form_control: [
+            'form-control',            //false, 0
+            'form-control is-valid',   //true, 1
+            'form-control is-invalid', //min, 2
+            'form-control is-invalid', //max, 3
+        ],
+        
         //受け取ったデータ
         meetingPlaces: {},
         rideRoutes: {},
@@ -75,17 +83,17 @@ new Vue({
         /**
          * nameのバリデーションチェック
          * 
-         * @returns status
+         * @returns int status
          */
         isValidName: function(){
             let status = false;
             let name = this.name;
 
             if(name.length == 0){
-                status = 'min';
+                status = 2;
 
             }else if(name.length > 32){
-                status = 'max';
+                status = 3;
 
             }else{
                 status = true;
@@ -111,16 +119,16 @@ new Vue({
         /**
          * commentのバリデーションチェック
          * 
-         * @returns status
+         * @returns int status
          */
          isValidComment: function(){
             let status = false;
 
             if(this.comment.length == 0){
-                status = 'min';
+                status = 2;
 
             }else if(this.comment.length > 1024){
-                status = 'max';
+                status = 3;
             }else{
                 status = true;
             }
@@ -198,54 +206,24 @@ new Vue({
          * this.isValidNameの値を元にバリデート内容をビューに反映
          */
         isValidName(){
-            switch(this.isValidName){
-                case 'min':
-                    this.nameClass = 'form-control is-invalid';
-                    this.nameErrComment = '名前は必須です';
-                    break;
-                
-                case 'max':
-                    this.nameClass = 'form-control is-invalid';
-                    this.nameErrComment = '名前は32文字以内で入力してください';
-                    break;
+            const form = '名前';
+            const max = '32';
+            let key = Number(this.isValidName);
 
-                case true:
-                    this.nameClass = 'form-control is-valid';
-                    this.nameErrComment = '';
-                    break;
-
-                default:
-                    this.nameClass = 'form-control';
-                    this.nameErrComment = '';
-                    break;
-            }
+            this.nameClass = this.form_control[key];
+            this.nameErrComment = this.getValidationMessage(form, max, key);
         },
 
         /**
          * this.isValidCommentの内容を元にバリデート内容をビューに反映
          */
         isValidComment(){
-            switch(this.isValidComment){
-                case 'min':
-                    this.commentClass = 'form-control is-invalid';
-                    this.commentErrComment = 'ライドの説明は必須です';
-                    break;
+            const form = 'ライドの説明';
+            const max = '1024';
+            let key = Number(this.isValidComment);
 
-                case 'max':
-                    this.commentClass = 'form-control is-invalid';
-                    this.commentErrComment = 'ライドの説明は1024字以内で入力してください';
-                    break;
-
-                case true:
-                    this.commentClass = 'form-control is-valid';
-                    this.commentErrComment = '';
-                    break;
-
-                default:
-                    this.commentClass = 'form-control';
-                    this.commentErrComment = '';
-                    break;
-            }
+            this.commentClass = this.form_control[key];
+            this.commentErrComment = this.getValidationMessage(form, max, key);
         },
 
         /**
@@ -311,6 +289,18 @@ new Vue({
         inputPublishStatus: function(val){
             this.publish_status = Number(val);
             this.$forceUpdate();
+        },
+        
+
+        getValidationMessage: function(form, max, key){
+            const message = [
+                '',                                       //false
+                '',                                       //true 
+                `${form}は必須です`,                       //min
+                `${form}は${max}文字以内で入力してください`, //max
+            ];
+
+            return message[key];
         },
 
         /**

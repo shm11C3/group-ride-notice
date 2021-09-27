@@ -6,6 +6,7 @@ use App\Http\Controllers\HttpErrorController;
 use App\Http\Controllers\Api\Ride\MeetingPlaceController;
 use App\Http\Controllers\Api\Ride\RideRouteController;
 use App\Http\Controllers\Api\Ride\RideController;
+use App\Http\Controllers\RideViewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+//非ログイン時
 Route::group(['middleware' => ['guest']], function () {
 
     //GET
@@ -37,22 +40,31 @@ Route::group(['middleware' => ['guest']], function () {
 
 });
 
+//ログイン時
 Route::group(['middleware' => ['auth']], function () {
     
     //GET
     Route::get('/dashboard', [AuthController::class, 'showDashboard'])->name('showDashboard'); //ダッシュボード
+
+    Route::get('/create-ride', [RideViewController::class, 'showRideForm'])->name('createRideForm'); 
 
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 
+    //GET API
+    Route::get('api/get/savedMeetingPlaces', [MeetingPlaceController::class, 'getSavedMeetingPlaces'])->name('getSavedMeetingPlaces');
+
+    Route::get('api/get/savedRideRoutes', [RideRouteController::class, 'getSavedRideRoutes'])->name('getSavedMeetingPlaces');
+
+
     //POST API
-    Route::post('api/createMeetingPlace', [MeetingPlaceController::class, 'createMeetingPlace'])->name('createMeetingPlace');
+    Route::post('api/post/meetingPlace', [MeetingPlaceController::class, 'createMeetingPlace'])->name('createMeetingPlace');
 
-    Route::post('api/createRideRoute', [RideRouteController::class, 'createRideRoute'])->name('createRideRoute');
+    Route::post('api/post/rideRoute', [RideRouteController::class, 'createRideRoute'])->name('createRideRoute');
 
-    Route::post('api/createRide', [RideController::class, 'createRide'])->name('createRide');
+    Route::post('api/post/createRide', [RideController::class, 'createRide'])->name('createRide');
 
 });
 

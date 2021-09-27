@@ -57,4 +57,33 @@ class RideRouteController extends Controller
 
         return response()->json($data);
     }
+
+    /**
+     * 保存したルートを取得
+     * 
+     * @param void
+     * @return object $data
+     */
+    public function getSavedRideRoutes()
+    {
+        $user_uuid = Auth::user()->uuid;
+
+        $dbData = DB::table('saved_ride_routes')
+        ->where('saved_ride_routes.user_uuid', $user_uuid)
+        ->join('ride_routes','route_uuid','ride_routes.uuid')
+        ->get([
+            'ride_routes.uuid',
+            'ride_routes.user_uuid',
+            'name',
+            'elevation',
+            'distance',
+            'num_of_laps',
+            'comment',
+            'publish_status',
+        ]);
+        
+        $data = ['data'=>$dbData, 'key'=>'saved_ride_routes'];
+
+        return response()->json($data);
+    }
 }

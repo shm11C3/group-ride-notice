@@ -8,9 +8,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateMeetingPlaceRequest;
 use Illuminate\Support\Str;
+use App\Models\Ride;
 
 class MeetingPlaceController extends Controller
 {
+    public function __construct(Ride $ride)
+    {
+        $this->ride = $ride;
+    }
+
     /**
      * 集合場所を作成
      * 
@@ -51,6 +57,31 @@ class MeetingPlaceController extends Controller
             DB::rollback();
             abort(500);
         }
+
+        return response()->json($data);
+    }
+
+    /**
+     * 保存した集合場所を取得
+     * 
+     * @param void
+     * @return object $data
+     */
+    public function getSavedMeetingPlaces()
+    {
+        $user_uuid = Auth::user()->uuid;
+
+        $dbData = DB::table('saved_meeting_places')
+        ->where('saved_meeting_places.user_uuid', $user_uuid)
+        ->join('meeting_places','meeting_place_uuid','meeting_places.uuid')
+        ->get([
+            'meeting_places.uuid',
+            'meeting_places.user_uuid',
+            'name',
+            'address',
+        ]);
+
+        $data = ['data'=>$dbData, 'key'=>'saved_meeting_places'];
 
         return response()->json($data);
     }

@@ -2,23 +2,20 @@
 @section('title','ライド作成')
 @section('content')
 <h2>ライドを作成</h2>
-@if ($errors->any())
-  @foreach ($errors->all() as $error)
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <strong>{{ $error }}</strong>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  @endforeach
-<x-alert type="danger" :session="session('login_error')"/>
-<x-alert type="danger" :session="session('account_lock')"/>
-<x-alert type="danger" :session="session('logout_success')"/>
-@endif
 <div id="app">
+  <div v-if="httpErrors">
+    <div v-for="(httpError, index) in httpErrors">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @{{ httpError }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
   <div class="form-group">
     <label for="name">ライド名</label>
-    <input v-model="name" type="text" name="name" v-bind:class="nameClass" placeholder="Name">
+    <input v-model="name" type="text" name="name" v-bind:class="nameClass" placeholder="ライド名">
     <div class="invalid-feedback">@{{ nameErrComment }}</div>
   </div>
 
@@ -28,6 +25,7 @@
         <label for="meetingPlace">集合場所を選択</label>
         <div v-if="meetingPlaces.data">
           <select class="form-control" id="select1" v-model="selectedMeetingPlace">
+            <option value="">選択してください</option>
             <option v-for="(meetingPlace, index) in meetingPlaces.data" v-bind:value="meetingPlace.uuid">
               @{{ meetingPlace.name }}
             </option>
@@ -52,6 +50,7 @@
     <label for="meetingPlace">ルートを選択</label>
     <div v-if="rideRoutes.data">
       <select class="form-control" id="select1" v-model="selectedRideRoute">
+        <option value="">選択してください</option>
         <option v-for="(rideRoute, index) in rideRoutes.data" v-bind:value="rideRoute.uuid">
           @{{ rideRoute.name }}
         </option>
@@ -72,11 +71,11 @@
 
   <div class="row">
     <div class="form-group col">
-      <label for="customRange2">
+      <label for="intensityControlRange">
         強度<br>
         ※トレーニングの場合はメインセットに合わせて選択してください
       </label>
-      <input type="range" class="custom-range" min="0" max="10" value="0" id="customRange2" v-model="intensity">
+      <input type="range" class="intensity-range" min="0" max="10" value="0" id="intensityControlRange" v-model="intensity">
     </div>
     <div class="col">
       <div class="alert alert-secondary" role="alert">

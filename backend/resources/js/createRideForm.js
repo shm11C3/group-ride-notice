@@ -13,7 +13,7 @@ new Vue({
         rideRoutes: {},
 
         //エラー表示
-        httpError: [],
+        httpErrors: [],
 
         nameClass: 'form-control',
         nameErrComment: '',
@@ -45,8 +45,9 @@ new Vue({
 
     computed :{
         /**
+         * selectedMeetingPlaceのバリデーションチェック
          * 
-         * @returns 
+         * @returns bool
          */
         isValidSelectedMeetingPlace: function(){
             if(this.selectedMeetingPlace.length == 0){
@@ -58,8 +59,9 @@ new Vue({
         },
 
         /**
+         * selectedRideRouteのバリデーションチェック
          * 
-         * @returns 
+         * @returns bool
          */
         isValidSelectedRideRoute: function(){
             if(this.selectedRideRoute.length == 0){
@@ -71,8 +73,9 @@ new Vue({
         },
 
         /**
+         * nameのバリデーションチェック
          * 
-         * @returns 
+         * @returns status
          */
         isValidName: function(){
             let status = false;
@@ -92,11 +95,64 @@ new Vue({
         },
 
         /**
-         * 強度の説明を表示
+         * time_appointのバリデーションチェック
          * 
-         * @returns 
+         * @returns bool
          */
-        showIntensityInfo: function(){
+        isValidTime_appoint: function(){
+            if(this.time_appoint.length == 0){
+                return false;
+
+            }else{
+                return true;
+            }
+        },
+
+        /**
+         * commentのバリデーションチェック
+         * 
+         * @returns status
+         */
+         isValidComment: function(){
+            let status = false;
+
+            if(this.comment.length == 0){
+                status = 'min';
+
+            }else if(this.comment.length > 1024){
+                status = 'max';
+            }else{
+                status = true;
+            }
+
+            return status;
+        },
+
+        /**
+         * すべてのフォームバリデートがtrueであることをチェック
+         * 
+         * @returns bool
+         */
+        isInValidForms: function(){
+            if(
+                this.isValidSelectedMeetingPlace == false
+                || this.isValidSelectedRideRoute == false
+                || this.isValidName != true
+                || this.isValidTime_appoint == false
+                || this.isValidComment != true 
+            ){
+                return true;
+            }else{
+                return false;
+            }
+        },
+
+        /**
+         * this.intensityから強度の説明を返す
+         * 
+         * @returns string
+         */
+         showIntensityInfo: function(){
             let intensity = this.intensity;
             
             if(intensity == 0){
@@ -128,59 +184,19 @@ new Vue({
 
             }
         },
-
-        /**
-         * 
-         * @returns 
-         */
-        isValidTime_appoint: function(){
-            if(this.time_appoint.length == 0){
-                return false;
-
-            }else{
-                return true;
-            }
-        },
-
-        /**
-         * 
-         * @returns 
-         */
-         isValidComment: function(){
-            let status = false;
-
-            if(this.comment.length == 0){
-                status = 'min';
-
-            }else if(this.comment.length > 1024){
-                status = 'max';
-            }else{
-                status = true;
-            }
-
-            return status;
-        },
-
-        isInValidForms: function(){
-            if(
-                this.isValidSelectedMeetingPlace == false
-                || this.isValidSelectedRideRoute == false
-                || this.isValidName != true
-                || this.isValidTime_appoint == false
-                || this.isValidComment != true 
-            ){
-                return true;
-            }else{
-                return false;
-            }
-        },
     },
 
     watch :{
+        /**
+         * showIntensityInfoをビューに反映
+         */
         showIntensityInfo(){
             this.intensityInfo = this.showIntensityInfo;
         },
 
+        /**
+         * this.isValidNameの値を元にバリデート内容をビューに反映
+         */
         isValidName(){
             switch(this.isValidName){
                 case 'min':
@@ -205,6 +221,9 @@ new Vue({
             }
         },
 
+        /**
+         * this.isValidCommentの内容を元にバリデート内容をビューに反映
+         */
         isValidComment(){
             switch(this.isValidComment){
                 case 'min':
@@ -229,6 +248,9 @@ new Vue({
             }
         },
 
+        /**
+         * isInValidFormsの値をthis.disableSubmitBtnに代入
+         */
         isInValidForms(){
             this.disableSubmitBtn = this.isInValidForms;
         }
@@ -249,7 +271,8 @@ new Vue({
             axios.get(url)
             .catch(error =>{
                 console.log(error);
-                this.httpError.push(error)
+                this.httpErrors.push(error);
+                return;
 
             }).then(res =>{
                 self.meetingPlaces = res.data;
@@ -271,7 +294,7 @@ new Vue({
             axios.get(url)
             .catch(error =>{
                 console.log(error);
-                this.httpError.push(error)
+                this.httpErrors.push(error);
 
             }).then(res =>{
                 self.rideRoutes = res.data;
@@ -280,14 +303,23 @@ new Vue({
             self.isLoad = false;
         },
 
-
+        /**
+         * 押されたボタンの引数をthis.publish_statusに代入
+         * 
+         * @param {*} val 
+         */
+        inputPublishStatus: function(val){
+            this.publish_status = Number(val);
+            this.$forceUpdate();
+        },
 
         /**
+         * ライドの登録
          * 
          * @param {*} url 
          * @param {*} data 
          */
-        post: function(url, data) {
+        postRide: function(url, data) {
             const self = this;
       
             let axiosPost = axios.create({
@@ -307,9 +339,6 @@ new Vue({
             });
         },
 
-        inputPublishStatus: function(val){
-            this.publish_status = Number(val);
-            this.$forceUpdate();
-        }
+        
     },
 });

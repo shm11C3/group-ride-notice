@@ -34,7 +34,31 @@ new Vue({
         disableSubmitBtn: true,
 
         //入力補足
-        intensityInfo: 'ゆるポタ(非競技勢向け)。体力や技術の向上を目的としないライドなど。',
+        intensityStyle: [
+            'intst-lowest',
+            'intst-lowest',
+            'intst-endurance',
+            'intst-tempo',
+            'intst-LactateThreshold',
+            'intst-VO2Max',
+            'intst-AnaerobicCapacity',
+            'intst-NeuromuscularPower',
+            'intst-highest'
+        ],
+
+        intensityComment: [
+            'ゆるポタ(非競技勢向け)。体力や技術の向上を目的としないライドなど。',
+            'ゆるポタ(競技勢向け)。体力や技術の向上を目的としないライドや回復走など。',
+            '(L1-L2) LSDなどの低強度エンデュランストレーニング。もしくは技術を目的とした練習。',
+            '(L3) テンポ走などのエンデュランストレーニングや1時間以上のペース走、峠TTなど。',
+            '(L4) インターバル10-60分のFTP、筋持久力の向上を目的としたトレーニングや峠TT、ペース走など。',
+            '(L5) インターバル3-8分のVO2maxの向上を目的としたトレーニングや登坂アタックなど。',
+            '(L6) インターバル2分以下の無酸素能力の向上を目的としたトレーニングや登坂アタックなど。',
+            '(L7) インターバル30秒以下のスプリント能力の向上を目的としたトレーニング。',
+            'レース走などレース強度での走行。時間に問わず、レース同様に力を出し切るトレーニング・練習。',
+        ],
+
+        intensityInfo: '',
 
         //フォーム入力
         selectedMeetingPlace: '',
@@ -156,7 +180,7 @@ new Vue({
         },
 
         /**
-         * this.intensityから強度の説明を返す
+         * this.intensityから強度の説明のキーを返す
          * 
          * @returns string
          */
@@ -164,32 +188,31 @@ new Vue({
             let intensity = this.intensity;
             
             if(intensity == 0){
-                return 'ゆるポタ(非競技勢向け)。体力や技術の向上を目的としないライドなど。';
+                return 0;
 
             }else if(intensity == 1){
-                return 'ゆるポタ(競技勢向け)。体力や技術の向上を目的としないライドや回復走など。';
+                return 1;
 
             }else if(intensity < 4){
-                return '(L1-L2) LSDなどの低強度エンデュランストレーニング。もしくは技術を目的とした練習。';
+                return 2;
             
             }else if(intensity < 5){
-                return '(L3) テンポ走などのエンデュランストレーニングや1時間以上のペース走、峠TTなど。';
+                return 3;
 
             }else if(intensity < 7){
-                return '(L4) インターバル10-60分のFTP、筋持久力の向上を目的としたトレーニングや峠TT、ペース走など。';
+                return 4;
 
             }else if(intensity < 8){
-                return '(L5) インターバル3-8分のVO2maxの向上を目的としたトレーニングや登坂アタックなど。';
+                return 5;
 
             }else if(intensity < 9){
-                return '(L6) インターバル2分以下の無酸素能力の向上を目的としたトレーニングや登坂アタックなど。';
+                return 6;
             
             }else if(intensity < 10){
-                return '(L7) インターバル30秒以下のスプリント能力の向上を目的としたトレーニング。';
+                return 7;
 
             }else{
-                return 'レース走などレース強度での走行。時間に問わず、レース同様に力を出し切るトレーニング・練習。';
-
+                return 8;
             }
         },
     },

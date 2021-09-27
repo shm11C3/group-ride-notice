@@ -72,15 +72,15 @@
   <div class="row">
     <div class="form-group col">
       <label for="intensityControlRange">
-        強度<br>
+        ライドの強度(ペース)<br>
         ※トレーニングの場合はメインセットに合わせて選択してください
       </label>
       <input type="range" class="intensity-range" min="0" max="10" value="0" id="intensityControlRange" v-model="intensity">
     </div>
     <div class="col">
       <div class="alert alert-secondary" role="alert">
-        強度：@{{ intensity }}<br>
-        @{{ intensityInfo }}
+        <span class="intst-display">強度：<span v-bind:class="intensityStyle[showIntensityInfo]">@{{ intensity }}</span></span><br>
+        @{{ intensityComment[showIntensityInfo] }}
       </div>
     </div>
   </div>

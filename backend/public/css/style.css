@@ -5,3 +5,38 @@
 .navbar-brand {
     color: white !important;
 }
+
+
+/**
+
+強度の値の色
+
+**/
+.intst-lowest{
+    color: #1872bc;
+}
+.intst-endurance{
+    color: #189bbc;
+}
+.intst-tempo{
+    color: #4cbc18;
+}
+.intst-LactateThreshold{
+    color: #bcac18;
+}
+.intst-VO2Max{
+    color:#bc7a18;
+}
+.intst-AnaerobicCapacity{
+    color: #bc3e18;
+}
+.intst-NeuromuscularPower{
+    color: #bc2318;
+}
+.intst-highest{
+    color: #bc1818;
+}
+
+.intst-display{
+    font-weight: bolder;
+}

@@ -63,11 +63,14 @@ new Vue({
         //フォーム入力
         selectedMeetingPlace: '',
         selectedRideRoute: '',
+        date: '',
+        time: '',
         name: '',
-        time_appoint: '',
         intensity: 0,
         comment: '',
         publish_status: 0,
+
+        time_appoint: '',
     },
 
     mounted() {
@@ -215,9 +218,25 @@ new Vue({
                 return 8;
             }
         },
+
+        /**
+         * dateとtimeをtime_appoint型にフォーマット
+         * 
+         * @returns string
+         */
+        formatToDateTime: function(){
+            return this.date+' '+this.time;
+        }
     },
 
     watch :{
+        /**
+         * formatToDateTimeを反映
+         */
+        formatToDateTime(){
+            this.time_appoint = this.formatToDateTime;
+        },
+
         /**
          * showIntensityInfoをビューに反映
          */
@@ -332,26 +351,38 @@ new Vue({
          * @param {*} url 
          * @param {*} data 
          */
-        postRide: function(url, data) {
+        submit: function() {
             const self = this;
+
+            const url = 'api/post/createRide';
+
+            let data = {
+                "meeting_places_uuid":this.selectedMeetingPlace,
+                "ride_routes_uuid":this.selectedRideRoute,
+                "name":this.name,
+                "time_appoint":this.time_appoint,
+                "intensity":this.intensity,
+                "comment":this.comment,
+                "publish_status":this.publish_status
+            }
       
             let axiosPost = axios.create({
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
               withCredentials: true
             });
 
-            axiosPost.post(
-                url,
-                data
-      
-            ).catch(error => {
+            axiosPost.post(url, data)
+            
+            .catch(error => {
                 console.log(error);
+                this.httpErrors.push(error);
               
             }).then(res => {
-              console.log(res);
+
+              if(res.status){
+                location.href = '/'; //[todo]ライド情報ページを作ったらそこに飛ばす
+              }
             });
         },
-
-        
     },
 });

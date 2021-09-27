@@ -19,33 +19,6 @@
     <div class="invalid-feedback">@{{ nameErrComment }}</div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="meetingPlace">集合場所を選択</label>
-        <div v-if="meetingPlaces.data">
-          <select class="form-control" id="select1" v-model="selectedMeetingPlace">
-            <option value="">選択してください</option>
-            <option v-for="(meetingPlace, index) in meetingPlaces.data" v-bind:value="meetingPlace.uuid">
-              @{{ meetingPlace.name }}
-            </option>
-          </select>
-        </div>
-        <div v-else class="text-center">
-          <div class="spinner-grow spinner-grow-sm" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group">
-        <label for="time_appoint">集合時間</label>
-        <input class="form-control" type="datetime-local" v-model="time_appoint">
-      </div>
-    </div>
-  </div>
-
   <div class="form-group">
     <label for="meetingPlace">ルートを選択</label>
     <div v-if="rideRoutes.data">
@@ -60,6 +33,37 @@
         <div class="spinner-grow spinner-grow-sm" role="status">
           <span class="sr-only">Loading...</span>
         </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="meetingPlace">集合場所を選択</label>
+    <div v-if="meetingPlaces.data">
+      <select class="form-control" id="select1" v-model="selectedMeetingPlace">
+        <option value="">選択してください</option>
+        <option v-for="(meetingPlace, index) in meetingPlaces.data" v-bind:value="meetingPlace.uuid">
+          @{{ meetingPlace.name }}
+        </option>
+      </select>
+    </div>
+    <div v-else class="text-center">
+      <div class="spinner-grow spinner-grow-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="date">開催日</label>
+        <input class="form-control" type="date" v-model="date">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="time">集合時間</label>
+        <input class="form-control" type="time" v-model="time">
+      </div>
     </div>
   </div>
 
@@ -98,7 +102,7 @@
   </div>
 
   <div class="text-right mt-2 mr-5 mb-5">
-    <button type="submit" class="btn btn-success" v-bind:disabled="disableSubmitBtn">送信</button>
+    <button type="submit" class="btn btn-success" v-on:click="submit" v-bind:disabled="disableSubmitBtn">送信</button>
   </div>
 
 </div>

@@ -47,7 +47,10 @@ class RideRouteController extends Controller
                 ]);
             }
 
-            $data = ['status' => true];
+            $data = [
+                'status' => true,
+                'uuid' => $ride_route_uuid,
+            ];
 
             DB::commit();
         }catch(\Throwable $e){

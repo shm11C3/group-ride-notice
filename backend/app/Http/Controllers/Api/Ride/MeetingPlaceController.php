@@ -50,7 +50,10 @@ class MeetingPlaceController extends Controller
                 ]);
             }
 
-            $data = ['status' => true];
+            $data = [
+                'status' => true,
+                'uuid' => $meeting_place_uuid,
+            ];
 
             DB::commit();
         }catch(\Throwable $e){

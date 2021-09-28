@@ -1,6 +1,6 @@
 <div class="bs-component">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <a class="navbar-brand" href="/">Bipokele</a>
+      <a class="navbar-brand" href="/"><span class="text-accent">B</span>ipokele</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -28,10 +28,17 @@
               <a class="dropdown-item" href="#">ライド検索</a>
             </div>
           </li>
+          @if(url()->current() === 'http://www.localhost/create-ride')
+          <li class="nav-item dropdown active">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              ライド管理
+            </a>
+          @else
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               ライド管理
             </a>
+          @endif
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{{ route('createRideForm') }}">ライドを作成</a>
               <a class="dropdown-item" href="#">コースを登録</a>

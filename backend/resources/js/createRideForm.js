@@ -519,6 +519,8 @@ new Vue({
 
                 this.resetModals();
 
+                this.selectedMeetingPlace = uuid;
+
                 $('#meetingPlaceModal').modal('hide');
                 this.mp_isPush = false;
             });
@@ -566,6 +568,8 @@ new Vue({
                 this.rideRoutes.data.push(data);
 
                 this.resetModals();
+
+                this.selectedRideRoute = uuid;
 
                 $('#rideRouteModal').modal('hide');
                 this.rr_isPush = false;

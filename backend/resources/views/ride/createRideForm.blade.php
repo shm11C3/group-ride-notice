@@ -95,7 +95,7 @@
             <button type="button" class="btn btn-primary" data-dismiss="modal">キャンセル</button>
             <button type="button" class="btn btn-success" disabled>
               <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-              送信中
+              送信中...
             </button>
           </div>
           <div v-else>
@@ -167,7 +167,7 @@
             <button type="button" class="btn btn-primary" data-dismiss="modal">キャンセル</button>
             <button type="button" class="btn btn-success" disabled>
               <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-              送信中
+              送信中...
             </button>
           </div>
           <div v-else>
@@ -208,7 +208,7 @@
       </select>
     </div>
     <div v-else class="text-center">
-        <div class="spinner-grow spinner-grow-sm" role="status">
+        <div class="spinner-grow spinner-grow-sm text-success" role="status">
           <span class="sr-only">Loading...</span>
         </div>
     </div>
@@ -226,7 +226,7 @@
       </select>
     </div>
     <div v-else class="text-center">
-      <div class="spinner-grow spinner-grow-sm" role="status">
+      <div class="spinner-grow spinner-grow-sm text-success" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
@@ -284,7 +284,7 @@
     <div v-if="isPush">
       <button type="submit" class="btn btn-success" disabled>
         <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-        送信中
+        送信中...
       </button>
     </div>
     <div v-else>

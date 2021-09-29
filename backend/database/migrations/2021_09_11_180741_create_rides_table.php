@@ -22,6 +22,7 @@ class CreateRidesTable extends Migration
             $table->string('name', 32);
             $table->dateTime('time_appoint');
             $table->unsignedTinyInteger('intensity');
+            $table->unsignedTinyInteger('num_of_laps')->default(0);
             $table->string('comment', 1024);
             $table->unsignedTinyInteger('publish_status')->default(0);
             $table->timestamps();

@@ -31,6 +31,7 @@ class RideController extends Controller
             'name' => $request['name'],
             'time_appoint' => $request['time_appoint'],
             'intensity' => $request['intensity'],
+            'num_of_laps' => $request['num_of_laps'],
             'comment' => $request['comment'],
             'publish_status' => $request['publish_status'],
             'created_at' => now(),
@@ -40,8 +41,5 @@ class RideController extends Controller
         $data = ['status' => true];
 
         return response()->json($data);
-
-
-        //[todo]ride_routes.lap_statusがtrueの場合周回数も登録する
     }
 }

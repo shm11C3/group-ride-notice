@@ -27,7 +27,7 @@ class CreateRideRouteRequest extends FormRequest
             'name' => 'required|string|min:1|max:32',
             'elevation' => 'numeric|min:0|max:65535',
             'distance' => 'required|numeric|min:0|max:65535',
-            'num_of_laps' => 'numeric|min:0|max:255',
+            'lap_status' => 'required|boolean',
             'comment' => 'required|string|min:0|max:512',
             'publish_status' => 'required|numeric|min:0|max:2',
             'save_status' => 'required|boolean'

@@ -40,5 +40,8 @@ class RideController extends Controller
         $data = ['status' => true];
 
         return response()->json($data);
+
+
+        //[todo]ride_routes.lap_statusがtrueの場合周回数も登録する
     }
 }

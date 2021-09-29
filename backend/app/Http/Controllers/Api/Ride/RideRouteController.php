@@ -31,7 +31,7 @@ class RideRouteController extends Controller
                 'name' => $request['name'],
                 'elevation' => $request['elevation'],
                 'distance' => $request['distance'],
-                'num_of_laps' => $request['num_of_laps'],
+                'lap_status' => $request['lap_status'],
                 'comment' => $request['comment'],
                 'publish_status' => $request['publish_status']
             ]);
@@ -80,7 +80,7 @@ class RideRouteController extends Controller
             'name',
             'elevation',
             'distance',
-            'num_of_laps',
+            'lap_status',
             'comment',
             'publish_status',
         ]);

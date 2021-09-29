@@ -22,6 +22,8 @@ new Vue({
 
         //エラー表示
         httpErrors: [],
+        mp_httpErrors: [],
+        rr_httpErrors: [],
 
         nameClass: 'form-control',
         nameErrComment: '',
@@ -32,6 +34,9 @@ new Vue({
         //ボタン操作
         isLoad: false,
         disableSubmitBtn: true,
+        isPush: false,
+        mp_isPush: false,
+        rr_isPush: false,
 
         //入力補足
         intensityStyle: [
@@ -60,7 +65,7 @@ new Vue({
 
         intensityInfo: '',
 
-        //フォーム入力
+        //rideのフォーム入力
         selectedMeetingPlace: '',
         selectedRideRoute: '',
         date: '',
@@ -71,6 +76,23 @@ new Vue({
         publish_status: 0,
 
         time_appoint: '',
+
+
+        //meetingPlaceのフォーム入力
+        mp_name: '',
+        mp_address: '',
+        mp_publish_status: 2,
+        mp_save_status: false,
+
+
+        //rideRouteのフォーム入力
+        rr_name: '',
+        rr_elevation: '',
+        rr_distance: '',
+        rr_lap_status: false,
+        rr_comment: '',
+        rr_publish_status: 2,
+        rr_save_status: false,
     },
 
     mounted() {
@@ -85,11 +107,14 @@ new Vue({
          * @returns bool
          */
         isValidSelectedMeetingPlace: function(){
-            if(this.selectedMeetingPlace.length == 0){
-                return false;
-
-            }else{
+            if(this.selectedMeetingPlace.length == 36){
                 return true;
+
+            }else if(this.selectedMeetingPlace.length == 0){
+                return false;
+            
+            }else{
+                return 'create';
             }
         },
 
@@ -99,11 +124,14 @@ new Vue({
          * @returns bool
          */
         isValidSelectedRideRoute: function(){
-            if(this.selectedRideRoute.length == 0){
-                return false;
-
-            }else{
+            if(this.selectedRideRoute.length == 36){
                 return true;
+
+            }else if(this.selectedRideRoute.length == 0){
+                return false;
+            
+            }else{
+                return 'create';
             }
         },
 
@@ -273,7 +301,49 @@ new Vue({
          */
         isInValidForms(){
             this.disableSubmitBtn = this.isInValidForms;
-        }
+        },
+
+        /**
+         * 値が"create" の場合にモーダルメソッドを呼び出す
+         */
+        isValidSelectedMeetingPlace(){
+            if(this.isValidSelectedMeetingPlace == 'create'){
+                const options = {};
+                $('#meetingPlaceModal').modal(options);
+
+                this.selectedMeetingPlace = "";
+            }
+        },
+
+        /**
+         * 値が"create" の場合にモーダルメソッドを呼び出す
+         */
+        isValidSelectedRideRoute(){
+            if(this.isValidSelectedRideRoute == 'create'){
+                const options = {};
+                $('#rideRouteModal').modal(options);
+
+                this.selectedRideRoute = "";
+            }
+        },
+
+        mp_save_status(){
+            if(this.mp_save_status){
+                this.mp_publish_status = '';
+            
+            }else{
+                this.rr_publish_status = 2;
+            }
+        },
+
+        rr_save_status(){
+            if(this.rr_save_status){
+                this.rr_publish_status = '';
+
+            }else{
+                this.rr_publish_status = 2;
+            }
+        },
 
     },
 
@@ -332,7 +402,26 @@ new Vue({
             this.publish_status = Number(val);
             this.$forceUpdate();
         },
-        
+
+        /**
+         * 押されたボタンの引数をthis.publish_statusに代入
+         * 
+         * @param {*} val 
+         */
+        mp_inputPublishStatus: function(val){
+            this.mp_publish_status = Number(val);
+            this.$forceUpdate();
+        },
+
+        /**
+         * 押されたボタンの引数をthis.publish_statusに代入
+         * 
+         * @param {*} val 
+         */
+        rr_inputPublishStatus: function(val){
+            this.rr_publish_status = Number(val);
+            this.$forceUpdate();
+        },
 
         getValidationMessage: function(form, max, key){
             const message = [
@@ -347,12 +436,11 @@ new Vue({
 
         /**
          * ライドの登録
-         * 
-         * @param {*} url 
-         * @param {*} data 
          */
         submit: function() {
             const self = this;
+
+            this.isPush = true;
 
             const url = 'api/post/createRide';
 
@@ -376,6 +464,8 @@ new Vue({
             .catch(error => {
                 console.log(error);
                 this.httpErrors.push(error);
+
+                this.isPush = false;
               
             }).then(res => {
 
@@ -383,6 +473,120 @@ new Vue({
                 location.href = '/'; //[todo]ライド情報ページを作ったらそこに飛ばす
               }
             });
+        },
+
+        /**
+         * 集合場所の登録
+         */
+        mp_submit: function(){
+            const self = this;
+
+            this.mp_isPush = true;
+
+            const url = 'api/post/meetingPlace';
+
+            let data = {
+                "name":this.mp_name,
+                "address":this.mp_address,
+                "publish_status":this.mp_publish_status,
+                "save_status":this.mp_save_status
+            }
+
+            let axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true
+            });
+
+            axiosPost.post(url, data)
+            
+            .catch(error => {
+                console.log(error);
+
+                this.mp_httpErrors.push(error);
+                
+                this.mp_isPush = false;
+
+            }).then(res => {
+                const uuid = res.data.uuid;
+
+                let data = {
+                    "address":this.mp_address,
+                    "name":this.mp_name,
+                    "uuid":uuid
+                };
+
+                this.meetingPlaces.data.push(data);
+
+                this.resetModals();
+
+                $('#meetingPlaceModal').modal('hide');
+                this.mp_isPush = false;
+            });
+        },
+
+        rr_submit: function(){
+            const self = this;
+
+            this.rr_isPush = true;
+
+            const url = 'api/post/rideRoute';
+
+            let data = {
+                "name":this.rr_name,
+                "elevation":this.rr_elevation,
+                "distance":this.rr_distance,
+                "lap_status":this.rr_lap_status,
+                "comment":this.rr_comment,
+                "publish_status":this.rr_publish_status,
+                "save_status":this.rr_save_status,
+            }
+
+            let axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true
+            });
+
+            axiosPost.post(url, data)
+            
+            .catch(error => {
+                console.log(error);
+
+                this.rr_httpErrors.push(error);
+                
+                this.rr_isPush = false;
+
+            }).then(res => {
+                const uuid = res.data.uuid;
+
+                let data = {
+                    "name":this.rr_name,
+                    "uuid":uuid
+                };
+
+                this.rideRoutes.data.push(data);
+
+                this.resetModals();
+
+                $('#rideRouteModal').modal('hide');
+                this.rr_isPush = false;
+            });
+        },
+
+        resetModals: function(){
+            this.mp_name = '';
+            this.mp_address = '';
+            this.mp_publish_status = '';
+            this.mp_save_status = '';
+            this.rr_name = '';
+            this.rr_elevation = '';
+            this.rr_distance = '';
+            this.rr_lap_status = '';
+            this.rr_comment = '';
+            this.rr_publish_status = '';
+            this.rr_save_status = '';
+
+            this.mp_httpErrors = [];
+            this.rr_httpErrors = [];
         },
     },
 });

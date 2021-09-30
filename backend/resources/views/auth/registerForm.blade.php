@@ -99,8 +99,10 @@
           </label>
         </div>
       </fieldset>
-      <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-success">送信</button>
-      <a class="btn btn-link" href="{{ route('showLogin') }}">登録済みの方はこちら</a>
+      <div class="text-right">
+        <a class="btn btn-secondary" href="{{ route('showLogin') }}">登録済みの方はこちら</a>
+        <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-success">送信</button>
+      </div>
   </form>
 </div>
 <script src="{{ mix('js/registerForm.js') }}"></script>

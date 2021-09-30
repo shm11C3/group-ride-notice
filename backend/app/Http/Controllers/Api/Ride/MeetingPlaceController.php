@@ -35,6 +35,7 @@ class MeetingPlaceController extends Controller
                 'uuid' => $meeting_place_uuid,
                 'user_uuid' => $user_uuid,
                 'name' => $request['name'],
+                'prefecture_code' => $request['prefecture_code'],
                 'address' => $request['address'],
                 'publish_status' => $request['publish_status'],
             ]);
@@ -81,6 +82,7 @@ class MeetingPlaceController extends Controller
             'meeting_places.uuid',
             'meeting_places.user_uuid',
             'name',
+            'prefecture_code',
             'address',
         ]);
 

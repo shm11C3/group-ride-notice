@@ -72,14 +72,17 @@ new Vue({
         time: '',
         name: '',
         intensity: 0,
+        num_of_laps: 0,
         comment: '',
         publish_status: 0,
 
+        selectedRideRouteKey: '',
         time_appoint: '',
 
 
         //meetingPlaceのフォーム入力
         mp_name: '',
+        mp_prefecture_code: '',
         mp_address: '',
         mp_publish_status: 2,
         mp_save_status: false,
@@ -93,6 +96,9 @@ new Vue({
         rr_comment: '',
         rr_publish_status: 2,
         rr_save_status: false,
+
+
+        selectedLap_status: false,
     },
 
     mounted() {
@@ -124,14 +130,14 @@ new Vue({
          * @returns bool
          */
         isValidSelectedRideRoute: function(){
-            if(this.selectedRideRoute.length == 36){
-                return true;
-
-            }else if(this.selectedRideRoute.length == 0){
+            if(this.selectedRideRouteKey.length == 0){
                 return false;
+
+            }else if(this.selectedRideRouteKey === 'create'){
+                return 'create';
             
             }else{
-                return 'create';
+                return true;
             }
         },
 
@@ -203,6 +209,7 @@ new Vue({
                 || this.isValidName != true
                 || this.isValidTime_appoint == false
                 || this.isValidComment != true 
+                || this.isNum_of_lapsIsExist == false
             ){
                 return true;
             }else{
@@ -254,10 +261,39 @@ new Vue({
          */
         formatToDateTime: function(){
             return this.date+' '+this.time;
+        },
+
+        /**
+         * rr_lap_status == trueの場合num_of_lapsが1から255の間かをチェック
+         */
+        isNum_of_lapsIsExist: function(){
+            console.log(this.num_of_laps);
+
+            let laps = Number(this.num_of_laps);
+
+            if(this.selectedLap_status == true && (laps <= 0 || laps > 255)){
+                return false;
+            
+            }else{
+                return true;
+            }
         }
     },
 
     watch :{
+        selectedRideRouteKey(){
+            if(this.isValidSelectedRideRoute == true){
+                let rideRoute = this.rideRoutes.data[this.selectedRideRouteKey]
+
+                this.selectedRideRoute = rideRoute.uuid;
+                this.selectedLap_status = rideRoute.lap_status;
+            
+            }else{
+                this.selectedLap_status = false;
+                this.num_of_laps = 0;
+            }
+        },
+
         /**
          * formatToDateTimeを反映
          */
@@ -323,7 +359,7 @@ new Vue({
                 const options = {};
                 $('#rideRouteModal').modal(options);
 
-                this.selectedRideRoute = "";
+                this.selectedRideRouteKey = "";
             }
         },
 
@@ -393,6 +429,10 @@ new Vue({
             self.isLoad = false;
         },
 
+        test: function(index){
+            console.log(index);
+        },
+
         /**
          * 押されたボタンの引数をthis.publish_statusに代入
          * 
@@ -411,6 +451,15 @@ new Vue({
         mp_inputPublishStatus: function(val){
             this.mp_publish_status = Number(val);
             this.$forceUpdate();
+        },
+
+        /**
+         * 都道府県コードをmp_prefecture_codeに代入
+         * 
+         * @param {*} val 
+         */
+        mp_inputPrefecture_code: function(val){
+            this.mp_prefecture_code = val.target.value;
         },
 
         /**
@@ -450,6 +499,7 @@ new Vue({
                 "name":this.name,
                 "time_appoint":this.time_appoint,
                 "intensity":this.intensity,
+                "num_of_laps":this.num_of_laps,
                 "comment":this.comment,
                 "publish_status":this.publish_status
             }
@@ -487,6 +537,7 @@ new Vue({
 
             let data = {
                 "name":this.mp_name,
+                "prefecture_code":this.mp_prefecture_code,
                 "address":this.mp_address,
                 "publish_status":this.mp_publish_status,
                 "save_status":this.mp_save_status
@@ -510,14 +561,17 @@ new Vue({
                 const uuid = res.data.uuid;
 
                 let data = {
-                    "address":this.mp_address,
+                    "uuid":uuid,
                     "name":this.mp_name,
-                    "uuid":uuid
+                    "address":this.mp_address,
+                    "prefecture_code":this.mp_prefecture_code,
                 };
 
                 this.meetingPlaces.data.push(data);
 
                 this.resetModals();
+
+                this.selectedMeetingPlace = uuid;
 
                 $('#meetingPlaceModal').modal('hide');
                 this.mp_isPush = false;
@@ -560,12 +614,15 @@ new Vue({
 
                 let data = {
                     "name":this.rr_name,
-                    "uuid":uuid
+                    "uuid":uuid,
+                    "lap_status":this.rr_lap_status
                 };
 
                 this.rideRoutes.data.push(data);
 
                 this.resetModals();
+
+                this.selectedRideRouteKey = this.rideRoutes.length;
 
                 $('#rideRouteModal').modal('hide');
                 this.rr_isPush = false;

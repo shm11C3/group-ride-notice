@@ -25,6 +25,7 @@ class CreateMeetingPlaceRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:1|max:32',
+            'prefecture_code' => 'required|numeric|between:1,47',
             'address' => 'required|string|min:1|max:255',
             'publish_status' => 'required|numeric|min:0|max:2',
             'save_status' => 'required|boolean'

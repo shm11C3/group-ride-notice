@@ -50,7 +50,7 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input v-model="rr_lap_status" class="form-check-input" type="checkbox" value="1" checked="">
-                周回コース
+                反復・周回コース
               </label>
             </div>
           </fieldset>
@@ -123,11 +123,63 @@
             <small class="form-text text-muted">わかりやすい名前を32文字以内で入力してください</small>
           </div>
           <div class="form-group">
+            <label for="mp_prefecture_code">都道府県</label>
+            <select v-on:change="mp_inputPrefecture_code" class="form-control">
+              <option value="">選択してください</option>
+              <option value="1">北海道</option>
+              <option value="2">青森県</option>
+              <option value="3">岩手県</option>
+              <option value="4">宮城県</option>
+              <option value="5">秋田県</option>
+              <option value="6">山形県</option>
+              <option value="7">福島県</option>
+              <option value="8">茨城県</option>
+              <option value="9">栃木県</option>
+              <option value="10">群馬県</option>
+              <option value="11">埼玉県</option>
+              <option value="12">千葉県</option>
+              <option value="13">東京都</option>
+              <option value="14">神奈川県</option>
+              <option value="15">新潟県</option>
+              <option value="16">富山県</option>
+              <option value="17">石川県</option>
+              <option value="18">福井県</option>
+              <option value="19">山梨県</option>
+              <option value="20">長野県</option>
+              <option value="21">岐阜県</option>
+              <option value="22">静岡県</option>
+              <option value="23">愛知県</option>
+              <option value="24">三重県</option>
+              <option value="25">滋賀県</option>
+              <option value="26">京都府</option>
+              <option value="27">大阪府</option>
+              <option value="28">兵庫県</option>
+              <option value="29">奈良県</option>
+              <option value="30">和歌山県</option>
+              <option value="31">鳥取県</option>
+              <option value="32">島根県</option>
+              <option value="33">岡山県</option>
+              <option value="34">広島県</option>
+              <option value="35">山口県</option>
+              <option value="36">徳島県</option>
+              <option value="37">香川県</option>
+              <option value="38">愛媛県</option>
+              <option value="39">高知県</option>
+              <option value="40">福岡県</option>
+              <option value="41">佐賀県</option>
+              <option value="42">長崎県</option>
+              <option value="43">熊本県</option>
+              <option value="44">大分県</option>
+              <option value="45">宮崎県</option>
+              <option value="46">鹿児島県</option>
+              <option value="47">沖縄県</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="mp_address">場所の詳細 ※必須</label>
             <textarea class="form-control" rows="3" v-model="mp_address"></textarea>
             <small class="form-text text-muted">住所や建造物の固有名など、場所を特定できる情報を255文字以内で入力してください</small>
           </div>
-
           <fieldset class="form-group mt-2">
             <div class="form-check">
               <label class="form-check-label">
@@ -195,22 +247,57 @@
     <input v-model="name" type="text" name="name" v-bind:class="nameClass" placeholder="ライド名">
     <div class="invalid-feedback">@{{ nameErrComment }}</div>
   </div>
-
-  <div class="form-group mt-2">
-    <label for="meetingPlace">ルートを選択</label>
-    <div v-if="rideRoutes.data">
-      <select class="form-control" id="select1" v-model="selectedRideRoute">
-        <option value="">選択してください</option>
-        <option v-for="(rideRoute, index) in rideRoutes.data" v-bind:value="rideRoute.uuid">
-          @{{ rideRoute.name }}
-        </option>
-        <option value="create"><span class="font-weight-bold">+ </span>新しいルートを作成</option>
-      </select>
-    </div>
-    <div v-else class="text-center">
-        <div class="spinner-grow spinner-grow-sm text-success" role="status">
-          <span class="sr-only">Loading...</span>
+  <div v-if="selectedLap_status">
+    <div class="row">
+      <div class="col">
+        <div class="form-group mt-2">
+          <label for="meetingPlace">ルートを選択</label>
+          <div v-if="rideRoutes.data">
+            <select class="form-control" id="select1" v-model="selectedRideRouteKey">
+              <option value="">選択してください</option>
+              <option v-for="(rideRoute, index) in rideRoutes.data" v-bind:value="index">
+                @{{ rideRoute.name }}
+              </option>
+              <option value="create"><span class="font-weight-bold">+ </span>新しいルートを作成</option>
+            </select>
+          </div>
+          <div v-else class="text-center">
+              <div class="spinner-grow spinner-grow-sm text-success" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+          </div>
         </div>
+      </div>
+      <div class="col">
+        <div class="form-group mt-2">
+          <label for="num_of_laps">周回・反復数</label>
+          <select class="form-control" v-model="num_of_laps">
+            <option value="0">選択してください</option>
+            <option v-for="n of 255" :key="n" v-bind:value="n">
+              @{{ n }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    <div class="form-group mt-2">
+      <label for="meetingPlace">ルートを選択</label>
+      <div v-if="rideRoutes.data">
+        <select class="form-control" id="select1" v-model="selectedRideRouteKey">
+          <option value="">選択してください</option>
+          <option v-for="(rideRoute, index) in rideRoutes.data" v-bind:value="index">
+            @{{ rideRoute.name }}
+          </option>
+          <option value="create"><span class="font-weight-bold">+ </span>新しいルートを作成</option>
+        </select>
+      </div>
+      <div v-else class="text-center">
+          <div class="spinner-grow spinner-grow-sm text-success" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+      </div>
     </div>
   </div>
 

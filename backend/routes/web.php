@@ -19,9 +19,14 @@ use App\Http\Controllers\RideViewController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//常時
+
+//GET
+Route::get('/', [RideViewController::class, 'showHome'])->name('showHome');
+
+
+//GET API
+Route::get('api/get/rides/{time_appoint}/{prefecture_code}/{intensity}', [RideController::class, 'getRides'])->whereNumber('time_appoint', 'prefecture_code', 'intensityRange')->name('getRides');
 
 
 //非ログイン時
@@ -40,6 +45,7 @@ Route::group(['middleware' => ['guest']], function () {
 
 });
 
+
 //ログイン時
 Route::group(['middleware' => ['auth']], function () {
     
@@ -57,6 +63,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/get/savedMeetingPlaces', [MeetingPlaceController::class, 'getSavedMeetingPlaces'])->name('getSavedMeetingPlaces');
 
     Route::get('api/get/savedRideRoutes', [RideRouteController::class, 'getSavedRideRoutes'])->name('getSavedMeetingPlaces');
+
+    Route::get('api/get/rides/my-rides', [RideController::class, 'getRegisteredRides'])->name('getRegisteredRides');
 
 
     //POST API

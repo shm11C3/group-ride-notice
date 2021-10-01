@@ -23,6 +23,8 @@ mix.js('resources/js/app.js', 'public/js')
       }
   });
 
+
+mix.js('resources/js/home.js', 'public/js/home.js').vue();
 mix.js('resources/js/loginForm.js', 'public/js/loginForm.js').vue();
 mix.js('resources/js/registerForm.js', 'public/js/registerForm.js').vue();
 mix.js('resources/js/createRideForm.js', 'public/js/createRideForm.js').vue();

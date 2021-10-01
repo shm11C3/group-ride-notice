@@ -74,19 +74,20 @@ class RideController extends Controller
                 ->where('rides.publish_status', 0)
                 ->where('time_appoint', '>', $time[0])
                 ->where('time_appoint', '<', $time[1])
-                ->where('prefecture_code', $operator, $prefecture_code)
+                ->where('meeting_places.prefecture_code', $operator, $prefecture_code)
                 ->where('intensity', '>=', $intensity[0])
                 ->where('intensity', '<=', $intensity[1])
             //host_user_uuid = $user_uuid
                 ->orWhere('host_user_uuid', $user_uuid)
                 ->where('time_appoint', '>', $time[0])
                 ->where('time_appoint', '<', $time[1])
-                ->where('prefecture_code', $operator, $prefecture_code)
+                ->where('meeting_places.prefecture_code', $operator, $prefecture_code)
                 ->where('intensity', '>=', $intensity[0])
                 ->where('intensity', '<=', $intensity[1])
 
             ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
             ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
+            ->join('users', 'host_user_uuid', 'users.uuid')
             ->orderBy('rides.created_at' ,'desc')
             ->select([
                 'rides.uuid',
@@ -102,15 +103,15 @@ class RideController extends Controller
                 'rides.created_at',
                 'rides.updated_at',
                 'meeting_places.name as mp_name',
-                'prefecture_code',
+                'meeting_places.prefecture_code',
                 'address',
                 'ride_routes.name as rr_name',
                 'elevation',
                 'distance',
-                'ride_routes.comment as rr_comment'
+                'ride_routes.comment as rr_comment',
+                'users.name as user_name'
             ])
             ->simplePaginate(30);
-            
 
         return response()->json($rides);
     }

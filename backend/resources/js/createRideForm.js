@@ -267,8 +267,6 @@ new Vue({
          * rr_lap_status == trueの場合num_of_lapsが1から255の間かをチェック
          */
         isNum_of_lapsIsExist: function(){
-            console.log(this.num_of_laps);
-
             let laps = Number(this.num_of_laps);
 
             if(this.selectedLap_status == true && (laps <= 0 || laps > 255)){

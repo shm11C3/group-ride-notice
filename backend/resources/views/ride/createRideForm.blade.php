@@ -321,7 +321,7 @@
   <div class="row mt-2">
     <div class="col">
       <div class="form-group">
-        <label for="date">開催日</label>
+        <label for="date">開催日　※1年後まで</label>
         <input class="form-control" type="date" v-model="date">
       </div>
     </div>

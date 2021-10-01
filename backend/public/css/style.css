@@ -19,6 +19,18 @@
     color: #ffffff;
 }
 
+.dropdown-menu.show {
+    background-color: #45617e;
+}
+
+.dropdown-menu :hover{
+    background-color: #6286ad !important;
+}
+
+.dropdown-item {
+    color: white !important;
+}
+
 /**
 
 強度の値の色

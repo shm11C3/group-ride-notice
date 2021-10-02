@@ -11,6 +11,8 @@ new Vue({
         //データ
         rides: [],
 
+        participateIndex: '',
+
 
         //パラメータ
         page: 1,
@@ -21,10 +23,30 @@ new Vue({
 
         //状態
         isLoad: false,
+        participateModal: false,
+
+
+        //エラー表示
+        httpErrors: [],
+
+        observer: null,
+
+        resIsExist: false,
     },
 
     mounted() {
-        this.load();
+        this.initialLoad();
+
+        this.observer = new IntersectionObserver((entries) => {
+            const entry = entries[0];
+
+            if (entry && entry.isIntersecting && this.resIsExist) {
+                this.addLoad();
+            }
+        });
+
+        const observe_element = this.$refs.observe_element;
+        this.observer.observe(observe_element);
     },
 
     computed :{
@@ -39,7 +61,7 @@ new Vue({
         /**
          * 
          */
-        load: function(){
+        initialLoad: function(){
             this.rides = [];
             this.page = 1;
             this.getRides();
@@ -61,26 +83,48 @@ new Vue({
                 this.isLoad = false;
 
             }).then(res =>{
-                console.log(res);
-                console.log(res.data)
-                res.data.data.forEach(element => this.rides.push(element));
+                let data = res.data.data;
+                
+                data.forEach(element => this.rides.push(element));
                 this.isLoad = false;
+                
+                if(data.length<10){
+                    this.resIsExist = false;
+
+                }else{
+                    this.resIsExist = true;
+                }
             });
         },
 
         input_time_appoint: function(val){
             this.time_appoint = val.target.value;
-            this.load();
+            this.initialLoad();
         },
 
         input_prefecture_code: function(val){
             this.prefecture_code = val.target.value;
-            this.load();
+            this.initialLoad();
         },
 
         input_intensity: function(val){
             this.intensity = val.target.value;
-            this.load();
+            this.initialLoad();
         },
+
+        addLoad: function (){
+            this.page++;
+            this.getRides();
+        },
+    
+        participate: function(uuid, index){
+
+            this.participateIndex = index;
+            this.participateModal = true;
+
+            const options = {};
+            $('#participateModal').modal(options);
+
+        }
     },
 });

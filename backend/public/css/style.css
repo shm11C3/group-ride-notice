@@ -31,6 +31,19 @@
     color: white !important;
 }
 
+.profile-img {
+    border-radius: 5%;  /* 角丸半径を50%にする(=円形にする) */
+}
+
+.username {
+    color: #768f89;
+    font-size: 12px;
+}
+
+.course-profile {
+    font-size: 24px;
+}
+
 /**
 
 強度の値の色

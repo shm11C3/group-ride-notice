@@ -16,8 +16,8 @@
     </div>
     <!--一覧系表示-->
     <div class="rides-group mt-5">
-        <h3>ライド一覧</h3>
-        <div class="row">
+        <h3 class="mb-4">ライド一覧</h3>
+        <div class="row" style="margin-left: 0.1rem;">
             <div class="col-12 col-lg-3 form-group mr-1">
                 <div class="row mr-2">
                     <label class="col-4 col-lg-12" for="time_appoint">開催日時</label>
@@ -159,32 +159,67 @@
                             <div v-if="ride.num_of_laps > 0">
                                 <div class="row">
                                     <div class="col-4">
-                                        <p>@{{ ride.rr_name }} @{{ ride.num_of_laps }}周</p>
+                                        <p>
+                                            <span class="text-muted additional-txt">コース</span><br>
+                                            @{{ ride.rr_name }} @{{ ride.num_of_laps }}周
+                                        </p>
                                     </div>
                                     <div class="col-4">
-                                        <p>@{{ ride.num_of_laps*ride.distance }}km</p>
+                                        <p>
+                                            <span class="text-muted additional-txt">走行距離</span><br>
+                                            @{{ ride.num_of_laps*ride.distance }}km
+                                        </p>
                                     </div>
                                     <div class="col-4">
-                                        <p>@{{ ride.num_of_laps*ride.elevation }}m up</p>
+                                        <p>
+                                            <span class="text-muted additional-txt">獲得標高</span><br>
+                                            @{{ ride.num_of_laps*ride.elevation }}m
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                             <div v-else>
                                 <div class="row">
                                     <div class="col-4">
-                                        <p>@{{ ride.rr_name }}</p>
+                                        <p>
+                                            <span class="text-muted additional-txt">ルート</span><br>
+                                            @{{ ride.rr_name }}
+                                        </p>
                                     </div>
                                     <div class="col-4">
-                                        <p>@{{ ride.distance }}km</p>
+                                        <p>
+                                            <span class="text-muted additional-txt">走行距離</span><br>
+                                            @{{ ride.distance }}km
+                                        </p>
                                     </div>
                                     <div class="col-4">
-                                        <p>@{{ ride.elevation }}m up</p>
+                                        <p>
+                                            <span class="text-muted additional-txt">獲得標高</span><br>
+                                            @{{ ride.elevation }}m
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <p class="mt-5">@{{ ride.time_appoint.substring(5,7)+'月'+ride.time_appoint.substring(8,10)+'日'+ride.time_appoint.substring(10,16) }}　@{{ ride.mp_name }}集合</p>
-                        <p>強度：@{{ ride.intensity }}</p>
+                        <div  style="border-bottom: 1px solid rgb(219, 219, 219); margin-right: 5.2rem; margin-top: 3rem;"></div>
+                        <div class="row mt-5">
+                            <div class="col-2">
+                                <p>
+                                    <span class="text-muted additional-txt">@{{ ride.time_appoint.substring(0,4) }}</span><br>
+                                    @{{ ride.time_appoint.substring(5,7)+'月'+ride.time_appoint.substring(8,10)+'日'+ride.time_appoint.substring(10,16) }}
+                                </p>
+                            </div>
+                            <div class="col-10">
+                                <p>
+                                    <span class="text-muted additional-txt">@{{ prefecture[ride.prefecture_code-1] }}</span><br>
+                                    @{{ ride.mp_name }}集合
+                                </p>
+                            </div>
+                        </div>
+                        <p class="mb-0 mt-3">強度：@{{ ride.intensity }}</p>
+                        <div class="progress" style="height: 10px; margin-right: 6rem">
+                            <div class="progress-bar" role="progressbar" v-bind:style="'width: '+ride.intensity+'0%'" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -206,7 +241,6 @@
               <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <button type="button" v-on:click="getRides" class="btn btn-secondary btn-lg btn-block mt-5">もう一度読み込む</button>
     </div>
 </div>
 <script src="{{ mix('js/home.js') }}"></script>

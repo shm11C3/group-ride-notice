@@ -74,6 +74,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('api/post/createRide', [RideController::class, 'createRide'])->name('createRide');
 
+    Route::post('api/post/participation', [RideController::class, 'participationRegister'])->name('participationRegister');
+
 });
 
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRequest;
+use App\Http\Requests\ParticipationRequest;
 use App\Models\User;
 use App\Models\Ride;
 use Dotenv\Parser\Value;
@@ -135,5 +136,26 @@ class RideController extends Controller
         ->simplePaginate(30);
 
         return response()->json($rides);
+    }
+
+    
+    /**
+     * ライドの参加登録
+     * 
+     * @param App\Http\Requests\ParticipationRequest;
+     * @return response
+     */
+    public function participationRegister(ParticipationRequest $request)
+    {
+        $user = Auth::user();
+
+        DB::table('ride_participants')
+            ->insert([
+                'user_uuid' => $user->uuid,
+                'ride_uuid' => $request['ride_uuid'],
+                'comment' => $request['comment']
+            ]);
+
+        return response()->json(['status' => true]);
     }
 }

@@ -5,12 +5,47 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Ride extends Model
 {
     use HasFactory;
 
-     /**
+    protected $appends = [
+        'rideParticipant_count',
+        'rideParticipant_user'
+    ];
+
+    public function rideParticipant()
+    {
+      return $this->hasMany(RideParticipant::class, 'ride_uuid', 'uuid');
+    }
+
+    /**
+     * ridesと紐付いたrideParticipantの総数を取得
+     * 
+     * @return int
+     */
+    public function getRideParticipantCountAttribute()
+    {
+        return $this->rideParticipant->count();
+    }
+
+    /**
+     * ログインユーザーがride_participantsに存在するかチェック
+     */
+    public function getRideParticipantUserAttribute()
+    {
+        if (Auth::guest()) {
+            return false;
+        }
+
+        return $this->rideParticipant->contains(function ($user) {
+            return $user->user_id === Auth::user()->user_id;
+        });
+    }
+
+    /**
      * $user_idとログインユーザの一致チェック
      * 
      * @param string $user_id

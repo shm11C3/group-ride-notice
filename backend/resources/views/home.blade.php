@@ -127,11 +127,20 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    @{{ rides[participateIndex].ride_comment }}
+                                    <p>ライド名：@{{ rides[participateIndex].ride_name }}</p>
+                                    <p>ホストユーザー：@{{ rides[participateIndex].user_name }}</p>
+                                    <p>ルート：@{{ rides[participateIndex].rr_name }}</p>
+                                    <p>ライドの説明：@{{ rides[participateIndex].ride_comment }}</p>
+                                    <p class="mt-3">
+                                        <span class="text-muted additional-txt">@{{ rides[participateIndex].time_appoint.substring(0,4) }}</span><br>
+                                        @{{ rides[participateIndex].time_appoint.substring(5,7)+'月'+rides[participateIndex].time_appoint.substring(8,10)+'日'+rides[participateIndex].time_appoint.substring(10,16) }}
+                                    </p>
+                                    <textarea class="form-control" v-model="participateComment"></textarea>
+                                    
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">キャンセル</button>
-                                    <button type="button" class="btn btn-success">送信</button>
+                                    <button type="button" v-on:click="participation" class="btn btn-success">送信</button>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +159,7 @@
                                 <h6 class="mb-0">@{{ ride.ride_name }}</h6>
                             </div>
                             <div class="btn-group ml-auto">
-                                <button class="btn btn-success mb-1 mt-1" v-on:click="participate(ride.uuid, index)" data-toggle="modal" data-target="#participateModal">参加する</button>
+                                <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加する</button>
                             </div>
                         </div>
                     </div>

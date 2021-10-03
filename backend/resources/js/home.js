@@ -12,6 +12,7 @@ new Vue({
         rides: [],
 
         participateIndex: '',
+        participateComment: '',
 
         prefecture:["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県",
                     "茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県",
@@ -32,6 +33,8 @@ new Vue({
         //状態
         isLoad: false,
         participateModal: false,
+
+        pt_isPush: false,
 
 
         //エラー表示
@@ -125,15 +128,53 @@ new Vue({
             this.getRides();
         },
     
-        participate: function(uuid, index){
-
+        openParticipateModal: function(index){
+            this.participateComment = 'よろしくお願いします。';
             this.participateIndex = index;
             this.participateModal = true;
 
             const options = {};
             $('#participateModal').modal(options);
-            
-            //[todo]モーダルを閉じる際にthis.participateIndex, this.participateModalの値を初期化
+        },
+
+        closeParticipateModal: function(){
+
+            this.participateIndex = '';
+            this.participateComment = '';
+            this.participateModal = false;
+
+            const options = {};
+            $('#participateModal').modal('hide');
+        },
+
+        participation: function(){
+            this.pt_isPush = true;
+
+            const url = 'api/post/participation';
+
+            let data = {
+                "ride_uuid" : this.rides[this.participateIndex].uuid,
+                "comment" : this.participateComment
+            }
+
+            let axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true
+            });
+
+            axiosPost.post(url, data)
+            .catch(error => {
+                console.log(error);
+
+                this.httpErrors.push(error);
+                
+                this.pt_isPush = false;
+
+            }).then(res => {
+
+                this.closeParticipateModal()
+                this.pt_isPush = false;
+            });
         },
     },
 });

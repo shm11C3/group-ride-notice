@@ -13,6 +13,7 @@ class Ride extends Model
 
     protected $appends = [
         'rideParticipant_count',
+        'rideParticipant_user'
     ];
 
     public function rideParticipant()
@@ -28,6 +29,20 @@ class Ride extends Model
     public function getRideParticipantCountAttribute()
     {
         return $this->rideParticipant->count();
+    }
+
+    /**
+     * ログインユーザーがride_participantsに存在するかチェック
+     */
+    public function getRideParticipantUserAttribute()
+    {
+        if (Auth::guest()) {
+            return false;
+        }
+
+        return $this->rideParticipant->contains(function ($user) {
+            return $user->user_id === Auth::user()->user_id;
+        });
     }
 
     /**

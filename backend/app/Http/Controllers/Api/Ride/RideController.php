@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRequest;
-use App\Http\Requests\ParticipationRequest;
 use App\Models\User;
 use App\Models\Ride;
 use Dotenv\Parser\Value;
@@ -69,7 +68,7 @@ class RideController extends Controller
         $intensity = $this->ride->getIntstByRange($intensityRange);
 
 
-        $rides = DB::table('rides')
+        $rides = Ride::with('rideParticipant')
 
             //rides.publish_status = 0
                 ->where('rides.publish_status', 0)
@@ -136,39 +135,5 @@ class RideController extends Controller
         ->simplePaginate(30);
 
         return response()->json($rides);
-    }
-
-    
-    /**
-     * ライドの参加登録
-     * 
-     * @param App\Http\Requests\ParticipationRequest;
-     * @return response
-     */
-    public function participationRegister(ParticipationRequest $request)
-    {
-        $user_uuid = Auth::user()->uuid;
-        $uuid = Str::uuid();
-
-        if($this->ride->ptIsRegistered($user_uuid, $request['ride_uuid'])){
-            //登録済みの場合は解除
-            DB::table('ride_participants')
-            ->where('user_uuid', $user_uuid)
-            ->where('ride_uuid', $request['ride_uuid'])
-            ->delete();
-
-            return response()->json(['status' => -1, 'uuid' => $uuid]);
-
-        }else{
-            DB::table('ride_participants')
-            ->insert([
-                'uuid' => $uuid,
-                'user_uuid' => $user_uuid,
-                'ride_uuid' => $request['ride_uuid'],
-                'comment' => $request['comment']
-            ]);
-
-            return response()->json(['status' => 1, 'uuid' => $uuid]);
-        }
     }
 }

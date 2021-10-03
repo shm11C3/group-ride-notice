@@ -11,7 +11,26 @@ class Ride extends Model
 {
     use HasFactory;
 
-     /**
+    protected $appends = [
+        'rideParticipant_count',
+    ];
+
+    public function rideParticipant()
+    {
+      return $this->hasMany(RideParticipant::class, 'ride_uuid', 'uuid');
+    }
+
+    /**
+     * ridesと紐付いたrideParticipantの総数を取得
+     * 
+     * @return int
+     */
+    public function getRideParticipantCountAttribute()
+    {
+        return $this->rideParticipant->count();
+    }
+
+    /**
      * $user_idとログインユーザの一致チェック
      * 
      * @param string $user_id
@@ -115,24 +134,5 @@ class Ride extends Model
         ];
 
         return $result;
-    }
-
-    /**
-     * ride_participantsの重複チェック
-     * 
-     * @param string uuid
-     * @return bool
-     */
-    public function ptIsRegistered(string $user_uuid, string $ride_uuid)
-    {
-        $isExist = DB::table('ride_participants')
-            ->where('user_uuid', $user_uuid)
-            ->where('ride_uuid', $ride_uuid)
-            ->exists();
-
-        if($isExist){
-            return true;
-        }
-        return false;
     }
 }

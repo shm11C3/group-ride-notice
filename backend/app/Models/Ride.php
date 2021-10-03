@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Ride extends Model
 {
@@ -114,5 +115,24 @@ class Ride extends Model
         ];
 
         return $result;
+    }
+
+    /**
+     * ride_participantsの重複チェック
+     * 
+     * @param string uuid
+     * @return bool
+     */
+    public function ptIsRegistered(string $user_uuid, string $ride_uuid)
+    {
+        $isExist = DB::table('ride_participants')
+            ->where('user_uuid', $user_uuid)
+            ->where('ride_uuid', $ride_uuid)
+            ->exists();
+
+        if($isExist){
+            return true;
+        }
+        return false;
     }
 }

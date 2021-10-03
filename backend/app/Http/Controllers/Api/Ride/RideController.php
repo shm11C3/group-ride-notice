@@ -147,17 +147,28 @@ class RideController extends Controller
      */
     public function participationRegister(ParticipationRequest $request)
     {
-        $user = Auth::user();
+        $user_uuid = Auth::user()->uuid;
         $uuid = Str::uuid();
 
-        DB::table('ride_participants')
+        if($this->ride->ptIsRegistered($user_uuid, $request['ride_uuid'])){
+            //登録済みの場合は解除
+            DB::table('ride_participants')
+            ->where('user_uuid', $user_uuid)
+            ->where('ride_uuid', $request['ride_uuid'])
+            ->delete();
+
+            return response()->json(['status' => -1, 'uuid' => $uuid]);
+
+        }else{
+            DB::table('ride_participants')
             ->insert([
                 'uuid' => $uuid,
-                'user_uuid' => $user->uuid,
+                'user_uuid' => $user_uuid,
                 'ride_uuid' => $request['ride_uuid'],
                 'comment' => $request['comment']
             ]);
 
-        return response()->json(['status' => true, 'uuid' => $uuid]);
+            return response()->json(['status' => 1, 'uuid' => $uuid]);
+        }
     }
 }

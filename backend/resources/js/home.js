@@ -143,8 +143,17 @@ new Vue({
             this.participateComment = '';
             this.participateModal = false;
 
-            const options = {};
             $('#participateModal').modal('hide');
+            $('#cancelParticipateModal').modal('hide');
+        },
+
+        openCancelParticipateModal: function(index){
+            this.participateIndex = index;
+            this.participateModal = false;
+
+
+            const options = {};
+            $('#cancelParticipateModal').modal(options);
         },
 
         participation: function(){
@@ -172,9 +181,46 @@ new Vue({
 
             }).then(res => {
 
-                this.closeParticipateModal()
+                this.rides[this.participateIndex].rideParticipant_user = true;
+                this.rides[this.participateIndex].rideParticipant_count++;
+
+                this.closeParticipateModal();    
                 this.pt_isPush = false;
             });
+        },
+
+        cancelParticipation: function(){
+            this.pt_isPush = true;
+
+            const url = 'api/post/participation/delete';
+
+            let data = {
+                "ride_uuid" : this.rides[this.participateIndex].uuid,
+            }
+
+            let axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true
+            });
+
+            axiosPost.post(url, data)
+            .catch(error => {
+                console.log(error);
+
+                this.httpErrors.push(error);
+                
+                this.pt_isPush = false;
+
+            }).then(res => {
+
+                this.rides[this.participateIndex].rideParticipant_user = false;
+                this.rides[this.participateIndex].rideParticipant_count--;
+
+                this.closeParticipateModal();
+                this.pt_isPush = false;
+            });
+
+            //[todo] 自分のライドには参加ボタンを押せないようにする
         },
     },
 });

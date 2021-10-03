@@ -10,7 +10,7 @@
         @guest
         <h3>次に参加予定のライド</h3>
         <div class="alert alert-info mt-2" role="alert">
-            <p>ライドの参加には<a href="{{ route('showLogin') }}" class="alert-link">ログイン</a>が必須です！</p>
+            <p>ライドの参加には<a href="{{ route('showLogin') }}" class="alert-link">ログイン</a>が必須です</p>
         </div>
         @endguest
     </div>
@@ -114,6 +114,34 @@
         </div>
         <div v-if="rides.length!=0">
             @auth
+            <div class="modal fade" id="cancelParticipateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">参加をキャンセル</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            キャンセルしますか？
+                        </div>
+                        <div class="modal-footer">
+                            <div v-if="pt_isPush">
+                                <button type="button" class="btn btn-secondary" disabled>いいえ</button>
+                                <button type="button" class="btn btn-primary" disabled>
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    送信中...
+                                </button>
+                            </div>
+                            <div v-else>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">いいえ</button>
+                                <button type="button" v-on:click="cancelParticipation" class="btn btn-success">はい</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--ライド参加時のモーダル-->
             <div v-if="participateModal">
                 <div class="model-group">
@@ -139,8 +167,17 @@
                                     
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">キャンセル</button>
-                                    <button type="button" v-on:click="participation" class="btn btn-success">送信</button>
+                                    <div v-if="pt_isPush">
+                                        <button type="button" class="btn btn-primary" disabled>キャンセル</button>
+                                        <button type="button" class="btn btn-success" disabled>
+                                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                            送信中...
+                                        </button>
+                                    </div>
+                                    <div v-else>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">キャンセル</button>
+                                        <button type="button" v-on:click="participation" class="btn btn-success">送信</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -159,7 +196,12 @@
                                 <h6 class="mb-0">@{{ ride.ride_name }}</h6>
                             </div>
                             <div class="btn-group ml-auto">
-                                <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加する</button>
+                                <div v-if="ride.rideParticipant_user">
+                                    <button class="btn btn-success mb-1 mt-1" v-on:click="openCancelParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加をキャンセル</button>
+                                </div>
+                                <div v-else>
+                                    <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加する</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -218,10 +260,16 @@
                                     @{{ ride.time_appoint.substring(5,7)+'月'+ride.time_appoint.substring(8,10)+'日'+ride.time_appoint.substring(10,16) }}
                                 </p>
                             </div>
-                            <div class="col-10">
+                            <div class="col-2">
                                 <p>
                                     <span class="text-muted additional-txt">@{{ prefecture[ride.prefecture_code-1] }}</span><br>
                                     @{{ ride.mp_name }}集合
+                                </p>
+                            </div>
+                            <div class="col-8">
+                                <p>
+                                    <span class="text-muted additional-txt">参加人数</span><br>
+                                    @{{ ride.rideParticipant_count + 1 }}人
                                 </p>
                             </div>
                         </div>

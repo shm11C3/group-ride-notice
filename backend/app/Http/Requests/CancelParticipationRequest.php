@@ -24,7 +24,7 @@ class CancelParticipationRequest extends FormRequest
     public function rules()
     {
         return [
-            'ride_uuid' => 'required|uuid|exists:rides,uuid|exists:ride_participant,ride_uuid',
+            'ride_uuid' => 'required|uuid|exists:rides,uuid|exists:ride_participants,ride_uuid',
         ];
     }
 }

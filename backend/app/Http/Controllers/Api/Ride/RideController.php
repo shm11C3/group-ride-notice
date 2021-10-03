@@ -148,14 +148,16 @@ class RideController extends Controller
     public function participationRegister(ParticipationRequest $request)
     {
         $user = Auth::user();
+        $uuid = Str::uuid();
 
         DB::table('ride_participants')
             ->insert([
+                'uuid' => $uuid,
                 'user_uuid' => $user->uuid,
                 'ride_uuid' => $request['ride_uuid'],
                 'comment' => $request['comment']
             ]);
 
-        return response()->json(['status' => true]);
+        return response()->json(['status' => true, 'uuid' => $uuid]);
     }
 }

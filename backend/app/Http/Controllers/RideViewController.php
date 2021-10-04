@@ -21,4 +21,12 @@ class RideViewController extends Controller
     {
         return view('ride.createRideForm');
     }
+
+    /**
+     * ライド管理画面を表示
+     */
+    public function showRideAdmin()
+    {
+        return view('ride.admin');
+    }
 }

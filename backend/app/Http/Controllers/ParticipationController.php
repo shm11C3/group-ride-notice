@@ -27,13 +27,18 @@ class ParticipationController extends Controller
     {
         $user_uuid = Auth::user()->uuid;
         $uuid = Str::uuid();
+        $ride_uuid = $request['ride_uuid'];
 
-        if(!$this->participation->ptIsRegistered($user_uuid, $request['ride_uuid'])){
+
+        if($this->participation->ptIsRegistered($user_uuid, $ride_uuid)){
+            return response()->json(['status' => 0]);
+
+        }else{
             DB::table('ride_participants')
             ->insert([
                 'uuid' => $uuid,
                 'user_uuid' => $user_uuid,
-                'ride_uuid' => $request['ride_uuid'],
+                'ride_uuid' => $ride_uuid,
                 'comment' => $request['comment']
             ]);
 
@@ -41,19 +46,30 @@ class ParticipationController extends Controller
         }
     }
 
+    /**
+     * ライドの参加解除
+     * 
+     * @param App\Http\Requests\CancelParticipationRequest;
+     * @return response
+     */
     public function cancelParticipation(CancelParticipationRequest $request)
     {
         $user_uuid = Auth::user()->uuid;
         $uuid = Str::uuid();
+        $ride_uuid = $request['ride_uuid'];
 
-        if($this->participation->ptIsRegistered($user_uuid, $request['ride_uuid'])){
+
+        if(!$this->participation->ptIsRegistered($user_uuid, $ride_uuid) || $this->participation->isLoginUser($user_uuid, $ride_uuid) ){
+            return response()->json(['status' => 0]);
+            
+        }else{
             //登録済みの場合は解除
             DB::table('ride_participants')
             ->where('user_uuid', $user_uuid)
-            ->where('ride_uuid', $request['ride_uuid'])
+            ->where('ride_uuid', $ride_uuid)
             ->delete();
 
-            return response()->json(['status' => -1, 'uuid' => $uuid]);   
+            return response()->json(['status' => -1, 'uuid' => $uuid]);
         }     
     }
 }

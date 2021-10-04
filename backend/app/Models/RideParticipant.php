@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class RideParticipant extends Model
 {
@@ -27,6 +28,25 @@ class RideParticipant extends Model
             ->exists();
             
         if($isExist){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * ライドがログインユーザのものか判定
+     * 
+     * @param string $ride_uuid
+     * @return bool
+     */
+    public function isLoginUser(string $user_uuid, string $ride_uuid)
+    {
+        $host_user = Ride::
+            where('uuid', $ride_uuid)
+            ->where('host_user_uuid', $user_uuid)
+            ->exists();
+
+        if($host_user){
             return true;
         }
         return false;

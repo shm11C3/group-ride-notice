@@ -13,7 +13,8 @@ class Ride extends Model
 
     protected $appends = [
         'rideParticipant_count',
-        'rideParticipant_user'
+        'rideParticipant_user',
+        'hadByLoginUser',
     ];
 
     public function rideParticipant()
@@ -33,16 +34,28 @@ class Ride extends Model
 
     /**
      * ログインユーザーがride_participantsに存在するかチェック
+     * 
+     * @param void
+     * @return bool
      */
     public function getRideParticipantUserAttribute()
     {
-        if (Auth::guest()) {
-            return false;
-        }
-
         return $this->rideParticipant->contains(function ($user) {
-            return $user->user_id === Auth::user()->user_id;
+            $auth = Auth::user()->uuid ?? 0;
+            return $user->user_uuid === $auth;
         });
+    }
+
+    /**
+     * ride_routes_uuidとuser_uuidが一致した場合trueを返す
+     * 
+     * @param void
+     * @return bool
+     */
+    public function getHadByLoginUserAttribute()
+    {
+        $auth = Auth::user()->uuid ?? 0;
+        return $this->host_user_uuid === $auth;
     }
 
     /**

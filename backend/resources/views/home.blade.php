@@ -196,12 +196,22 @@
                                 <h6 class="mb-0">@{{ ride.ride_name }}</h6>
                             </div>
                             <div class="btn-group ml-auto">
-                                <div v-if="ride.rideParticipant_user">
-                                    <button class="btn btn-success mb-1 mt-1" v-on:click="openCancelParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加をキャンセル</button>
+                                @auth
+                                <div v-if="ride.hadByLoginUser">
+                                    <a class="btn btn-success mb-1 mt-1" href="#">ライド管理</a>
                                 </div>
                                 <div v-else>
-                                    <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加する</button>
+                                    <div v-if="ride.rideParticipant_user">
+                                        <button class="btn btn-success mb-1 mt-1" v-on:click="openCancelParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加をキャンセル</button>
+                                    </div>
+                                    <div v-else>
+                                        <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加する</button>
+                                    </div>
                                 </div>
+                                @endauth
+                                @guest
+                                <a class="btn btn-success mb-1 mt-1" href="{{ route('showLogin') }}">ログインして参加する</a>
+                                @endguest
                             </div>
                         </div>
                     </div>
@@ -269,7 +279,7 @@
                             <div class="col-8">
                                 <p>
                                     <span class="text-muted additional-txt">参加人数</span><br>
-                                    @{{ ride.rideParticipant_count + 1 }}人
+                                    @{{ ride.rideParticipant_count }}人
                                 </p>
                             </div>
                         </div>

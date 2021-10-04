@@ -28,23 +28,41 @@ class RideController extends Controller
     public function createRide(CreateRideRequest $request)
     {
         $ride_uuid = Str::uuid();
+        $pt_uuid = Str::uuid();
         $user_uuid = Auth::user()->uuid;
 
-        DB::table('rides')
-        ->insert([
-            'uuid' => $ride_uuid,
-            'host_user_uuid' => $user_uuid,
-            'meeting_places_uuid' => $request['meeting_places_uuid'],
-            'ride_routes_uuid' => $request['ride_routes_uuid'],
-            'name' => $request['name'],
-            'time_appoint' => $request['time_appoint'],
-            'intensity' => $request['intensity'],
-            'num_of_laps' => $request['num_of_laps'],
-            'comment' => $request['comment'],
-            'publish_status' => $request['publish_status'],
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        DB::beginTransaction();
+        try{
+
+            DB::table('rides')
+            ->insert([
+                'uuid' => $ride_uuid,
+                'host_user_uuid' => $user_uuid,
+                'meeting_places_uuid' => $request['meeting_places_uuid'],
+                'ride_routes_uuid' => $request['ride_routes_uuid'],
+                'name' => $request['name'],
+                'time_appoint' => $request['time_appoint'],
+                'intensity' => $request['intensity'],
+                'num_of_laps' => $request['num_of_laps'],
+                'comment' => $request['comment'],
+                'publish_status' => $request['publish_status'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::table('ride_participants')
+                ->insert([
+                    'uuid' => $pt_uuid,
+                    'user_uuid' => $user_uuid,
+                    'ride_uuid' => $ride_uuid,
+                    'comment' => 'ホストユーザーです'
+                ]);
+
+            DB::commit();
+        }catch(\Throwable $e){
+            DB::rollback();
+            abort(500);
+        }
 
         $data = ['status' => true];
 

@@ -17,7 +17,7 @@ class Ride extends Model
         'hadByLoginUser',
     ];
 
-    public function rideParticipant()
+    public function rideParticipants()
     {
       return $this->hasMany(RideParticipant::class, 'ride_uuid', 'uuid');
     }
@@ -29,7 +29,7 @@ class Ride extends Model
      */
     public function getRideParticipantCountAttribute()
     {
-        return $this->rideParticipant->count();
+        return $this->rideParticipants->count();
     }
 
     /**
@@ -40,7 +40,7 @@ class Ride extends Model
      */
     public function getRideParticipantUserAttribute()
     {
-        return $this->rideParticipant->contains(function ($user) {
+        return $this->rideParticipants->contains(function ($user) {
             $auth = Auth::user()->uuid ?? 0;
             return $user->user_uuid === $auth;
         });

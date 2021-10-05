@@ -15,6 +15,11 @@ class RideParticipant extends Model
         return $this->belongsTo(Ride::class, 'uuid', 'ride_uuid');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_uuid', 'uuid');
+    }
+
     /**
      * ride_participantsの重複チェック
      * 

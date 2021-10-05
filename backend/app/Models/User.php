@@ -12,6 +12,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function rides()
+    {
+        return $this->belongsToMany(Ride::class, 'ride_participants', 'user_uuid', 'uuid');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

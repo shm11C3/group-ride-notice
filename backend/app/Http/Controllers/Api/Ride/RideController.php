@@ -86,7 +86,7 @@ class RideController extends Controller
         $intensity = $this->ride->getIntstByRange($intensityRange);
 
 
-        $rides = Ride::with('rideParticipant')
+        $rides = Ride::with('rideParticipants')
 
             //rides.publish_status = 0
                 ->where('rides.publish_status', 0)
@@ -140,7 +140,7 @@ class RideController extends Controller
      * @param void
      * @return object $rides
      */
-    public function getRegisteredRides()
+    public function getAuthorizedRides()
     {
         $user = Auth::user();
 
@@ -153,5 +153,86 @@ class RideController extends Controller
         ->simplePaginate(30);
 
         return response()->json($rides);
+    }
+
+    /**
+     * rides.uuidからライドを取得
+     * 
+     * @param string uuid
+     * @return response
+     */
+    public function getRideBy_rides_uuid(string $uuid)
+    {
+        $ride = Ride::with('rideParticipants')
+        ->where('rides.uuid', $uuid)
+        ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
+        ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
+        ->join('users', 'host_user_uuid', 'users.uuid')
+        ->get([
+            'rides.uuid',
+            'host_user_uuid',
+            'meeting_places_uuid',
+            'ride_routes_uuid',
+            'rides.name as ride_name',
+            'time_appoint',
+            'intensity',
+            'num_of_laps',
+            'rides.comment as ride_comment',
+            'rides.publish_status',
+            'rides.created_at',
+            'rides.updated_at',
+            'meeting_places.name as mp_name',
+            'meeting_places.prefecture_code',
+            'address',
+            'ride_routes.name as rr_name',
+            'elevation',
+            'distance',
+            'ride_routes.comment as rr_comment',
+            'users.name as user_name'
+        ]);
+
+        return response()->json($ride);
+    }
+
+    /**
+     * rides.uuidと一致かつログインユーザのライドを取得
+     * 
+     * @param string uuid
+     * @return response
+     */
+    public function getAuthorizedRideBy_rides_uuid(string $uuid)
+    {
+        $user_uuid = Auth::user()->uuid;
+
+        $ride = Ride::with('rideParticipants.user')
+        //->users()
+        ->where('rides.uuid', $uuid)
+        ->where('host_user_uuid', $user_uuid)
+        ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
+        ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
+        ->join('users', 'host_user_uuid', 'users.uuid')
+        ->get([
+            'rides.uuid',
+            'host_user_uuid',
+            'meeting_places_uuid',
+            'ride_routes_uuid',
+            'rides.name as ride_name',
+            'time_appoint',
+            'intensity',
+            'num_of_laps',
+            'rides.comment as ride_comment',
+            'rides.publish_status',
+            'rides.created_at',
+            'rides.updated_at',
+            'meeting_places.name as mp_name',
+            'meeting_places.prefecture_code',
+            'address',
+            'ride_routes.name as rr_name',
+            'elevation',
+            'distance',
+            'ride_routes.comment as rr_comment',
+        ]);
+
+        return response()->json($ride);
     }
 }

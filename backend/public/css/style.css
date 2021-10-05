@@ -85,3 +85,15 @@
 .intst-background {
     height: 100px;
 }
+
+.hidden-btn {     
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;        
+}
+
+.edit-btn {
+    color: #666666;
+}

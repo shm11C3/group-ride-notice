@@ -185,7 +185,7 @@
                 </div>
             </div>
             @endauth
-            <!--ライド参加時のモーダル-->        
+            <!---->        
             <div v-for="(ride, index) in rides" class="media ride shadow mt-4">
                 <svg class="bd-placeholder-img align-self-start profile-img" width="64" height="64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 64x64"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" ></text></svg>
                 <div class="media-body">
@@ -198,7 +198,7 @@
                             <div class="btn-group ml-auto">
                                 @auth
                                 <div v-if="ride.hadByLoginUser">
-                                    <a class="btn btn-success mb-1 mt-1" href="#">ライド管理</a>
+                                    <a class="btn btn-success mb-1 mt-1" v-bind:href="'/my-ride?uuid=' + ride.uuid">ライド管理</a>
                                 </div>
                                 <div v-else>
                                     <div v-if="ride.rideParticipant_user">

@@ -431,10 +431,6 @@ new Vue({
             self.isLoad = false;
         },
 
-        test: function(index){
-            console.log(index);
-        },
-
         /**
          * 押されたボタンの引数をthis.publish_statusに代入
          * 

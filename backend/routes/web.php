@@ -83,11 +83,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('api/post/updateRide', [RideController::class, 'updateRide'])->name('updateRide');
 
+    Route::post('api/post/updatePublishStatus', [RideController::class, 'updatePublishStatus'])->name('UpdatePublishStatus');
+
     Route::post('api/post/participation', [ParticipationController::class, 'participationRegister'])->name('participationRegister');
 
     Route::post('api/post/participation/delete', [ParticipationController::class, 'cancelParticipation'])->name('cancelParticipationRegister');
-
-    
 
 });
 

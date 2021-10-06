@@ -36,13 +36,14 @@
                     <div class="course-profile">
                         <div v-if="ride[0].num_of_laps > 0">
                             <p>
+                                <span class="text-muted additional-txt">ライド名</span><br>
+                                @{{ ride[0].ride_name }}
+                            </p>
+                            <p>
                                 <span class="text-muted additional-txt">コース</span><br>
                                 @{{ ride[0].rr_name }} @{{ ride[0].num_of_laps }}周
                             </p>
                             <div class="row">
-                                
-                                    
-                                
                                 <div class="col-6">
                                     <p>
                                         <span class="text-muted additional-txt">走行距離</span><br>
@@ -58,6 +59,10 @@
                             </div>
                         </div>
                         <div v-else>
+                            <p>
+                                <span class="text-muted additional-txt">ライド名</span><br>
+                                @{{ ride[0].ride_name }}
+                            </p>
                             <p>
                                 <span class="text-muted additional-txt">ルート</span><br>
                                 @{{ ride[0].rr_name }}
@@ -99,13 +104,12 @@
                     </div>
                         <span class="text-muted additional-txt">強度</span><br>
                         <span class="intst-display"><span v-bind:class="intensityStyle[intensityInfo]">@{{ ride[0].intensity }}</span></span>
-                        <i v-bind:class="'fas fa-biking '+intensityStyle[intensityInfo]"></i><br>
-                        @{{ intensityComment[intensityInfo] }}
+                        <i v-bind:class="'fas fa-biking '+intensityStyle[intensityInfo]"></i>
                         <div class="progress" style="height: 10px; margin-right: 6rem">
                             <div v-bind:class="'progress-bar '+intensityStyle[intensityInfo]" role="progressbar" v-bind:style="'width: '+ride[0].intensity+'0%'" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-          
-                    
+                        <br>
+                        @{{ intensityComment[intensityInfo] }}
                 </div>
                 <div class="col mt-5 mb-5">
                     <h4>参加者リスト</h4>
@@ -131,6 +135,23 @@
                 <span class="text-muted additional-txt">ライドに関する説明</span><br>
                 @{{ ride[0].ride_comment }}
             </p>
+            <span class="text-muted additional-txt">公開設定を変更</span><br>
+            <div class="btn-toolbar" role="toolbar">          
+                <div class="btn-group btn-group-toggle status-radio-group mt-2" data-toggle="buttons">
+                    <label v-bind:class="'btn btn-outline-primary status-radio '+publish_status_class[0]">
+                        <input type="radio" name="publish_status" autocomplete="off" v-on:click="updatePublishStatus('0')">公開
+                    </label>
+                    <label v-bind:class="'btn btn-outline-primary status-radio '+publish_status_class[1]">
+                        <input type="radio" name="publish_status" autocomplete="off" v-on:click="updatePublishStatus('1')">限定公開
+                    </label>
+                    <label v-bind:class="'btn btn-outline-primary status-radio '+publish_status_class[2]">
+                        <input type="radio" name="publish_status" autocomplete="off" v-on:click="updatePublishStatus('2')">非公開
+                    </label>
+                </div>
+                <div class="btn-group ml-auto">
+                    <button type="submit" class="btn btn-success m-1" v-on:click="openUpdate">編集する</button>
+                </div>
+            </div>
         </div>
         <div v-else>
             <div ref="observe_element"></div>

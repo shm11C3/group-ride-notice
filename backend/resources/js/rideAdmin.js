@@ -43,6 +43,8 @@ new Vue({
         num_of_laps: 0,
         comment: '',
 
+        publish_status_class: ['','',''],
+
         selectedRideRouteKey: '',
 
 
@@ -169,7 +171,9 @@ new Vue({
                 this.ride = data;
 
                 this.isLoad = false;
+
                 this.intensityInfo = this.showIntensityInfo(this.ride[0].intensity);
+                this.publish_status_class[this.ride[0].publish_status] = 'active';
             });
         },
 
@@ -310,5 +314,39 @@ new Vue({
               this.isPush = false;
             });
         },
+
+        /**
+         * 公開ステータスの更新
+         * 
+         * @param {*} publish_status 
+         */
+        updatePublishStatus: function(publish_status){
+            this.update = false;
+            this.publish_status_class = ['','',''];
+            this.publish_status_class[publish_status] = 'active'; //ボタンの見た目を動的に変更
+
+            const url = 'api/post/updatePublishStatus';
+
+            let data = {
+                "uuid": this.ride[0].uuid,
+                "publish_status": publish_status
+            }
+
+            let axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true
+              });
+
+            axiosPost.post(url, data)
+            
+            .catch(error => {
+                console.log(error);
+                this.httpErrors.push(error);
+                
+            }).then(res => {
+                this.update = true;
+            });
+
+        }
     }
 });

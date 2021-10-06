@@ -279,6 +279,10 @@ new Vue({
     },
 
     watch :{
+        /**
+         * selectedRideRouteのoption変更時と新規作成時にそれが有効な値(デフォルト、ルート作成option以外)の場合は
+         * selectedRideRouteとselectedLap_statusに値を反映する
+         */
         selectedRideRouteKey(){
             if(this.isValidSelectedRideRoute == true){
                 let rideRoute = this.rideRoutes.data[this.selectedRideRouteKey]
@@ -538,7 +542,7 @@ new Vue({
                 "prefecture_code":this.mp_prefecture_code,
                 "address":this.mp_address,
                 "publish_status":this.mp_publish_status,
-                "save_status":this.mp_save_status
+                "save_status":Boolean(this.mp_save_status)
             }
 
             let axiosPost = axios.create({
@@ -587,10 +591,10 @@ new Vue({
                 "name":this.rr_name,
                 "elevation":this.rr_elevation,
                 "distance":this.rr_distance,
-                "lap_status":this.rr_lap_status,
+                "lap_status":Boolean(this.rr_lap_status),
                 "comment":this.rr_comment,
                 "publish_status":this.rr_publish_status,
-                "save_status":this.rr_save_status,
+                "save_status":Boolean(this.rr_save_status),
             }
 
             let axiosPost = axios.create({
@@ -616,12 +620,13 @@ new Vue({
                     "lap_status":this.rr_lap_status
                 };
 
+                let rideRoutesLength = this.rideRoutes.data.length;
+                this.selectedRideRouteKey = rideRoutesLength;
+
                 this.rideRoutes.data.push(data);
 
                 this.resetModals();
-
-                this.selectedRideRouteKey = this.rideRoutes.length;
-
+                
                 $('#rideRouteModal').modal('hide');
                 this.rr_isPush = false;
             });

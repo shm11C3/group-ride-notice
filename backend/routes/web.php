@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Ride\RideRouteController;
 use App\Http\Controllers\Api\Ride\RideController;
 use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\ParticipationController;
+use App\Http\Controllers\Api\User\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::get('api/get/rides/{time_appoint}/{prefecture_code}/{intensity}', [RideCo
 
 Route::get('api/get/ride/{ride_uuid}', [RideController::class, 'getRideBy_rides_uuid'])->whereUuid('ride_uuid')->name('getRide');
 
+Route::get('api/get/profile/{user_uuid}', [UserProfileController::class, 'getUserProfile'])->whereUuid('user_uuid')->name('getUserProfile');
 
 //非ログイン時
 Route::group(['middleware' => ['guest']], function () {
@@ -89,6 +91,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('api/post/participation/delete', [ParticipationController::class, 'cancelParticipation'])->name('cancelParticipationRegister');
 
+    Route::post('api/post/profile/update', [UserProfileController::class, 'updateUserProfile'])->name('updateUserProfile');
 });
 
 

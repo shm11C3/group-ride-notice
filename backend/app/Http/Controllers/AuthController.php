@@ -116,6 +116,7 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
+        dd($request->ip());
         $credentials = $request->only('email','password');
         $remember = $request['remember'];
         $user =  User::where('email', '=', $credentials['email'])->first();

@@ -19,6 +19,8 @@
         @yield('content')
     </div>
 <footer>
+    <div class="footer">
+    </div>
 </footer>
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="{{ asset('js/submit.js') }}"></script>

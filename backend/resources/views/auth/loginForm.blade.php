@@ -20,7 +20,7 @@
     @csrf
       <div class="form-group">
         <label for="inputEmail1">メールアドレス</label>
-        <input v-model="email" type="email" name="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp" placeholder="Email" value="{{ old('email') }}">
+        <input v-model="email" type="email" name="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp" placeholder="Email" value="{{ old('email') }}" autocomplete="email">
       </div>
       @if ($errors->has('isInvalidPassword'))
         <div class="form-group has-danger">

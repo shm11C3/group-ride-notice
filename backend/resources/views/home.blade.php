@@ -155,14 +155,23 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>ライド名：@{{ rides[participateIndex].ride_name }}</p>
-                                    <p>ホストユーザー：@{{ rides[participateIndex].user_name }}</p>
-                                    <p>ルート：@{{ rides[participateIndex].rr_name }}</p>
-                                    <p>ライドの説明：@{{ rides[participateIndex].ride_comment }}</p>
+                                    <p>
+                                        <span class="text-muted additional-txt">ライド名</span><br>
+                                        @{{ rides[participateIndex].ride_name }}</p>
+                                    <p>
+                                        <span class="text-muted additional-txt">ホストユーザー</span><br>
+                                        @{{ rides[participateIndex].user_name }}</p>
+                                    <p>
+                                        <span class="text-muted additional-txt">ルート</span><br>
+                                        @{{ rides[participateIndex].rr_name }}</p>
+                                    <p>
+                                        <span class="text-muted additional-txt">ライドの説明</span><br>
+                                        @{{ rides[participateIndex].ride_comment }}</p>
                                     <p class="mt-3">
                                         <span class="text-muted additional-txt">@{{ rides[participateIndex].time_appoint.substring(0,4) }}</span><br>
                                         @{{ rides[participateIndex].time_appoint.substring(5,7)+'月'+rides[participateIndex].time_appoint.substring(8,10)+'日'+rides[participateIndex].time_appoint.substring(10,16) }}
                                     </p>
+                                    <span class="text-muted additional-txt">メッセージ</span>
                                     <textarea class="form-control" v-model="participateComment"></textarea>
                                     
                                 </div>

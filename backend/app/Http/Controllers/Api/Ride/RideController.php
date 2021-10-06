@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRequest;
+use App\Http\Requests\UpdateRideRequest;
+use App\Http\Requests\UpdatePublishStatusRequest;
 use App\Models\User;
 use App\Models\Ride;
 use Dotenv\Parser\Value;
@@ -55,7 +57,7 @@ class RideController extends Controller
                     'uuid' => $pt_uuid,
                     'user_uuid' => $user_uuid,
                     'ride_uuid' => $ride_uuid,
-                    'comment' => 'ホストユーザーです'
+                    'comment' => 'ホストユーザー'
                 ]);
 
             DB::commit();
@@ -63,6 +65,54 @@ class RideController extends Controller
             DB::rollback();
             abort(500);
         }
+
+        $data = ['status' => true];
+
+        return response()->json($data);
+    }
+
+    /**
+     * ライドをアップデート
+     * 
+     * @param App\Http\Requests\UpdateRideRequest
+     * @return response
+     */
+    public function updateRide(UpdateRideRequest $request)
+    {
+        $user_uuid = Auth::user()->uuid;
+
+        DB::table('rides')
+            ->where('uuid', $request['uuid'])
+            ->where('host_user_uuid', $user_uuid)
+            ->update([
+                'ride_routes_uuid' => $request['ride_routes_uuid'],
+                'name' => $request['name'],
+                'intensity' => $request['intensity'],
+                'num_of_laps' => $request['num_of_laps'],
+                'comment' => $request['comment'],
+                'updated_at' => now(),
+            ]);
+
+        $data = ['status' => true];
+
+        return response()->json($data);
+    }
+
+    /**
+     * 
+     * @param App\Http\Requests\UpdatePublishStatusRequest;
+     * @return response
+     */
+    public function updatePublishStatus(UpdatePublishStatusRequest $request)
+    {
+        $user_uuid = Auth::user()->uuid;
+
+        DB::table('rides')
+            ->where('uuid', $request['uuid'])
+            ->where('host_user_uuid', $user_uuid)
+            ->update([
+                'publish_status' => $request['publish_status']
+            ]);
 
         $data = ['status' => true];
 
@@ -205,7 +255,6 @@ class RideController extends Controller
         $user_uuid = Auth::user()->uuid;
 
         $ride = Ride::with('rideParticipants.user')
-        //->users()
         ->where('rides.uuid', $uuid)
         ->where('host_user_uuid', $user_uuid)
         ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')

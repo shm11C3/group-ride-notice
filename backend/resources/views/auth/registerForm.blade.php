@@ -22,22 +22,22 @@
       @csrf
       <div class="form-group">
           <label for="inputName">名前</label>
-          <input v-model="name" type="text" name="name" v-bind:class="nameClass" placeholder="Name" value="{{ old('name') }}">
+          <input v-model="name" type="text" name="name" v-bind:class="nameClass" placeholder="Name" value="{{ old('name') }}" autocomplete="name">
           <small id="nameInfo" class="form-text text-muted">公序良俗に反する内容は入力しないでください</small>
       </div>
       <div class="form-group has-danger">
         <label for="inputEmail1">メールアドレス</label>
-        <input v-model="email" type="email" name="email" v-bind:class="emailClass" id="inputEmail1" aria-describedby="emailHelp" placeholder="Email" value="{{ old('email') }}">
+        <input v-model="email" type="email" name="email" v-bind:class="emailClass" id="inputEmail1" aria-describedby="emailHelp" placeholder="Email" value="{{ old('email') }}" autocomplete="email">
         <small id="emailHelp" class="form-text text-muted">ここで入力したメールアドレスは公開されません</small>
       </div>
       <div class="form-group has-danger">
         <label for="inputPassword1">パスワード</label>
-        <input v-model="password" type="password" name="password" v-bind:class="passwordClass" id="inputPassword1" placeholder="Password" value="{{ old('password') }}">
+        <input v-model="password" type="password" name="password" v-bind:class="passwordClass" id="inputPassword1" placeholder="Password" value="{{ old('password') }}" autocomplete="new-password">
         <div class="invalid-feedback">@{{ passwordError }}</div>
       </div>
       <div class="form-group has-danger">
           <label for="inputPassword1">パスワード（確認）</label>
-          <input v-model="password_confirmation" type="password" v-bind:class="confirmClass" id="inputPassword1" placeholder="Email (confirm)">
+          <input v-model="password_confirmation" type="password" v-bind:class="confirmClass" id="inputPassword-confirm" placeholder="Password (confirm)" autocomplete="off">
       </div>
       <div class="form-group">
         <label for="select1">お住まいの都道府県</label>

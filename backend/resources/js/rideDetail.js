@@ -53,18 +53,25 @@ new Vue({
 
         //状態
         isLoad: false,
+        participateModal: false,
+        pt_isPush: false,
+
+        mp_infoStatus: false,
+        rr_infoStatus: false,
+
 
         //HTTP Error
         httpErrors: [],
         authError: false,
 
-        
+        //受信データ        
         ride: '',
         time: '',
         weathers: '',
 
-        mp_infoStatus: false,
-        rr_infoStatus: false,
+        //送信データ
+        participateIndex: '',
+        participateComment: '',
     },
 
     mounted(){
@@ -184,9 +191,88 @@ new Vue({
             }).then(res =>{
                 this.weathers = res.data[0].timeSeries[0].areas;
             });
-        }        
+        },
+        
+        
+        openParticipateModal: function(){
+            this.participateComment = 'よろしくお願いします。';
+            this.participateModal = true;
+    
+            const options = {};
+
+            $('#participateModal').modal(options);
+        },
+    
+        closeParticipateModal: function(){
+            this.participateComment = '';
+            this.participateModal = false;
+
+            $('#participateModal').modal('hide');
+            $('#cancelParticipateModal').modal('hide');
+        },
+    
+        participation: function(){
+            this.pt_isPush = true;
+    
+            const url = 'api/post/participation';
+    
+            let data = {
+                "ride_uuid" : this.ride.uuid,
+                "comment" : this.participateComment
+            }
+    
+            let axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true
+            });
+    
+            axiosPost.post(url, data)
+            .catch(error => {
+                console.log(error);
+    
+                this.httpErrors.push(error);
+                
+                this.pt_isPush = false;
+    
+            }).then(res => {
+
+                this.getRide(this.getQueryParam());
+    
+                this.closeParticipateModal();    
+                this.pt_isPush = false;
+            });
+        },
+    
+        cancelParticipation: function(){
+            this.pt_isPush = true;
+    
+            const url = 'api/post/participation/delete';
+    
+            let data = {
+                "ride_uuid" : this.ride.uuid,
+            }
+    
+            let axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true
+            });
+    
+            axiosPost.post(url, data)
+            .catch(error => {
+                console.log(error);
+    
+                this.httpErrors.push(error);
+                
+                this.pt_isPush = false;
+    
+            }).then(res => {
+    
+                this.getRide(this.getQueryParam());
+    
+                this.closeParticipateModal();
+                this.pt_isPush = false;
+            });
+        },
 
     },
-
-
 });

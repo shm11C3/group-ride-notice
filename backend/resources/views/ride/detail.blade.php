@@ -214,8 +214,103 @@
                     </tbody>
                 </table>
             </div>
+            <div class="btn-group">
+                @auth
+                <div class="modal fade" id="cancelParticipateModal" tabindex="-1" role="dialog" aria-labelledby="cancelParticipateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cancelParticipateModalLabel">参加をキャンセル</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                キャンセルしますか？
+                            </div>
+                            <div class="modal-footer">
+                                <div v-if="pt_isPush">
+                                    <button type="button" class="btn btn-secondary" disabled>いいえ</button>
+                                    <button type="button" class="btn btn-primary" disabled>
+                                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                        送信中...
+                                    </button>
+                                </div>
+                                <div v-else>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">いいえ</button>
+                                    <button type="button" v-on:click="cancelParticipation" class="btn btn-success">はい</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ライド参加時のモーダル-->
+                    <div class="modal fade" id="participateModal" tabindex="-1" role="dialog" aria-labelledby="participateModalTitle" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="participateModalTitle">ライドに参加する</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        <span class="text-muted additional-txt">ライド名</span><br>
+                                        @{{ ride.ride_name }}</p>
+                                    <p>
+                                        <span class="text-muted additional-txt">ホストユーザー</span><br>
+                                        @{{ ride.user_name }}</p>
+                                    <p>
+                                        <span class="text-muted additional-txt">ルート</span><br>
+                                        @{{ ride.rr_name }}</p>
+                                    <p>
+                                        <span class="text-muted additional-txt">ライドの説明</span><br>
+                                        @{{ ride.ride_comment }}</p>
+                                    <p class="mt-3">
+                                        <span class="text-muted additional-txt">@{{ ride.time_appoint.substring(0,4) }}</span><br>
+                                        @{{ time }}
+                                    </p>
+                                    <span class="text-muted additional-txt">メッセージ</span>
+                                    <textarea class="form-control" v-model="participateComment"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <div v-if="pt_isPush">
+                                        <button type="button" class="btn btn-primary" disabled>キャンセル</button>
+                                        <button type="button" class="btn btn-success" disabled>
+                                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                            送信中...
+                                        </button>
+                                    </div>
+                                    <div v-else>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">キャンセル</button>
+                                        <button type="button" v-on:click="participation" class="btn btn-success">送信</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="ride.hadByLoginUser" class="text-right mr-3">
+                    <a class="btn btn-success mb-1 mt-1 text-right" v-bind:href="'/my-ride?uuid=' + ride.uuid">ライド管理</a>
+                </div>
+                <div v-else class="text-right mr-3">
+                    <div v-if="ride.rideParticipant_user">
+                        <button class="btn btn-success mb-1 mt-1 text-right" data-toggle="modal" data-target="#cancelParticipateModal">参加をキャンセル</button>
+                    </div>
+                    <div v-else>
+                        <button class="btn btn-success mb-1 mt-1 text-right" v-on:click="openParticipateModal">参加する</button>
+                    </div>
+                </div>
+                @endauth
+                @guest
+                <a class="btn btn-success mb-1 mt-1 text-right" href="{{ route('showLogin') }}">ログインして参加する</a>
+                @endguest
+            </div>
         </div>
     </div>
+    
 </div>
+
 <script src="{{ mix('js/rideDetail.js') }}"></script>
 @endsection

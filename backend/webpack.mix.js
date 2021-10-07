@@ -29,3 +29,5 @@ mix.js('resources/js/loginForm.js', 'public/js/loginForm.js').vue();
 mix.js('resources/js/registerForm.js', 'public/js/registerForm.js').vue();
 mix.js('resources/js/createRideForm.js', 'public/js/createRideForm.js').vue();
 mix.js('resources/js/rideAdmin.js', 'public/js/rideAdmin.js').vue();
+mix.js('resources/js/rideDetail.js', 'public/js/rideDetail.js').vue();
+

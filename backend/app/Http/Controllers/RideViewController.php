@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RideViewController extends Controller
 {
@@ -28,5 +29,17 @@ class RideViewController extends Controller
     public function showRideAdmin()
     {
         return view('ride.admin');
+    }
+
+    /**
+     * ライド詳細画面を表示
+     */
+    public function showRide(Request $request)
+    {
+        $ride = DB::table('rides')
+            ->where('uuid', $request->uuid)
+            ->get('name');
+
+        return view('ride.detail', ['ride' => $ride[0]]);
     }
 }

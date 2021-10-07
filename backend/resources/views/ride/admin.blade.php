@@ -35,10 +35,10 @@
                     <h4>ライド概要 <button class="hidden-btn" v-on:click="openUpdate"><i class="fas fa-edit edit-btn"></i></button></h4>
                     <div class="course-profile">
                         <div v-if="ride[0].num_of_laps > 0">
-                            <p>
+                            <a v-bind:href="'/ride?uuid='+ride[0].uuid">
                                 <span class="text-muted additional-txt">ライド名</span><br>
                                 @{{ ride[0].ride_name }}
-                            </p>
+                            </a>
                             <p>
                                 <span class="text-muted additional-txt">コース</span><br>
                                 @{{ ride[0].rr_name }} @{{ ride[0].num_of_laps }}周
@@ -60,8 +60,10 @@
                         </div>
                         <div v-else>
                             <p>
-                                <span class="text-muted additional-txt">ライド名</span><br>
-                                @{{ ride[0].ride_name }}
+                                <a v-bind:href="'/ride?uuid='+ride[0].uuid">
+                                    <span class="text-muted additional-txt">ライド名</span><br>
+                                    @{{ ride[0].ride_name }}
+                                </a>
                             </p>
                             <p>
                                 <span class="text-muted additional-txt">ルート</span><br>

@@ -26,6 +26,8 @@ use App\Http\Controllers\Api\User\UserProfileController;
 //GET
 Route::get('/', [RideViewController::class, 'showHome'])->name('showHome');
 
+Route::get('/ride', [RideViewController::class, 'showRide'])->name('showRide');
+
 
 //GET API
 Route::get('api/get/rides/{time_appoint}/{prefecture_code}/{intensity}', [RideController::class, 'getRides'])->whereNumber('time_appoint', 'prefecture_code', 'intensityRange')->name('getRides');

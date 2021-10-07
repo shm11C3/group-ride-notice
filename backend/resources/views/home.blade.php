@@ -169,7 +169,7 @@
                                         @{{ rides[participateIndex].ride_comment }}</p>
                                     <p class="mt-3">
                                         <span class="text-muted additional-txt">@{{ rides[participateIndex].time_appoint.substring(0,4) }}</span><br>
-                                        @{{ rides[participateIndex].time_appoint.substring(5,7)+'月'+rides[participateIndex].time_appoint.substring(8,10)+'日'+rides[participateIndex].time_appoint.substring(10,16) }}
+                                        @{{ time }}
                                     </p>
                                     <span class="text-muted additional-txt">メッセージ</span>
                                     <textarea class="form-control" v-model="participateComment"></textarea>
@@ -202,7 +202,9 @@
                         <div class="btn-toolbar">
                             <div class="ride-title">
                                 <p class="mb-1 username">@@{{ ride.user_name }}</p>
-                                <h6 class="mb-0">@{{ ride.ride_name }}</h6>
+                                <a v-bind:href="'/ride?uuid='+ride.uuid">
+                                    <h6 class="mb-0">@{{ ride.ride_name }}</h6>
+                                </a>
                             </div>
                             <div class="btn-group ml-auto">
                                 @auth

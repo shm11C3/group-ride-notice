@@ -61,6 +61,7 @@ new Vue({
         
         ride: '',
         time: '',
+        weathers: '',
 
         mp_infoStatus: false,
         rr_infoStatus: false,
@@ -161,10 +162,29 @@ new Vue({
          */
         mp_showInfo: function(){
             this.mp_infoStatus = !this.mp_infoStatus;
+
+            if(!this.weathers.length){
+                this.getWether();
+            }
         },
         rr_showInfo: function(){
             this.rr_infoStatus = !this.rr_infoStatus;
         },
+
+        getWether: function(){
+            const url = `https://www.jma.go.jp/bosai/forecast/data/forecast/${this.ride.prefecture_code}0000.json`;
+
+            
+
+            axios.get(url)
+            .catch(error =>{
+                console.log(error);
+                this.httpErrors.push(error);
+        
+            }).then(res =>{
+                this.weathers = res.data[0].timeSeries[0].areas;
+            });
+        }        
 
     },
 

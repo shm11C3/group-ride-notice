@@ -135,6 +135,34 @@
                         <span class="text-muted additional-txt">集合場所の説明</span><br>
                         @{{ ride.address }}
                     </p>
+                    <span class="text-muted additional-txt">@{{ prefecture[ride.prefecture_code-1] }}の天気</span>
+                    <div v-if="weathers.length">
+                        <table class="table table-striped mt-2">
+                            <thead class="thead-dark">
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">今日</th>
+                                <th scope="col">明日</th>
+                                <th scope="col">明後日</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr v-for="(weather, index) in weathers">
+                                <th scope="row">@{{ weather.area.name }}</th>
+                                <td>@{{ weather.weathers[0].replace(/\s+/g, "") }}<br>@{{ weather.winds[0].replace(/\s+/g, "") }}</td>
+                                <td>@{{ weather.weathers[1].replace(/\s+/g, "") }}<br>@{{ weather.winds[1].replace(/\s+/g, "") }}</td>
+                                <td>@{{ weather.weathers[2].replace(/\s+/g, "") }}<br>@{{ weather.winds[2].replace(/\s+/g, "") }}</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div v-else>
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-grow text-success mb-30" style="width: 3rem; height: 3rem; margin-top: 200px;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <p class="mt-3">
                     <span class="text-muted additional-txt">参加人数</span><br>
@@ -184,7 +212,7 @@
                         <td>@{{ ride_participant.comment }}</td>
                       </tr>
                     </tbody>
-                  </table>
+                </table>
             </div>
         </div>
     </div>

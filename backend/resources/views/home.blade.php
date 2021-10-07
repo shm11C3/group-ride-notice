@@ -169,7 +169,7 @@
                                         @{{ rides[participateIndex].ride_comment }}</p>
                                     <p class="mt-3">
                                         <span class="text-muted additional-txt">@{{ rides[participateIndex].time_appoint.substring(0,4) }}</span><br>
-                                        @{{ time }}
+                                        @{{ rides[participateIndex].time_appoint.substring(5,7)+'月'+rides[participateIndex].time_appoint.substring(8,10)+'日'+rides[participateIndex].time_appoint.substring(10,16) }}
                                     </p>
                                     <span class="text-muted additional-txt">メッセージ</span>
                                     <textarea class="form-control" v-model="participateComment"></textarea>

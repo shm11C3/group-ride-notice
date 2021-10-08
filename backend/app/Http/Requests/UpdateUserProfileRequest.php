@@ -24,11 +24,11 @@ class UpdateUserProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_intro' => 'string|max:128',
-            'user_url' => 'url|max128',
-            'fb_username' => 'string|max: 64',
-            'tw_username' => 'string|max: 14',
-            'ig_username' => 'string|max: 30',
+            'user_intro' => 'nullable|string|max:128',
+            'user_url' => 'nullable|url|max: 128',
+            'fb_username' => 'nullable|string|max: 64',
+            'tw_username' => 'nullable|string|max: 14',
+            'ig_username' => 'nullable|string|max: 30',
             'name' => 'required|string|max:32',
             'prefecture_code' => 'required|numeric|between:1,47'
         ];

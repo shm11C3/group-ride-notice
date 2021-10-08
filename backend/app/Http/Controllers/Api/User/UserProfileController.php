@@ -28,9 +28,17 @@ class UserProfileController extends Controller
                 'fb_username' => $request['fb_username'],
                 'tw_username' => $request['tw_username'],
                 'ig_username' => $request['ig_username'],
-                'created_at' => now()
+                'updated_at' => now(),
             ]);
         
+        DB::table('users')
+            ->where('uuid', $user_uuid)
+            ->update([
+                'name' => $request['name'],
+                'prefecture_code' => $request['prefecture_code'],
+                'updated_at' => now()
+            ]);
+
         $data = ['status' => true];
         
         return response()->json($data);
@@ -50,6 +58,7 @@ class UserProfileController extends Controller
         ->join('user_profiles', 'user_uuid', 'users.uuid')
         ->get([
             'name',
+            'prefecture_code',
             'user_profile_img_path',
             'user_intro',
             'user_url',

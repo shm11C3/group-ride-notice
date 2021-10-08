@@ -29,6 +29,8 @@ class UpdateUserProfileRequest extends FormRequest
             'fb_username' => 'string|max: 64',
             'tw_username' => 'string|max: 14',
             'ig_username' => 'string|max: 30',
+            'name' => 'required|string|max:32',
+            'prefecture_code' => 'required|numeric|between:1,47'
         ];
     }
 }

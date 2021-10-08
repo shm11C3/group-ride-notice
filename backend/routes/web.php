@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Ride\RideController;
 use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
+use App\Http\Controllers\UserViewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/create-ride', [RideViewController::class, 'showRideForm'])->name('createRideForm'); 
 
     Route::get('/my-ride', [RideViewController::class, 'showRideAdmin'])->name('rideAdmin');
+
+    Route::get('user/config', [UserViewController::class, 'showConfig'])->name('showConfig');
 
 
     //POST

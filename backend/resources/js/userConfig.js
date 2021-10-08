@@ -32,6 +32,8 @@ new Vue({
         //データ
         profile: '',
 
+        replacedUser_introArr: '',
+
         name_formStatus: false,
         prefecture_formStatus: false,
         url_formStatus: false,
@@ -40,6 +42,15 @@ new Vue({
         ig_username_formStatus: false,
         user_intro_formStatus: false,
 
+        isPush: false,
+        update: false,
+    },
+
+    computed: {
+        replaceUser_intro: function(){
+            
+            
+        }
     },
 
     mounted(){
@@ -79,12 +90,20 @@ new Vue({
 
             }).then(res=>{
                 this.profile = res.data[0];
+
+                if(this.profile.user_intro){
+                    this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
+                }
+                
+
                 this.profile_isLoad = false;
 
             });
         },
 
         profile_update: function(){
+            this.update = false;
+            this.isPush = true;
             this.closeAllForm();
 
             const url = '../api/post/profile/update';
@@ -109,9 +128,12 @@ new Vue({
             .catch(error => {
                 console.log(error);
                 this.httpErrors.push(error);
+
+                this.isPush = false;
                 
               }).then(res => {
-                
+                this.isPush = false;
+                this.update = true;
               });
         },
 
@@ -141,6 +163,10 @@ new Vue({
             this.name_formStatus = this.prefecture_formStatus = this.url_formStatus 
             = this.fb_username_formStatus = this.tw_username_formStatus 
             = this.ig_username_formStatus = this.user_intro_formStatus = false;
+
+            if(this.profile.user_intro){
+                this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
+            }
         }
     }
 });

@@ -1,0 +1,3 @@
+{
+    "The given :attribute has appeared in a data leak. Please choose a different :attribute.":"この:attributeは過去に漏洩したことのある脆弱な:attributeです。別の:attributeを入力してください。"
+}

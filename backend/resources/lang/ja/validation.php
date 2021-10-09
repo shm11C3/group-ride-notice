@@ -133,6 +133,10 @@ return [
         '属性名' => [
             'ルール名' => 'カスタムメッセージ',
         ],
+
+        'password' => [
+            'uncompromised' => 'この:attributeは過去に漏洩したことのある脆弱な:attributeです。別の:attributeを入力してください。',
+        ]
     ],
 
     /*
@@ -146,6 +150,14 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email'=>'メールアドレス',
+        'password'=>'パスワード',
+        'password_confirmation'=>'確認用パスワード',
+        'current_password' => '現在のパスワード',
+        'new_password' => 'パスワード',
+        'name'=>'名前',
+
+    ],
 
 ];

@@ -55,7 +55,7 @@
           @endif
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" class="nav-link" href="{{ route('showDashboard') }}">ダッシュボード</a>
-              <a class="dropdown-item" href="user/config?uuid={{ Auth::user()->uuid }}">設定</a>
+              <a class="dropdown-item" href="user/config">設定</a>
             </div>
           </li>
           @endauth

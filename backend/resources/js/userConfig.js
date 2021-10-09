@@ -54,20 +54,10 @@ new Vue({
     },
 
     mounted(){
-        this.user_uuid = this.getQueryParam();
         this.getUserProfile();
     },
 
     methods:{
-        /**
-         * パラメータからライドのUUIDを取得
-         */
-         getQueryParam: function(){
-            const param = location.search;
-
-            return param.substr(6,36)
-        },
-        
         /**
          * pageStatus変更
          */
@@ -80,7 +70,7 @@ new Vue({
         getUserProfile: function(){
             this.profile_isLoad = true;
 
-            const url = `../api/get/profile/${this.user_uuid}`;
+            const url = '../api/get/my-profile';
 
             axios.get(url)
             .catch(error =>{

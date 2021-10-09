@@ -80,6 +80,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('api/get/my-ride/{ride_uuid}', [RideController::class, 'getAuthorizedRideBy_rides_uuid'])->whereUuid('ride_uuid')->name('getAuthorizedRide');
 
+    Route::get('api/get/my-profile', [UserProfileController::class, 'getAuthUserProfile'])->name('getAuthUserProfile');
+
 
     //POST API
     Route::post('api/post/meetingPlace', [MeetingPlaceController::class, 'createMeetingPlace'])->name('createMeetingPlace');

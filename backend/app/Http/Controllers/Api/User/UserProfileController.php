@@ -69,4 +69,32 @@ class UserProfileController extends Controller
 
         return response()->json($user);
     }
+
+    /**
+     * 認証ユーザー自身の情報を返す
+     * 
+     * @param string $user_uuid
+     * @return response $user
+     */
+    public function getAuthUserProfile()
+    {
+        $user_uuid = Auth::user()->uuid;
+        
+        $user = DB::table('users')
+        ->where('users.uuid', $user_uuid)
+        ->join('user_profiles', 'user_uuid', 'users.uuid')
+        ->get([
+            'name',
+            'prefecture_code',
+            'email',
+            'user_profile_img_path',
+            'user_intro',
+            'user_url',
+            'fb_username',
+            'tw_username',
+            'ig_username',
+        ]);
+
+        return response()->json($user);
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,14 @@ class AuthController extends Controller
     public function showLogin()
     {
         return view('auth.loginForm');
+    }
+
+    /**
+     * パスワード更新フォームを表示
+     */
+    public function showUpdatePassword()
+    {
+        return view('auth.updatePassword');
     }
 
     /**
@@ -196,5 +205,23 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('showDashboard');
+    }
+
+    /**
+     * パスワードを更新
+     * すべての端末からログアウト
+     * 
+     * @param App\Http\Requests\UpdatePasswordRequest
+     * @return redirect
+     */
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $user = User::where('uuid', Auth::user()->uuid)->first();
+        Auth::logoutOtherDevices($request['current_password']);
+
+        $user->password = Hash::make($request['new_password']);
+        $user->save();
+
+        return redirect()->route('showConfig');
     }
 }

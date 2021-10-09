@@ -144,7 +144,7 @@
                 </div>
                 <div class="row p-3 border-bottom">
                     <span class="col-4 text-right profile-label">パスワードを変更</span>
-                    <span class="col-8"><a href="#" class="btn btn-primary text-white">パスワードを変更</a></span>
+                    <span class="col-8"><a href="{{ route('showUpdatePassword') }}" class="btn btn-primary text-white">パスワードを変更</a></span>
                 </div>
                 <div class="logout-btn text-right mt-2 mr-5 mb-5 ml-auto">
                     <form action="{{ route('logout') }}" method="POST">

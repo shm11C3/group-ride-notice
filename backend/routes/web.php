@@ -66,10 +66,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('user/config', [UserViewController::class, 'showConfig'])->name('showConfig');
 
+    Route::get('user/config/password', [AuthController::class, 'showUpdatePassword'])->name('showUpdatePassword');
+
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::post('updatePassword', [AuthController::class, 'updatePassword'])->name('updatePassword');
 
     //GET API
     Route::get('api/get/savedMeetingPlaces', [MeetingPlaceController::class, 'getSavedMeetingPlaces'])->name('getSavedMeetingPlaces');

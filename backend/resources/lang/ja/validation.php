@@ -117,6 +117,7 @@ return [
     'uploaded'             => ':attributeのアップロードに失敗しました。',
     'url'                  => ':attributeに正しい形式を指定してください。',
     'uuid'                 => ':attributeに有効なUUIDを指定してください。',
+    'current_password'     => ':attributeが一致しません',
 
     /*
     |--------------------------------------------------------------------------
@@ -154,8 +155,8 @@ return [
         'email'=>'メールアドレス',
         'password'=>'パスワード',
         'password_confirmation'=>'確認用パスワード',
-        'current_password' => '現在のパスワード',
-        'new_password' => 'パスワード',
+        'current_password' => 'パスワード',
+        'new_password' => '新しいパスワード',
         'name'=>'名前',
 
     ],

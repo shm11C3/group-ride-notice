@@ -28,7 +28,6 @@
             </button>
           </div>
     </div>
-<!--<div v-if="profile&&user">-->
     <div v-if="profile">
         <div class="row">
             <div class="col-2">
@@ -136,41 +135,23 @@
             </div>
             <div class="col-8" v-if="pageStatus==1">
                 <div class="row p-3 border-bottom">
-                    <span class="col-3 text-right profile-label">メールアドレス</span><span class="col-9 font-weight-bold">あ</span>
+                    <span class="col-4 text-right profile-label">登録日</span>
+                    <span class="col-8 font-weight-bold">@{{ created_at[0] }} @{{ created_at[1] }}</span>
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-3 text-right profile-label">パスワードを変更</span><span class="col-9 font-weight-bold">あ</span>
+                    <span class="col-4 text-right profile-label">メールアドレス</span>
+                    <span class="col-8 font-weight-bold">@{{ profile.email }}</span>
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-3 text-right profile-label"></span><span class="col-9 font-weight-bold">あ</span>
+                    <span class="col-4 text-right profile-label">パスワードを変更</span>
+                    <span class="col-8"><a href="#" class="btn btn-primary text-white">パスワードを変更</a></span>
                 </div>
-                <div class="logout-btn">
+                <div class="logout-btn text-right mt-2 mr-5 mb-5 ml-auto">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button class="btn btn-outline-primary mb-2">ログアウト</button>
                     </form>
                 </div>
-            </div>
-            <div class="col-8" v-if="pageStatus==2">
-                <div class="row p-3 border-bottom">
-                    <span class="col-3 text-right profile-label">名前</span><span class="col-9 font-weight-bold">ユーザーネーム</span>
-                </div>
-                <div class="row p-3 border-bottom">
-                    <span class="col-3 text-right profile-label">メールアドレス</span><span class="col-9 font-weight-bold">Email</span>
-                </div>
-                <div class="row p-3 border-bottom">
-                    <span class="col-3 text-right profile-label">都道府県</span><span class="col-9 font-weight-bold">都道府県</span>
-                </div>    
-            </div>
-        </div>
-    </div>
-    <div v-else>
-        <div v-if="!profile_isLoad">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                無効なIDです
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
         </div>
     </div>

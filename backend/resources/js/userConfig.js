@@ -31,6 +31,7 @@ new Vue({
 
         //データ
         profile: '',
+        created_at: '',
 
         replacedUser_introArr: '',
 
@@ -44,13 +45,6 @@ new Vue({
 
         isPush: false,
         update: false,
-    },
-
-    computed: {
-        replaceUser_intro: function(){
-            
-            
-        }
     },
 
     mounted(){
@@ -80,12 +74,12 @@ new Vue({
 
             }).then(res=>{
                 this.profile = res.data[0];
+                this.created_at = this.replaceDate(this.profile.created_at);
 
                 if(this.profile.user_intro){
                     this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
                 }
                 
-
                 this.profile_isLoad = false;
 
             });
@@ -157,6 +151,14 @@ new Vue({
             if(this.profile.user_intro){
                 this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
             }
+        },
+
+        replaceDate: function(dateParam){
+            let year = dateParam.substring(0,4)+'年';
+            let date = dateParam.substring(5,7)+'月'+dateParam.substring(8,10)+'日';
+            let time = dateParam.substring(10,16);
+
+            return [year, date, time];
         }
     }
 });

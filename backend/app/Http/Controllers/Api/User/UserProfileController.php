@@ -87,6 +87,7 @@ class UserProfileController extends Controller
             'name',
             'prefecture_code',
             'email',
+            'users.created_at',
             'user_profile_img_path',
             'user_intro',
             'user_url',

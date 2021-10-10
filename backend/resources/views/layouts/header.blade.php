@@ -45,15 +45,20 @@
               <a class="dropdown-item" href="#">集合場所を登録</a>
             </div>
           </li>
+          @auth
           @if(url()->current() === 'http://www.localhost/dashboard')
-          <li class="nav-item active">
-            <a class="nav-link" href="{{ route('showDashboard') }}">マイプロフィール<span class="sr-only">(current)</span></a>
-          </li>
+          <li class="nav-item dropdown active">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">マイプロフィール<span class="sr-only">(current)</span></a>
           @else
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('showDashboard') }}">マイプロフィール<span class="sr-only">(current)</span></a>
-          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">マイプロフィール<span class="sr-only">(current)</span></a>
           @endif
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" class="nav-link" href="{{ route('showDashboard') }}">ダッシュボード</a>
+              <a class="dropdown-item" href="user/config">設定</a>
+            </div>
+          </li>
+          @endauth
         </ul>
         <form class="form-inline my-2 my-lg-0">
           @auth

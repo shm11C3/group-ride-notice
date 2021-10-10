@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\DeleteUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +37,22 @@ class AuthController extends Controller
     public function showLogin()
     {
         return view('auth.loginForm');
+    }
+
+    /**
+     * パスワード更新フォームを表示
+     */
+    public function showUpdatePassword()
+    {
+        return view('auth.updatePassword');
+    }
+
+    /**
+     * アカウント削除フォームを表示
+     */
+    public function showDeleteUser()
+    {
+        return view('auth.deleteUser');
     }
 
     /**
@@ -196,5 +214,39 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('showDashboard');
+    }
+
+    /**
+     * パスワードを更新
+     * すべての端末からログアウト
+     * 
+     * @param App\Http\Requests\UpdatePasswordRequest
+     * @return redirect
+     */
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $user = User::where('uuid', Auth::user()->uuid)->first();
+        Auth::logoutOtherDevices($request['current_password']);
+
+        $user->password = Hash::make($request['new_password']);
+        $user->save();
+
+        return redirect()->route('showConfig');
+    }
+
+    /**
+     * アカウントを削除
+     * 
+     * @param App\Http\Requests\DeleteUserRequest
+     * @return redirect
+     */
+    public function deleteUser(DeleteUserRequest $request)
+    {
+        $user = Auth::user();
+
+        User::where('uuid', $user->uuid)
+            ->delete();
+
+        return redirect()->route('showLogin');
     }
 }

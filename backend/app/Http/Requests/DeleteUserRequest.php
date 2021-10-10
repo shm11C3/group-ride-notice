@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class DeleteUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|max:32|',
-            'email'=>'required|unique:users,email|email|max:255',
-            'prefecture_code' => 'required|numeric|between:1,47',
-            'password'=> ['required', 'max:64',Password::min(8)->uncompromised(5)],
-            'remember'=>'boolean',
+            'current_password' => 'required|current_password',
         ];
     }
 }

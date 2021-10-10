@@ -117,6 +117,7 @@ return [
     'uploaded'             => ':attributeのアップロードに失敗しました。',
     'url'                  => ':attributeに正しい形式を指定してください。',
     'uuid'                 => ':attributeに有効なUUIDを指定してください。',
+    'current_password'     => ':attributeが一致しません',
 
     /*
     |--------------------------------------------------------------------------
@@ -133,6 +134,10 @@ return [
         '属性名' => [
             'ルール名' => 'カスタムメッセージ',
         ],
+
+        'password' => [
+            'uncompromised' => 'この:attributeは過去に漏洩したことのある脆弱な:attributeです。別の:attributeを入力してください。',
+        ]
     ],
 
     /*
@@ -146,6 +151,14 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email'=>'メールアドレス',
+        'password'=>'パスワード',
+        'password_confirmation'=>'確認用パスワード',
+        'current_password' => 'パスワード',
+        'new_password' => '新しいパスワード',
+        'name'=>'名前',
+
+    ],
 
 ];

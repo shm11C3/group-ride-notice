@@ -219,8 +219,6 @@ new Vue({
                 this.closeParticipateModal();
                 this.pt_isPush = false;
             });
-
-            //[todo] 自分のライドには参加ボタンを押せないようにする
         },
     },
 });

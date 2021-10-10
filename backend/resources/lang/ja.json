@@ -1,0 +1,8 @@
+{
+    "The :attribute must contain at least one uppercase and one lowercase letter.":":attributeは、少なくとも大文字と小文字を1つずつ含める必要があります。",
+    "The :attribute must contain at least one letter.":":attributeは、少なくとも1つの文字が含まれていなければなりません。",
+    "The :attribute must contain at least one symbol.":":attributeは、少なくとも1つの記号が含まれていなければなりません。",
+    "The :attribute must contain at least one number.":":attributeは、少なくとも1つの数字が含まれていなければなりません。",
+    "The given :attribute has appeared in a data leak. Please choose a different :attribute.":"この:attributeは過去に漏洩したことのある脆弱な:attributeです。別の:attributeを入力してください。"
+
+}

@@ -6,5 +6,8 @@
     "/js/registerForm.js": "/js/registerForm.js",
     "/js/createRideForm.js": "/js/createRideForm.js",
     "/js/rideAdmin.js": "/js/rideAdmin.js",
+    "/js/rideDetail.js": "/js/rideDetail.js",
+    "/js/userConfig.js": "/js/userConfig.js",
+    "/js/deleteUser.js": "/js/deleteUser.js",
     "/css/app.css": "/css/app.css"
 }

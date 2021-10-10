@@ -208,16 +208,17 @@ class RideController extends Controller
     /**
      * rides.uuidからライドを取得
      * 
+     * [todo]参加中か参加中でないかで返す値を変える
+     * 
      * @param string uuid
      * @return response
      */
     public function getRideBy_rides_uuid(string $uuid)
     {
-        $ride = Ride::with('rideParticipants')
+        $ride = Ride::with('rideParticipants.user')
         ->where('rides.uuid', $uuid)
         ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
         ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
-        ->join('users', 'host_user_uuid', 'users.uuid')
         ->get([
             'rides.uuid',
             'host_user_uuid',
@@ -238,7 +239,6 @@ class RideController extends Controller
             'elevation',
             'distance',
             'ride_routes.comment as rr_comment',
-            'users.name as user_name'
         ]);
 
         return response()->json($ride);

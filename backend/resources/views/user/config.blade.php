@@ -144,7 +144,11 @@
                 </div>
                 <div class="row p-3 border-bottom">
                     <span class="col-4 text-right profile-label">パスワードを変更</span>
-                    <span class="col-8"><a href="{{ route('showUpdatePassword') }}" class="btn btn-primary text-white">パスワードを変更</a></span>
+                    <span class="col-8"><a href="{{ route('showUpdatePassword') }}" class="btn btn-primary text-white">変更する</a></span>
+                </div>
+                <div class="row p-3 border-bottom">
+                    <span class="col-4 text-right profile-label">アカウントを削除</span>
+                    <span class="col-8"><a href="{{ route('showDeleteUser') }}" class="btn btn-danger text-white">削除する</a></span>
                 </div>
                 <div class="logout-btn text-right mt-2 mr-5 mb-5 ml-auto">
                     <form action="{{ route('logout') }}" method="POST">

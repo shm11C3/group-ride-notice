@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\DeleteUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -44,6 +45,14 @@ class AuthController extends Controller
     public function showUpdatePassword()
     {
         return view('auth.updatePassword');
+    }
+
+    /**
+     * アカウント削除フォームを表示
+     */
+    public function showDeleteUser()
+    {
+        return view('auth.deleteUser');
     }
 
     /**
@@ -223,5 +232,21 @@ class AuthController extends Controller
         $user->save();
 
         return redirect()->route('showConfig');
+    }
+
+    /**
+     * アカウントを削除
+     * 
+     * @param App\Http\Requests\DeleteUserRequest
+     * @return redirect
+     */
+    public function deleteUser(DeleteUserRequest $request)
+    {
+        $user = Auth::user();
+
+        User::where('uuid', $user->uuid)
+            ->delete();
+
+        return redirect()->route('showLogin');
     }
 }

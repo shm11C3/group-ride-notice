@@ -19,7 +19,7 @@ new Vue({
         isInValidEmail: function() {
             const reg = new RegExp(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/);
 
-            if(reg.test(this.email) || email.length>255){
+            if(reg.test(this.email) || this.email.length>255){
                 return true;
             }
         }

@@ -54,8 +54,9 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">マイプロフィール<span class="sr-only">(current)</span></a>
           @endif
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" class="nav-link" href="{{ route('showDashboard') }}">ダッシュボード</a>
-              <a class="dropdown-item" href="user/config">設定</a>
+              <a class="dropdown-item" class="nav-link" href="{{ route('showUser', Auth::user()->uuid) }}">マイプロフィール</a>
+              <a class="dropdown-item" href="{{ route('showConfig') }}">設定</a>
+              <a class="dropdown-item" class="nav-link" href="{{ route('showDashboard') }}">登録情報</a>
             </div>
           </li>
           @endauth

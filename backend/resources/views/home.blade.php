@@ -196,12 +196,14 @@
             @endauth
             <!---->        
             <div v-for="(ride, index) in rides" class="media ride shadow mt-4">
-                <svg class="bd-placeholder-img align-self-start profile-img" width="64" height="64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 64x64"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" ></text></svg>
+                <a v-bind:href="'/user/'+ride.host_user_uuid">
+                    <svg class="bd-placeholder-img align-self-start profile-img" width="64" height="64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 64x64"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" ></text></svg>
+                </a>
                 <div class="media-body">
                     <div class="p-2">
                         <div class="btn-toolbar">
                             <div class="ride-title">
-                                <p class="mb-1 username">@@{{ ride.user_name }}</p>
+                                <a v-bind:href="'/user/'+ride.host_user_uuid" class="mb-1 username">@@{{ ride.user_name }}</a>
                                 <a v-bind:href="'/ride?uuid='+ride.uuid">
                                     <h6 class="mb-0">@{{ ride.ride_name }}</h6>
                                 </a>

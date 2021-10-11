@@ -79,7 +79,15 @@
                     <span class="col-4 text-right profile-label">Facebookユーザ名 <button class="hidden-btn" v-on:click="fb_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
                     <div class="col-8">
                         <div v-if="fb_username_formStatus">
-                            <input class="form-control" v-model="profile.fb_username">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">https://Facebook.com/</div>
+                                    </div>
+                                    <input class="form-control" v-model="profile.fb_username">
+                                </div>
+                            </div>
                         </div>
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.fb_username }}</span>
@@ -91,7 +99,15 @@
                     <span class="col-4 text-right profile-label">Twitterユーザ名 <button class="hidden-btn" v-on:click="tw_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
                     <div class="col-8">
                         <div v-if="tw_username_formStatus">
-                            <input class="form-control" v-model="profile.tw_username">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">@</div>
+                                    </div>
+                                    <input class="form-control" v-model="profile.tw_username">
+                                </div>
+                            </div>
                         </div>
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.tw_username }}</span>
@@ -103,7 +119,15 @@
                     <span class="col-4 text-right profile-label">Instagramユーザ名 <button class="hidden-btn" v-on:click="ig_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
                     <div class="col-8">
                         <div v-if="ig_username_formStatus">
-                            <input class="form-control" v-model="profile.ig_username">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">https://www.instagram.com/</div>
+                                    </div>
+                                    <input class="form-control" v-model="profile.ig_username">
+                                </div>
+                            </div>
                         </div>
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.ig_username }}</span>

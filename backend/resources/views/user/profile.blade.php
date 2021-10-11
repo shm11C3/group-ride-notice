@@ -26,25 +26,25 @@
         <div class="user-url-group border-top">
             <div class="user-url mt-2">
                 <span class="text-muted additional-txt">{{ $user->name }}さんのホームページ</span><br>
-                <a style="color: rgb(0, 174, 255)" href="{{ $user->user_url }}">{{ $user->user_url }}</a>
+                <a style="color: rgb(0, 174, 255)" href="{{ $user->user_url }}" target="_blank" rel="noopener noreferrer">{{ $user->user_url }}</a>
             </div>
             <div class="user-url mt-2">
-                <span class="text-muted additional-txt">Facebook</span><br>
+                <span class="text-muted additional-txt">Facebookアカウント</span><br>
                 @if(strlen($user->fb_username) > 0)
-                <a style="color: rgb(0, 174, 255)" href="https://Facebook.com/{{ $user->fb_username }}">{{ $user->fb_username }}</a>
+                <a style="color: rgb(0, 174, 255)" href="https://Facebook.com/{{ $user->fb_username }}" target="_blank" rel="noopener noreferrer">{{ $user->fb_username }}</a>
                 @endif    
             </div>
             <div class="user-url mt-2">
                 <span class="text-muted additional-txt">Twitterアカウント</span><br>
                 @if(strlen($user->tw_username) > 0)
-                <a style="color: rgb(0, 174, 255)" href="https://twitter.com/{{ $user->tw_username }}">{{ '@'.$user->tw_username }}</a>
+                <a style="color: rgb(0, 174, 255)" href="https://twitter.com/{{ $user->tw_username }}" target="_blank" rel="noopener noreferrer">{{ '@'.$user->tw_username }}</a>
                 @endif
             </div>
             <div class="user-url mt-2">
                 
                 <span class="text-muted additional-txt">Instagramアカウント</span><br>
                 @if(strlen($user->ig_username) > 0)
-                <a style="color: rgb(0, 174, 255)" href="https://twitter.com/{{ $user->tw_username }}">{{ '@'.$user->tw_username }}</a>
+                <a style="color: rgb(0, 174, 255)" href="https://www.instagram.com/{{ $user->ig_username }}" target="_blank" rel="noopener noreferrer">{{ $user->ig_username }}</a>
                 @endif
             </div>
         </div>

@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('title', e($ride->name))
 @section('content')
-<div id="app">
+<div id="app" v-cloak>
     <div v-if="httpErrors">
         <div v-for="(httpError, index) in httpErrors">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -140,7 +140,7 @@
                         <table class="table table-striped mt-2">
                             <thead class="thead-dark">
                               <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">地域</th>
                                 <th scope="col">今日</th>
                                 <th scope="col">明日</th>
                                 <th scope="col">明後日</th>
@@ -149,9 +149,9 @@
                             <tbody>
                               <tr v-for="(weather, index) in weathers">
                                 <th scope="row">@{{ weather.area.name }}</th>
-                                <td>@{{ weather.weathers[0].replace(/\s+/g, "") }}<br>@{{ weather.winds[0].replace(/\s+/g, "") }}</td>
-                                <td>@{{ weather.weathers[1].replace(/\s+/g, "") }}<br>@{{ weather.winds[1].replace(/\s+/g, "") }}</td>
-                                <td>@{{ weather.weathers[2].replace(/\s+/g, "") }}<br>@{{ weather.winds[2].replace(/\s+/g, "") }}</td>
+                                <td>@{{ weather.weathers[0] }}<br>@{{ weather.winds[0] }}</td>
+                                <td>@{{ weather.weathers[1] }}<br>@{{ weather.winds[1] }}</td>
+                                <td>@{{ weather.weathers[2] }}<br>@{{ weather.winds[2] }}</td>
                               </tr>
                             </tbody>
                         </table>

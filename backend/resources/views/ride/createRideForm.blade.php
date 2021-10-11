@@ -2,7 +2,7 @@
 @section('title','ライド作成')
 @section('content')
 <h2>ライドを作成</h2>
-<div id="app">
+<div id="app" v-cloak>
   
   <!--modal-->
   <div class="modal fade" id="rideRouteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

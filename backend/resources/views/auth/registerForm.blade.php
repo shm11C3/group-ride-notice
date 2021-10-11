@@ -17,7 +17,7 @@
 <x-alert type="danger" :session="session('account_lock')"/>
 <x-alert type="danger" :session="session('logout_success')"/>
 @endif
-<div id="app">
+<div id="app" v-cloak>
   <form class="login-form" method="POST" action="{{ route('register') }}">
       @csrf
       <div class="form-group">

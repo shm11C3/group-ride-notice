@@ -86,6 +86,7 @@ new Vue({
         },
 
         profile_update: function(){
+            this.httpErrors = '';
             this.update = false;
             this.isPush = true;
             this.closeAllForm();
@@ -109,15 +110,24 @@ new Vue({
   
             axiosPost.post(url, data)
               
-            .catch(error => {
-                console.log(error);
-                this.httpErrors.push(error);
+            .catch(({response}) => {
+                const errors = response.data.errors;
+                let errorArr = [];
+                
+                Object.keys(errors).forEach(function(key) { 
+                    errorArr.push(errors[key][0]);
+                });
 
+                this.httpErrors = errorArr;
+                 
                 this.isPush = false;
+                this.update = false;
                 
               }).then(res => {
                 this.isPush = false;
-                this.update = true;
+                if(res){
+                    this.update = true;
+                }
               });
         },
 

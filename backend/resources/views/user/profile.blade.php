@@ -19,31 +19,34 @@
         </div>
         <div class="user-intro border-top">
             <span class="text-muted additional-txt">自己紹介</span><br>
+            @if(strlen($user->user_intro) > 0)
             <p class="mt-2">{{ html($user->user_intro) }}</p>
+            @endif
         </div>
         <div class="user-url-group border-top">
             <div class="user-url mt-2">
                 <span class="text-muted additional-txt">{{ $user->name }}さんのホームページ</span><br>
                 <a style="color: rgb(0, 174, 255)" href="{{ $user->user_url }}">{{ $user->user_url }}</a>
             </div>
-            @if(strlen($user->fb_username) > 0)
             <div class="user-url mt-2">
                 <span class="text-muted additional-txt">Facebook</span><br>
+                @if(strlen($user->fb_username) > 0)
                 <a style="color: rgb(0, 174, 255)" href="https://Facebook.com/{{ $user->fb_username }}">{{ $user->fb_username }}</a>
+                @endif    
             </div>
-            @endif
-            @if(strlen($user->tw_username) > 0)
             <div class="user-url mt-2">
                 <span class="text-muted additional-txt">Twitterアカウント</span><br>
+                @if(strlen($user->tw_username) > 0)
                 <a style="color: rgb(0, 174, 255)" href="https://twitter.com/{{ $user->tw_username }}">{{ '@'.$user->tw_username }}</a>
+                @endif
             </div>
-            @endif
-            @if(strlen($user->ig_username) > 0)
             <div class="user-url mt-2">
+                
                 <span class="text-muted additional-txt">Instagramアカウント</span><br>
+                @if(strlen($user->ig_username) > 0)
                 <a style="color: rgb(0, 174, 255)" href="https://twitter.com/{{ $user->tw_username }}">{{ '@'.$user->tw_username }}</a>
+                @endif
             </div>
-            @endif
         </div>
     </div>
 </div>

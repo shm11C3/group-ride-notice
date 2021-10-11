@@ -2,7 +2,7 @@
 @section('title','ライド管理')
 @section('content')
 <h2>ライド管理</h2>
-<div id="app">
+<div id="app" v-cloak>
     <div v-if="httpErrors">
         <div v-for="(httpError, index) in httpErrors">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">

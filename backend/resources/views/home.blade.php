@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('title','ホーム')
 @section('content')
-<div id="app">
+<div id="app" v-cloak>
 <!--次の参加予定のライドを表示-->
     <div class="ride-schedule-group">
         @auth

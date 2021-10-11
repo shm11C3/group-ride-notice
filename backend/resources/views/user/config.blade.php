@@ -2,7 +2,7 @@
 @section('title','設定')
 @section('content')
 <h3>プロフィール</h3>
-<div id="app" class="profile mt-5">
+<div id="app" class="profile mt-5" v-cloak>
     <div v-if="httpErrors">
         <div v-for="(httpError, index) in httpErrors">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">

@@ -18,7 +18,7 @@
 <x-alert type="danger" :session="session('account_lock')"/>
 <x-alert type="danger" :session="session('logout_success')"/>
 @endif
-<div id="app">
+<div id="app" v-cloak>
     <form class="update-password-form mt-5" method="POST" action="{{ route('deleteUser') }}">
         @csrf
         <div class="form-group">

@@ -73,6 +73,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('user/config/delete', [AuthController::class, 'showDeleteUser'])->name('showDeleteUser');
 
+    Route::get('my-rides', [RideViewController::class, 'showMyRides'])->name('showMyRides');
+
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');

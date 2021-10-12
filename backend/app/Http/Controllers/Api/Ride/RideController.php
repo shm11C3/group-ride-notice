@@ -186,23 +186,23 @@ class RideController extends Controller
     }
 
     /**
-     * 自分で作成したライドをすべて取得
+     * ユーザー関連ライドをすべて取得
      * 
      * @param void
      * @return object $rides
      */
     public function getRidesRelatedToAuthorizedUser()
     {
-        $user = Auth::user();
+        $user_uuid = Auth::user()->uuid;
 
         $rides = DB::table('ride_participants')
         ->where('time_appoint', '>', now())
-        ->where('ride_participants.user_uuid', $user->uuid)
+        ->where('ride_participants.user_uuid', $user_uuid)
         ->join('rides', 'rides.uuid', 'ride_uuid')
         ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
         ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
-        ->orderBy('rides.created_at' ,'desc')
-        ->get([
+        ->orderBy('time_appoint' ,'asc')
+        ->select([
             'rides.uuid',
             'host_user_uuid',
             'rides.name as ride_name',
@@ -215,11 +215,15 @@ class RideController extends Controller
             'ride_routes.name as rr_name',
             'elevation',
             'distance'
-        ]);
+        ])
+        ->simplePaginate(30);
 
-        //dd($rides);
+        $data = [
+            'rides' => $rides,
+            'user_uuid' => $user_uuid    
+        ];
 
-        return response()->json($rides);
+        return response()->json($data);
     }
 
     /**

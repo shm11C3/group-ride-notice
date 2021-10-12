@@ -9,5 +9,6 @@
     "/js/rideDetail.js": "/js/rideDetail.js",
     "/js/userConfig.js": "/js/userConfig.js",
     "/js/deleteUser.js": "/js/deleteUser.js",
+    "/js/participated.js": "/js/participated.js",
     "/css/app.css": "/css/app.css"
 }

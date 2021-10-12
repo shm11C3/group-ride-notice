@@ -232,19 +232,19 @@
                         <div class="course-profile">
                             <div v-if="ride.num_of_laps > 0">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-sm-4">
                                         <p>
                                             <span class="text-muted additional-txt">コース</span><br>
                                             @{{ ride.rr_name }} @{{ ride.num_of_laps }}周
                                         </p>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-sm-4">
                                         <p>
                                             <span class="text-muted additional-txt">走行距離</span><br>
                                             @{{ ride.num_of_laps*ride.distance }}km
                                         </p>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-sm-4">
                                         <p>
                                             <span class="text-muted additional-txt">獲得標高</span><br>
                                             @{{ ride.num_of_laps*ride.elevation }}m
@@ -254,19 +254,19 @@
                             </div>
                             <div v-else>
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-sm-4">
                                         <p>
                                             <span class="text-muted additional-txt">ルート</span><br>
                                             @{{ ride.rr_name }}
                                         </p>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-sm-4">
                                         <p>
                                             <span class="text-muted additional-txt">走行距離</span><br>
                                             @{{ ride.distance }}km
                                         </p>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-sm-4">
                                         <p>
                                             <span class="text-muted additional-txt">獲得標高</span><br>
                                             @{{ ride.elevation }}m
@@ -277,19 +277,19 @@
                         </div>
                         <div  style="border-bottom: 1px solid rgb(219, 219, 219); margin-right: 5.2rem; margin-top: 3rem;"></div>
                         <div class="row mt-5">
-                            <div class="col-2">
+                            <div class="col-sm-4 col-lg-2">
                                 <p>
                                     <span class="text-muted additional-txt">@{{ ride.time_appoint.substring(0,4) }}</span><br>
                                     @{{ ride.time_appoint.substring(5,7)+'月'+ride.time_appoint.substring(8,10)+'日'+ride.time_appoint.substring(10,16) }}
                                 </p>
                             </div>
-                            <div class="col-2">
+                            <div class="col-sm-4 col-lg-2">
                                 <p>
                                     <span class="text-muted additional-txt">@{{ prefecture[ride.prefecture_code-1] }}</span><br>
                                     @{{ ride.mp_name }}集合
                                 </p>
                             </div>
-                            <div class="col-8">
+                            <div class="col-sm-4 col-lg-8">
                                 <p>
                                     <span class="text-muted additional-txt">参加人数</span><br>
                                     @{{ ride.rideParticipant_count }}人

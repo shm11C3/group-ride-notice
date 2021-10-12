@@ -99,12 +99,7 @@ new Vue({
                 data.forEach(element => this.rides.push(element));
                 this.isLoad = false;
                 
-                if(data.length<30){
-                    this.resIsExist = false;
-
-                }else{
-                    this.resIsExist = true;
-                }
+                this.resIsExist = Boolean(res.data.next_page_url);
             });
         },
 

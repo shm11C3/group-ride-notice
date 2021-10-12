@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateRideRequest;
 use App\Http\Requests\UpdatePublishStatusRequest;
 use App\Models\User;
 use App\Models\Ride;
+use App\Models\RideParticipant;
 use Dotenv\Parser\Value;
 
 class RideController extends Controller
@@ -66,7 +67,7 @@ class RideController extends Controller
             abort(500);
         }
 
-        $data = ['status' => true];
+        $data = ['status' => true, 'ride_uuid', $ride_uuid];
 
         return response()->json($data);
     }
@@ -190,25 +191,39 @@ class RideController extends Controller
      * @param void
      * @return object $rides
      */
-    public function getAuthorizedRides()
+    public function getRidesRelatedToAuthorizedUser()
     {
         $user = Auth::user();
 
-        $rides = DB::table('rides')
-        ->where('host_user_uuid', $user->uuid)
+        $rides = DB::table('ride_participants')
+        ->where('time_appoint', '>', now())
+        ->where('ride_participants.user_uuid', $user->uuid)
+        ->join('rides', 'rides.uuid', 'ride_uuid')
         ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
         ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
         ->orderBy('rides.created_at' ,'desc')
-        ->select('*')
-        ->simplePaginate(30);
+        ->get([
+            'rides.uuid',
+            'host_user_uuid',
+            'rides.name as ride_name',
+            'time_appoint',
+            'intensity',
+            'num_of_laps',
+            'rides.publish_status',
+            'meeting_places.name as mp_name',
+            'prefecture_code',
+            'ride_routes.name as rr_name',
+            'elevation',
+            'distance'
+        ]);
+
+        //dd($rides);
 
         return response()->json($rides);
     }
 
     /**
      * rides.uuidからライドを取得
-     * 
-     * [todo]参加中か参加中でないかで返す値を変える
      * 
      * @param string uuid
      * @return response

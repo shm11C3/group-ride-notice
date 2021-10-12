@@ -86,7 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('api/get/savedRideRoutes', [RideRouteController::class, 'getSavedRideRoutes'])->name('getSavedMeetingPlaces');
 
-    Route::get('api/get/my-rides', [RideController::class, 'getAuthorizedRides'])->name('getAuthorizedRides');
+    Route::get('api/get/my-rides', [RideController::class, 'getRidesRelatedToAuthorizedUser'])->name('getMyRides');
 
     Route::get('api/get/my-ride/{ride_uuid}', [RideController::class, 'getAuthorizedRideBy_rides_uuid'])->whereUuid('ride_uuid')->name('getAuthorizedRide');
 

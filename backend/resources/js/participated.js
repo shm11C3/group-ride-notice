@@ -72,7 +72,7 @@ new Vue({
             this.isLoad = true;
             const self = this;
 
-            let url = `/api/get/my-rides?page=${this.page}`;
+            let url = `/api/get/my-rides/1?page=${this.page}`;
 
             axios.get(url)
             .catch(error =>{

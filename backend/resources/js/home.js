@@ -10,6 +10,7 @@ new Vue({
     data: {
         //データ
         rides: [],
+        next_ride: '',
 
         participateIndex: '',
         participateComment: '',
@@ -32,6 +33,7 @@ new Vue({
 
         //状態
         isLoad: false,
+        next_isLoad: false,
         participateModal: false,
 
         pt_isPush: false,
@@ -43,10 +45,12 @@ new Vue({
         observer: null,
 
         resIsExist: false,
+        resNextIsExist: false,
     },
 
     mounted() {
         this.initialLoad();
+        this.getNextRide();
 
         this.observer = new IntersectionObserver((entries) => {
             const entry = entries[0];
@@ -100,6 +104,32 @@ new Vue({
                 this.isLoad = false;
                 
                 this.resIsExist = Boolean(res.data.next_page_url);
+            });
+        },
+
+        /**
+         * ライドの取得
+         */
+         getNextRide: function(){
+            this.next_isLoad = true;
+            const self = this;
+
+            let url = `/api/get/my-rides/0?page=1`;
+
+            axios.get(url)
+            .catch(error =>{
+                console.log(error);
+                this.httpErrors.push(error);
+                this.isLoad = false;
+
+            }).then(res =>{
+                let data = res.data.rides.data;
+
+                this.next_isLoad = false;
+                this.resNextIsExist = Boolean(data.length);
+                
+                this.authUser = res.data.user_uuid;
+                this.next_ride = data[0];
             });
         },
 

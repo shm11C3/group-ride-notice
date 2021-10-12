@@ -191,9 +191,10 @@ class RideController extends Controller
      * @param void
      * @return object $rides
      */
-    public function getRidesRelatedToAuthorizedUser()
+    public function getRidesRelatedToAuthorizedUser(int $option)
     {
         $user_uuid = Auth::user()->uuid;
+        $paginate = $this->ride->paginate[$option];
 
         $rides = DB::table('ride_participants')
         ->where('time_appoint', '>', now())
@@ -216,7 +217,7 @@ class RideController extends Controller
             'elevation',
             'distance'
         ])
-        ->simplePaginate(30);
+        ->simplePaginate($paginate);
 
         $data = [
             'rides' => $rides,

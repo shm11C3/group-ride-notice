@@ -67,7 +67,7 @@ class RideController extends Controller
             abort(500);
         }
 
-        $data = ['status' => true, 'ride_uuid', $ride_uuid];
+        $data = ['status' => true, 'ride_uuid' => $ride_uuid];
 
         return response()->json($data);
     }

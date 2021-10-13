@@ -111,7 +111,7 @@
                             @{{ ride.elevation }}m
                         </p>
                     </div>
-                    <p>
+                    <p class="ml-3">
                         <span class="text-muted additional-txt">コースの説明</span><br>
                         @{{ ride.rr_comment }}
                     </p>
@@ -136,7 +136,14 @@
                         @{{ ride.address }}
                     </p>
                     <span class="text-muted additional-txt">@{{ prefecture[ride.prefecture_code-1] }}の天気</span>
-                    <div v-if="weathers.length">
+                    <!--天気実装後削除-->
+                    <div class="alert alert-info alert-dismissible fade show mt-5" role="alert">
+                        天気機能はまもなく実装されます！                        
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <!--<div v-if="weathers.length">
                         <table class="table table-striped mt-2">
                             <thead class="thead-dark">
                               <tr>
@@ -162,7 +169,7 @@
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <p class="mt-3">
                     <span class="text-muted additional-txt">参加人数</span><br>

@@ -33,7 +33,7 @@ new Vue({
 
         //状態
         isLoad: false,
-        next_isLoad: false,
+        next_isLoad: true,
         participateModal: false,
         pt_isPush: false,
 
@@ -44,7 +44,9 @@ new Vue({
         observer: null,
 
         resIsExist: false,
-        resNextIsExist: true,
+        resNextIsExist: false,
+
+        authUser: '',
     },
 
     mounted() {
@@ -99,7 +101,7 @@ new Vue({
                 
                 this.resIsExist = Boolean(res.data.next_page_url);
 
-                if(auth){
+                if(auth && !this.resNextIsExist){
                     this.getNextRide();
                 }
             });

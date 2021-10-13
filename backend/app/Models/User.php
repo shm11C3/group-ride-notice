@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -203,5 +204,18 @@ class User extends Authenticatable
         $user->locked_flg++;
         $user->locked_at = now();
         $user->save();
+    }
+
+    /**
+     * IPアドレスを記録
+     */
+    public function recordIp(string $uuid, string $ip, bool $status)
+    {
+        DB::table('auth_request_ip_address')
+        ->insert([
+            'user_uuid' => $uuid,
+            'user_ip' => $ip,
+            'request_status' => $status
+        ]);
     }
 }

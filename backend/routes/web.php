@@ -10,6 +10,7 @@ use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\UserViewController;
+use App\Models\Ride;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,8 @@ use App\Http\Controllers\UserViewController;
 Route::get('/', [RideViewController::class, 'showHome'])->name('showHome');
 
 Route::get('/ride', [RideViewController::class, 'showRide'])->name('showRide');
+
+Route::get('/user/{user_uuid}', [UserViewController::class, 'showUser'])->whereUuid('user_uuid')->name('showUser');
 
 
 //GET API
@@ -70,6 +73,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('user/config/delete', [AuthController::class, 'showDeleteUser'])->name('showDeleteUser');
 
+    Route::get('my-rides', [RideViewController::class, 'showMyRides'])->name('showMyRides');
+
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -83,7 +88,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('api/get/savedRideRoutes', [RideRouteController::class, 'getSavedRideRoutes'])->name('getSavedMeetingPlaces');
 
-    Route::get('api/get/my-rides', [RideController::class, 'getAuthorizedRides'])->name('getAuthorizedRides');
+    Route::get('api/get/my-rides/{option}', [RideController::class, 'getRidesRelatedToAuthorizedUser'])->whereNumber('option')->name('getMyRides');
 
     Route::get('api/get/my-ride/{ride_uuid}', [RideController::class, 'getAuthorizedRideBy_rides_uuid'])->whereUuid('ride_uuid')->name('getAuthorizedRide');
 

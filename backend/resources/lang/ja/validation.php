@@ -158,6 +158,13 @@ return [
         'current_password' => 'パスワード',
         'new_password' => '新しいパスワード',
         'name'=>'名前',
+        'fb_username' => 'Facebookユーザー名',
+        'tw_username' => 'Twitterユーザー名',
+        'ig_username' => 'Instagramユーザー名',
+        'user_intro' => '自己紹介',
+        'user_url' => 'ホームページ',
+        'time appoint' => '現在時刻',
+        'today' => '今日'
 
     ],
 

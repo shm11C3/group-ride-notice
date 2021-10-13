@@ -115,6 +115,8 @@ class AuthController extends Controller
             DB::rollback();
             abort(500);
         }
+
+        $this->user->recordIp($user_uuid, $request->ip(), true);
         
         $credentials = $request->only('email','password');
         $remember = $request['remember'];
@@ -134,6 +136,7 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
+        $ip = $request->ip();
         $credentials = $request->only('email','password');
         $remember = $request['remember'];
         $user =  User::where('email', '=', $credentials['email'])->first();
@@ -143,6 +146,7 @@ class AuthController extends Controller
         }
 
         if($this->user->isAccountLocked($user)){
+            $this->user->recordIp($user->uuid, $ip, false);
             return back()->withInput()->withErrors([ 'account_lock' => 'アカウントはロックされています']);
         }
 
@@ -152,6 +156,7 @@ class AuthController extends Controller
                 $this->user->unlockAccount($user);
             }
 
+            $this->user->recordIp($user->uuid, $ip, true);
             $request->session()->regenerate();
 
             return redirect()->route('showLogin');
@@ -166,10 +171,11 @@ class AuthController extends Controller
             //ロック回数 未到達時
             if($error_count < 3){
 
+                $this->user->recordIp($user->uuid, $ip, false);
                 $user->save();
                 return back()->withErrors(['isInvalidPassword' => 'パスワードが違います'])->withInput();
             }else{
-
+                $this->user->recordIp($user->uuid, $ip, false);
                 $countDown = $error_countLimit - $error_count;
                 $user->save();
     
@@ -185,6 +191,7 @@ class AuthController extends Controller
 
         //ユーザーロック処理
         $this->user->lockAccount($user);
+        $this->user->recordIp($user->uuid, $ip, false);
 
         $lockTime = $this->user->lockTime($user->locked_flg);
         $lockTime_min_sec =  $this->user->secToTime($lockTime);
@@ -207,6 +214,8 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $this->user->recordIp(Auth::user()->uuid, $request->ip(), true);
+
         Auth::logout();
 
         $request->session()->invalidate();
@@ -225,7 +234,11 @@ class AuthController extends Controller
      */
     public function updatePassword(UpdatePasswordRequest $request)
     {
-        $user = User::where('uuid', Auth::user()->uuid)->first();
+        $user_uuid = Auth::user()->uuid;
+
+        $this->user->recordIp($user_uuid, $request->ip(), true);
+
+        $user = User::where('uuid', $user_uuid)->first();
         Auth::logoutOtherDevices($request['current_password']);
 
         $user->password = Hash::make($request['new_password']);

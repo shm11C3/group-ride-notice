@@ -30,8 +30,8 @@
     </div>
     <div v-if="!updateForm">
         <div v-if="ride.length">
-            <div class="row">
-                <div class="col mt-5 mb-5">
+            <div class="row m-2">
+                <div class="sm-col mt-5 mb-5">
                     <h4>ライド概要 <button class="hidden-btn" v-on:click="openUpdate"><i class="fas fa-edit edit-btn"></i></button></h4>
                     <div class="course-profile">
                         <div v-if="ride[0].num_of_laps > 0">
@@ -113,7 +113,7 @@
                         <br>
                         @{{ intensityComment[intensityInfo] }}
                 </div>
-                <div class="col mt-5 mb-5">
+                <div class="sm-col mt-5 mb-5">
                     <h4>参加者リスト</h4>
                     <table class="table table-striped mt-2">
                         <thead class="thead-dark">

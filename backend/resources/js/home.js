@@ -10,6 +10,7 @@ new Vue({
     data: {
         //データ
         rides: [],
+        next_ride: '',
 
         participateIndex: '',
         participateComment: '',
@@ -32,8 +33,8 @@ new Vue({
 
         //状態
         isLoad: false,
+        next_isLoad: true,
         participateModal: false,
-
         pt_isPush: false,
 
 
@@ -43,6 +44,9 @@ new Vue({
         observer: null,
 
         resIsExist: false,
+        resNextIsExist: false,
+
+        authUser: '',
     },
 
     mounted() {
@@ -60,21 +64,17 @@ new Vue({
         this.observer.observe(observe_element);
     },
 
-    computed :{
-        
-    },
-
-    watch :{
-
-    },
-
     methods :{
         /**
-         * 
+         * ライド取得の呼び出し
          */
         initialLoad: function(){
             this.rides = [];
             this.page = 1;
+            this.getRides();
+        },
+        addLoad: function (){
+            this.page++;
             this.getRides();
         },
         
@@ -83,7 +83,6 @@ new Vue({
          */
         getRides: function(){
             this.isLoad = true;
-            const self = this;
 
             let url = `/api/get/rides/${this.time_appoint}/${this.prefecture_code}/${this.intensity}?page=${this.page}`;
 
@@ -94,17 +93,43 @@ new Vue({
                 this.isLoad = false;
 
             }).then(res =>{
-                let data = res.data.data;
+                const data = res.data.rides.data;
+                const auth = Boolean(res.data.user_uuid);
                 
                 data.forEach(element => this.rides.push(element));
                 this.isLoad = false;
                 
-                if(data.length<30){
-                    this.resIsExist = false;
+                this.resIsExist = Boolean(res.data.next_page_url);
 
-                }else{
-                    this.resIsExist = true;
+                if(auth && !this.resNextIsExist){
+                    this.getNextRide();
                 }
+            });
+        },
+
+        /**
+         * 次回参加ライドを取得
+         */
+         getNextRide: function(){
+            this.next_isLoad = true;
+            const self = this;
+
+            let url = `/api/get/my-rides/0?page=1`;
+
+            axios.get(url)
+            .catch(error =>{
+                console.log(error);
+                this.httpErrors.push(error);
+                this.isLoad = false;
+
+            }).then(res =>{
+                let data = res.data.rides.data;
+
+                this.next_isLoad = false;
+                this.resNextIsExist = Boolean(data.length);
+                
+                this.authUser = res.data.user_uuid;
+                this.next_ride = data[0];
             });
         },
 
@@ -121,11 +146,6 @@ new Vue({
         input_intensity: function(val){
             this.intensity = val.target.value;
             this.initialLoad();
-        },
-
-        addLoad: function (){
-            this.page++;
-            this.getRides();
         },
     
         openParticipateModal: function(index){

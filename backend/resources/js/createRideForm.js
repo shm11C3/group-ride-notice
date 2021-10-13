@@ -517,8 +517,8 @@ new Vue({
               
             }).then(res => {
 
-              if(res.status){
-                location.href = '/'; //[todo]ライド情報ページを作ったらそこに飛ばす
+              if(res.data.status){
+                location.href = `../ride?uuid=${res.data.ride_uuid}`;
               }
             });
         },

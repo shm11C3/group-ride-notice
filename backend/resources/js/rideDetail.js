@@ -170,14 +170,19 @@ new Vue({
         mp_showInfo: function(){
             this.mp_infoStatus = !this.mp_infoStatus;
 
-            if(!this.weathers.length){
-                this.getWether();
-            }
+            //if(!this.weathers.length){
+            //    this.getWether();
+            //}
         },
         rr_showInfo: function(){
             this.rr_infoStatus = !this.rr_infoStatus;
         },
 
+        /**
+         * 天気情報の取得
+         * 
+         * [todo] サーバー側でAPIを叩いて取得する
+         */
         getWether: function(){
             const url = `https://www.jma.go.jp/bosai/forecast/data/forecast/${this.ride.prefecture_code}0000.json`;
 

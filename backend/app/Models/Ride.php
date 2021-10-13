@@ -17,6 +17,8 @@ class Ride extends Model
         'hadByLoginUser',
     ];
 
+    public $paginate = [1, 30];
+
     public function rideParticipants()
     {
       return $this->hasMany(RideParticipant::class, 'ride_uuid', 'uuid');

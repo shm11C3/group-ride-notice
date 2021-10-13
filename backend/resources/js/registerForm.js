@@ -14,12 +14,13 @@ new Vue({
         confirmClass: 'form-control',
         error: '',
         passwordError: '',
+        privacy: false,
     },
 
     computed: {
 
         isValidForm: function() {
-            if(this.isValidName && this.isValidEmail && this.isValidPassword && this.confirmPassword) {
+            if(this.isValidName && this.isValidEmail && this.isValidPassword && this.confirmPassword && this.privacy) {
                 return true;
             }
         },
@@ -55,7 +56,7 @@ new Vue({
             if(password.length == 0){
                 return 3;
 
-            }else if(password.length < 6 || password.length > 64){
+            }else if(password.length < 8 || password.length > 64){
                 return false;
 
             }else{

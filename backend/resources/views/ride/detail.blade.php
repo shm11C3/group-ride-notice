@@ -38,19 +38,19 @@
                         @{{ ride.ride_name }}
                     </p>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <p>
                                 <span class="text-muted additional-txt">コース</span><br>
                                 @{{ ride.rr_name }} @{{ ride.num_of_laps }}周
                             </p>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <p>
                                 <span class="text-muted additional-txt">走行距離</span><br>
                                 @{{ ride.num_of_laps*ride.distance }}km
                             </p>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <p>
                                 <span class="text-muted additional-txt">獲得標高</span><br>
                                 @{{ ride.num_of_laps*ride.elevation }}m
@@ -65,19 +65,19 @@
                         @{{ ride.ride_name }}
                     </p>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <p>
                                 <span class="text-muted additional-txt">ルート</span><br>
                                 @{{ ride.rr_name }}
                             </p>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <p>
                                 <span class="text-muted additional-txt">走行距離</span><br>
                                 @{{ ride.distance }}km
                             </p>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <p>
                                 <span class="text-muted additional-txt">獲得標高</span><br>
                                 @{{ ride.elevation }}m
@@ -291,10 +291,10 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="ride.hadByLoginUser" class="text-right mr-3">
+                <div v-if="ride.hadByLoginUser" class="text-right mr-lg-3">
                     <a class="btn btn-success mb-1 mt-1 text-right" v-bind:href="'/my-ride?uuid=' + ride.uuid">ライド管理</a>
                 </div>
-                <div v-else class="text-right mr-3">
+                <div v-else class="text-right mr-lg-3">
                     <div v-if="ride.rideParticipant_user">
                         <button class="btn btn-success mb-1 mt-1 text-right" data-toggle="modal" data-target="#cancelParticipateModal">参加をキャンセル</button>
                     </div>

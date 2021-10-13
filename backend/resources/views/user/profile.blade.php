@@ -11,11 +11,13 @@
                     {{ $prefecture }}
                 </p>
             </div>
+            @auth
             @if(Auth::user()->uuid === $user->uuid)
             <div class="btn-group ml-auto mb-5">
                 <a type="button" class="btn btn-outline-secondary" href="{{ route('showConfig') }}">プロフィールを編集</a>
             </div>
             @endif
+            @endauth
         </div>
         <div class="user-intro border-top">
             <span class="text-muted additional-txt">自己紹介</span><br>

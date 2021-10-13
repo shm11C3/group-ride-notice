@@ -182,7 +182,12 @@ class RideController extends Controller
             ])
             ->simplePaginate(30);
 
-        return response()->json($rides);
+        $data = [
+            'rides' => $rides,
+            'user_uuid' => $user_uuid
+        ];
+
+        return response()->json($data);
     }
 
     /**

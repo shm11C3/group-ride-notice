@@ -35,7 +35,6 @@ new Vue({
         isLoad: false,
         next_isLoad: false,
         participateModal: false,
-
         pt_isPush: false,
 
 
@@ -45,12 +44,11 @@ new Vue({
         observer: null,
 
         resIsExist: false,
-        resNextIsExist: false,
+        resNextIsExist: true,
     },
 
     mounted() {
         this.initialLoad();
-        this.getNextRide();
 
         this.observer = new IntersectionObserver((entries) => {
             const entry = entries[0];
@@ -64,21 +62,17 @@ new Vue({
         this.observer.observe(observe_element);
     },
 
-    computed :{
-        
-    },
-
-    watch :{
-
-    },
-
     methods :{
         /**
-         * 
+         * ライド取得の呼び出し
          */
         initialLoad: function(){
             this.rides = [];
             this.page = 1;
+            this.getRides();
+        },
+        addLoad: function (){
+            this.page++;
             this.getRides();
         },
         
@@ -87,7 +81,6 @@ new Vue({
          */
         getRides: function(){
             this.isLoad = true;
-            const self = this;
 
             let url = `/api/get/rides/${this.time_appoint}/${this.prefecture_code}/${this.intensity}?page=${this.page}`;
 
@@ -98,17 +91,22 @@ new Vue({
                 this.isLoad = false;
 
             }).then(res =>{
-                let data = res.data.data;
+                const data = res.data.rides.data;
+                const auth = Boolean(res.data.user_uuid);
                 
                 data.forEach(element => this.rides.push(element));
                 this.isLoad = false;
                 
                 this.resIsExist = Boolean(res.data.next_page_url);
+
+                if(auth){
+                    this.getNextRide();
+                }
             });
         },
 
         /**
-         * ライドの取得
+         * 次回参加ライドを取得
          */
          getNextRide: function(){
             this.next_isLoad = true;
@@ -146,11 +144,6 @@ new Vue({
         input_intensity: function(val){
             this.intensity = val.target.value;
             this.initialLoad();
-        },
-
-        addLoad: function (){
-            this.page++;
-            this.getRides();
         },
     
         openParticipateModal: function(index){

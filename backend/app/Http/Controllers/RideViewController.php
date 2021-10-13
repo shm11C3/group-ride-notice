@@ -42,4 +42,12 @@ class RideViewController extends Controller
 
         return view('ride.detail', ['ride' => $ride[0]]);
     }
+
+    /**
+     * 参加ライド一覧画面を表示
+     */
+    public function showMyRides()
+    {
+        return view('ride.participated');
+    }
 }

@@ -30,16 +30,16 @@
     </div>
     <div v-if="profile">
         <div class="row">
-            <div class="col-2">
+            <div class="col-lg-4 col-xl-2">
                 <div class="list-group">
                     <button v-on:click="changePage(0)" v-bind:class="'list-group-item list-group-item-action '+listBtnStatus[0]">プロフィール</button>
                     <button v-on:click="changePage(1)" v-bind:class="'list-group-item list-group-item-action '+listBtnStatus[1]">登録情報</button>
                   </div>
             </div>
-            <div class="col-10" v-if="pageStatus==0">
+            <div class="col-lg-8 col-xl-10" v-if="pageStatus==0">
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">名前 <button class="hidden-btn" v-on:click="name_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
-                    <div class="col-8">
+                    <span class="col-lg-4 text-lg-right profile-label">名前 <button class="hidden-btn" v-on:click="name_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
+                    <div class="col-lg-8">
                         <div v-if="name_formStatus">
                             <input class="form-control" v-model="profile.name">
                         </div>
@@ -50,8 +50,8 @@
                 </div>
 
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">都道府県 <button class="hidden-btn" v-on:click="prefecture_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
-                    <div class="col-8">
+                    <span class="col-lg-4 text-lg-right profile-label">都道府県 <button class="hidden-btn" v-on:click="prefecture_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
+                    <div class="col-lg-8">
                         <div v-if="prefecture_formStatus">
                             <select class="form-control" v-model="profile.prefecture_code">
                                 <option v-for="(prefectureElement, index) in prefecture" v-bind:value="index+1">
@@ -65,8 +65,8 @@
                     </div>                
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">ホームページ <button class="hidden-btn" v-on:click="url_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
-                    <div class="col-8">
+                    <span class="col-lg-4 text-lg-right profile-label">ホームページ <button class="hidden-btn" v-on:click="url_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
+                    <div class="col-lg-8">
                         <div v-if="url_formStatus">
                             <input class="form-control" v-model="profile.user_url">
                         </div>
@@ -76,10 +76,18 @@
                     </div>                
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">Facebookユーザ名 <button class="hidden-btn" v-on:click="fb_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
-                    <div class="col-8">
+                    <span class="col-lg-4 text-lg-right profile-label">Facebookユーザ名 <button class="hidden-btn" v-on:click="fb_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
+                    <div class="col-lg-8">
                         <div v-if="fb_username_formStatus">
-                            <input class="form-control" v-model="profile.fb_username">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">https://Facebook.com/</div>
+                                    </div>
+                                    <input class="form-control" v-model="profile.fb_username">
+                                </div>
+                            </div>
                         </div>
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.fb_username }}</span>
@@ -88,10 +96,18 @@
                 </div>
 
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">Twitterユーザ名 <button class="hidden-btn" v-on:click="tw_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
-                    <div class="col-8">
+                    <span class="col-lg-4 text-lg-right profile-label">Twitterユーザ名 <button class="hidden-btn" v-on:click="tw_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
+                    <div class="col-lg-8">
                         <div v-if="tw_username_formStatus">
-                            <input class="form-control" v-model="profile.tw_username">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">@</div>
+                                    </div>
+                                    <input class="form-control" v-model="profile.tw_username">
+                                </div>
+                            </div>
                         </div>
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.tw_username }}</span>
@@ -100,10 +116,18 @@
                 </div>
 
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">Instagramユーザ名 <button class="hidden-btn" v-on:click="ig_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
-                    <div class="col-8">
+                    <span class="col-lg-4 text-lg-right profile-label">Instagramユーザ名 <button class="hidden-btn" v-on:click="ig_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
+                    <div class="col-lg-8">
                         <div v-if="ig_username_formStatus">
-                            <input class="form-control" v-model="profile.ig_username">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">https://www.instagram.com/</div>
+                                    </div>
+                                    <input class="form-control" v-model="profile.ig_username">
+                                </div>
+                            </div>
                         </div>
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.ig_username }}</span>
@@ -111,8 +135,8 @@
                     </div>                
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">自己紹介 <button class="hidden-btn" v-on:click="user_intro_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
-                    <div class="col-8">
+                    <span class="col-lg-4 text-lg-right profile-label">自己紹介 <button class="hidden-btn" v-on:click="user_intro_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
+                    <div class="col-lg-8">
                         <div v-if="user_intro_formStatus">
                             <textarea class="form-control" v-model="profile.user_intro" rows="3"></textarea>
                         </div>
@@ -135,20 +159,20 @@
             </div>
             <div class="col-8" v-if="pageStatus==1">
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">登録日</span>
-                    <span class="col-8 font-weight-bold">@{{ created_at[0] }} @{{ created_at[1] }}</span>
+                    <span class="col-lg-4 text-lg-right profile-label">登録日</span>
+                    <span class="col-lg-8 font-weight-bold">@{{ created_at[0] }} @{{ created_at[1] }}</span>
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">メールアドレス</span>
-                    <span class="col-8 font-weight-bold">@{{ profile.email }}</span>
+                    <span class="col-lg-4 text-lg-right profile-label">メールアドレス</span>
+                    <span class="col-lg-8 font-weight-bold">@{{ profile.email }}</span>
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">パスワードを変更</span>
-                    <span class="col-8"><a href="{{ route('showUpdatePassword') }}" class="btn btn-primary text-white">変更する</a></span>
+                    <span class="col-lg-4 text-lg-right profile-label">パスワードを変更</span>
+                    <span class="col-lg-8"><a href="{{ route('showUpdatePassword') }}" class="btn btn-primary text-white">変更する</a></span>
                 </div>
                 <div class="row p-3 border-bottom">
-                    <span class="col-4 text-right profile-label">アカウントを削除</span>
-                    <span class="col-8"><a href="{{ route('showDeleteUser') }}" class="btn btn-danger text-white">削除する</a></span>
+                    <span class="col-lg-4 text-lg-right profile-label">アカウントを削除</span>
+                    <span class="col-lg-8"><a href="{{ route('showDeleteUser') }}" class="btn btn-danger text-white">削除する</a></span>
                 </div>
                 <div class="logout-btn text-right mt-2 mr-5 mb-5 ml-auto">
                     <form action="{{ route('logout') }}" method="POST">

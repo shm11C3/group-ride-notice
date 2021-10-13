@@ -25,9 +25,9 @@ class UpdateUserProfileRequest extends FormRequest
     {
         return [
             'user_intro' => 'nullable|string|max:128',
-            'user_url' => 'nullable|url|max: 128',
-            'fb_username' => 'nullable|string|max: 64',
-            'tw_username' => 'nullable|string|max: 14',
+            'user_url' => 'nullable|url|max: 128|active_url',
+            'fb_username' => 'nullable|string|max: 64|regex: /^[a-z\d.]{5,}$/i',
+            'tw_username' => 'nullable|alpha_dash|max: 14',
             'ig_username' => 'nullable|string|max: 30',
             'name' => 'required|string|max:32',
             'prefecture_code' => 'required|numeric|between:1,47'

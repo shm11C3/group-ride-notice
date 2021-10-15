@@ -240,7 +240,12 @@ class RideController extends Controller
      */
     public function getRideBy_rides_uuid(string $uuid)
     {
+        $user_uuid = Auth::user()->uuid ?? 0;
+
         $ride = Ride::with('rideParticipants.user')
+        ->where('rides.uuid', $uuid)
+        ->where('rides.publish_status', '<', 2)
+        ->orWhere('host_user_uuid', $user_uuid)
         ->where('rides.uuid', $uuid)
         ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
         ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')

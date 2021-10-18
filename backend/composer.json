@@ -10,7 +10,7 @@
         "doctrine/dbal": "^2.0",
         "encore/laravel-admin": "^1.8",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.3",
         "laravel-admin-ext/log-viewer": "^1.0",
         "laravel/framework": "^8.54",
         "laravel/sanctum": "^2.11",

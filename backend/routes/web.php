@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
+use App\Http\Controllers\SearchViewController;
 use App\Http\Controllers\UserViewController;
 use App\Models\Ride;
 
@@ -33,6 +34,8 @@ Route::get('/', [RideViewController::class, 'showHome'])->name('showHome');
 Route::get('/ride', [RideViewController::class, 'showRide'])->name('showRide');
 
 Route::get('/user/{user_uuid}', [UserViewController::class, 'showUser'])->whereUuid('user_uuid')->name('showUser');
+
+Route::get('/search', [SearchViewController::class, 'showSearch'])->name('showSearch');
 
 
 //GET API

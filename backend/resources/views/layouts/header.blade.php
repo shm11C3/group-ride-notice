@@ -22,10 +22,10 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              ライドを探す
+              検索
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="bottom" title="この機能は近日実装予定です！">ライド検索</a>
+              <a class="dropdown-item" href="{{ route('showSearch') }}">検索する</a>
             </div>
           </li>
           @if(url()->current() === 'http://www.localhost/create-ride')

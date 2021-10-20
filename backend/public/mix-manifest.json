@@ -1,6 +1,7 @@
 {
     "/js/popper.js": "/js/popper.js",
     "/js/app.js": "/js/app.js",
+    "/js/submit.js": "/js/submit.js",
     "/js/home.js": "/js/home.js",
     "/js/loginForm.js": "/js/loginForm.js",
     "/js/registerForm.js": "/js/registerForm.js",
@@ -10,5 +11,6 @@
     "/js/userConfig.js": "/js/userConfig.js",
     "/js/deleteUser.js": "/js/deleteUser.js",
     "/js/participated.js": "/js/participated.js",
+    "/js/search.js": "/js/search.js",
     "/css/app.css": "/css/app.css"
 }

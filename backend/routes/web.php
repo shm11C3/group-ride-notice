@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Ride\MeetingPlaceController;
 use App\Http\Controllers\Api\Ride\RideRouteController;
 use App\Http\Controllers\Api\Ride\RideController;
 use App\Http\Controllers\Api\Ride\WeatherController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
@@ -42,6 +43,8 @@ Route::get('api/get/ride/{ride_uuid}', [RideController::class, 'getRideBy_rides_
 Route::get('api/get/profile/{user_uuid}', [UserProfileController::class, 'getUserProfile'])->whereUuid('user_uuid')->name('getUserProfile');
 
 Route::get('api/get/weather/{prefecture_code}', [WeatherController::class, 'getWeather'])->whereNumber('prefecture_code')->name('getWeather');
+
+Route::get('api/search/{request}', [SearchController::class, 'search'])->name('search');
 
 //非ログイン時
 Route::group(['middleware' => ['guest']], function () {

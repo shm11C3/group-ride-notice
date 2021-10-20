@@ -14,6 +14,7 @@ const mix = require('laravel-mix');
 mix.sourceMaps().js('node_modules/popper.js/dist/popper.js', 'public/js').sourceMaps();
 
 mix.js('resources/js/app.js', 'public/js')
+  .js('resources/js/submit.js', 'public/js')
   .sass('resources/sass/app.scss', 'public/css', {
       sassOptions: {
         includePaths: [
@@ -33,3 +34,5 @@ mix.js('resources/js/rideDetail.js', 'public/js/rideDetail.js').vue();
 mix.js('resources/js/userConfig.js', 'public/js/userConfig.js').vue();
 mix.js('resources/js/deleteUser.js', 'public/js/deleteUser.js').vue();
 mix.js('resources/js/participated.js', 'public/js/participated.js').vue();
+
+

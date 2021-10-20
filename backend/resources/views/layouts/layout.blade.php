@@ -24,6 +24,6 @@
 </footer>
 <script src="{{ mix('js/app.js') }}"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<script src="{{ asset('js/submit.js') }}"></script>
+<script src="{{ mix('js/submit.js') }}"></script>
 </body>
 </html>

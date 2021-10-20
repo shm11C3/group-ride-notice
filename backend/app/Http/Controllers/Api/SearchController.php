@@ -28,7 +28,7 @@ class SearchController extends Controller
         $searchWordArr = $this->search->spaceSubstitute($request); //検索キーワード配列
 
 
-        $query_rides = Ride::query()
+        $query_rides = Ride::with('rideParticipants.user')
             ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
             ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
             ->join('users', 'host_user_uuid', 'users.uuid');
@@ -46,6 +46,7 @@ class SearchController extends Controller
             $query_users->orWhere('tw_username', 'LIKE', $searchWord);
             $query_users->orWhere('ig_username', 'LIKE', $searchWord);
 
+            $query_rides->where('rides.publish_status', 0);
             $query_rides->where('rides.name', 'LIKE', $searchWord);
             $query_rides->orWhere('rides.comment', 'LIKE', $searchWord);
             $query_rides->orWhere('meeting_places.name', 'LIKE', $searchWord);

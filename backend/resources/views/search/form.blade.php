@@ -52,10 +52,10 @@
                             </div>
                             <div v-else>
                                 <div v-if="ride.rideParticipant_user">
-                                    <button class="btn btn-success mb-1 mt-1" v-on:click="openCancelParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加をキャンセル</button>
+                                    <a class="btn btn-success mb-1 mt-1" v-bind:href="'/ride?uuid=' + ride.uuid">参加登録済み</a>
                                 </div>
                                 <div v-else>
-                                    <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加する</button>
+                                    <a class="btn btn-secondary mb-1 mt-1" v-bind:href="'/ride?uuid=' + ride.uuid">参加未登録</a>
                                 </div>
                             </div>
                             @endauth

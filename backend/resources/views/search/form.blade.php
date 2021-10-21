@@ -151,7 +151,7 @@
                         <div class="username-title">
                             <p>
                                 <span class="font-weight-bold">@{{ user.name }}</span><br>
-                                @{{ prefecture[user.prefecture_code] }}
+                                @{{ prefecture[user.prefecture_code-1] }}
                             </p>
                         </div>
                     </div>

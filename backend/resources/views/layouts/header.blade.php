@@ -6,39 +6,19 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
-          @if(url()->current() === 'http://www.localhost')
-          <li class="nav-item active">
-          @else
-          <li class="nav-item">
-          @endif
+          <li  @if(request()->path() === '/') class="nav-item active" @else class="nav-item" @endif>
             <a class="nav-link" href="{{ route('showHome') }}">ホーム<span class="sr-only">(current)</span></a>
           </li>
-          @if(url()->current() === 'http://www.localhost/my-rides')
-          <li class="nav-item active">
-          @else
-          <li class="nav-item">
-          @endif
+          <li @if(request()->path() === 'my-rides') class="nav-item active" @else class="nav-item" @endif>
             <a class="nav-link" href="{{ route('showMyRides') }}">参加予定のライド<span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              検索
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{ route('showSearch') }}">検索する</a>
-            </div>
+          <li @if(request()->path() === 'search') class="nav-item active" @else class="nav-item" @endif>
+            <a class="nav-link" href="{{ route('showSearch') }}">検索する<span class="sr-only">(current)</span></a>
           </li>
-          @if(url()->current() === 'http://www.localhost/create-ride')
-          <li class="nav-item dropdown active">
+          <li @if(request()->path() === 'create-ride') class="nav-item dropdown active" @else  class="nav-item dropdown" @endif>
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               ライド管理
             </a>
-          @else
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              ライド管理
-            </a>
-          @endif
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{{ route('createRideForm') }}">ライドを作成</a>
               <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="bottom" title="この機能は近日実装予定です！">コースを登録</a>
@@ -46,13 +26,8 @@
             </div>
           </li>
           @auth
-          @if(url()->current() === 'http://www.localhost/dashboard')
-          <li class="nav-item dropdown active">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">マイプロフィール<span class="sr-only">(current)</span></a>
-          @else
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">マイプロフィール<span class="sr-only">(current)</span></a>
-          @endif
+          <li @if(request()->path() === 'user/'.Auth::user()->uuid || request()->path() === 'user/config' || request()->path() === 'dashboard') class="nav-item dropdown active" @else class="nav-item dropdown" @endif>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">マイプロフィール<span class="sr-only">(current)</span></a>          
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" class="nav-link" href="{{ route('showUser', Auth::user()->uuid) }}">マイプロフィール</a>
               <a class="dropdown-item" href="{{ route('showConfig') }}">設定</a>

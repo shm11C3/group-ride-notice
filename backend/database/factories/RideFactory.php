@@ -31,7 +31,7 @@ class RideFactory extends Factory
             'meeting_places_uuid' => $seeder->meeting_place_uuid,
             'ride_routes_uuid' => $seeder->ride_route_uuid,
             'name' => $this->faker->word(),
-            'time_appoint' => $this->faker->dateTimeThisMonth(),
+            'time_appoint' => $this->faker->dateTimeBetween('-1 months', '+3 months')->format('Y-m-d H:i:s'),
             'intensity' => $this->faker->numberBetween(0, 10),
             'num_of_laps' => $this->faker->numberBetween(0, 30),
             'comment' => $this->faker->sentence(),

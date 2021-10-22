@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
     public $numberOfRides = 1000;
 
-    public $numberOfRideParticipants = 300;
+    public $numberOfRideParticipants = 3000;
 
     /**
      * Seed the application's database.

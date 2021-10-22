@@ -77,7 +77,7 @@ new Vue({
             this.page++;
             this.getRides();
         },
-        
+
         /**
          * ライドの取得
          */
@@ -95,11 +95,11 @@ new Vue({
             }).then(res =>{
                 const data = res.data.rides.data;
                 const auth = Boolean(res.data.user_uuid);
-                
+
                 data.forEach(element => this.rides.push(element));
                 this.isLoad = false;
-                
-                this.resIsExist = Boolean(res.data.next_page_url);
+
+                this.resIsExist = Boolean(res.data.rides.next_page_url);
 
                 if(auth && !this.resNextIsExist){
                     this.getNextRide();
@@ -127,7 +127,7 @@ new Vue({
 
                 this.next_isLoad = false;
                 this.resNextIsExist = Boolean(data.length);
-                
+
                 this.authUser = res.data.user_uuid;
                 this.next_ride = data[0];
             });
@@ -147,7 +147,7 @@ new Vue({
             this.intensity = val.target.value;
             this.initialLoad();
         },
-    
+
         openParticipateModal: function(index){
             this.participateComment = 'よろしくお願いします。';
             this.participateIndex = index;
@@ -196,7 +196,7 @@ new Vue({
                 console.log(error);
 
                 this.httpErrors.push(error);
-                
+
                 this.pt_isPush = false;
 
             }).then(res => {
@@ -204,7 +204,7 @@ new Vue({
                 this.rides[this.participateIndex].rideParticipant_user = true;
                 this.rides[this.participateIndex].rideParticipant_count++;
 
-                this.closeParticipateModal();    
+                this.closeParticipateModal();
                 this.pt_isPush = false;
             });
         },
@@ -228,7 +228,7 @@ new Vue({
                 console.log(error);
 
                 this.httpErrors.push(error);
-                
+
                 this.pt_isPush = false;
 
             }).then(res => {

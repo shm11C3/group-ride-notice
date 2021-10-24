@@ -19,7 +19,7 @@ class MeetingPlaceController extends Controller
 
     /**
      * 集合場所を作成
-     * 
+     *
      * @param App\Http\Requests\CreateMeetingPlaceRequest
      * @return bool
      */
@@ -67,7 +67,7 @@ class MeetingPlaceController extends Controller
 
     /**
      * 保存した集合場所を取得
-     * 
+     *
      * @param void
      * @return object $data
      */
@@ -87,6 +87,35 @@ class MeetingPlaceController extends Controller
         ]);
 
         $data = ['data'=>$dbData, 'key'=>'saved_meeting_places'];
+
+        return response()->json($data);
+    }
+
+    /**
+     * 公開されているすべての集合場所を取得
+     *
+     * @param int $prefecture_code
+     * @return response
+     */
+    public function getAllMeetingPlaces($prefecture_code)
+    {
+        $user = Auth::user();
+        $user_uuid = $user->uuid ?? 0;
+
+        $operator = $this->ride->getOperatorByPrefectureCode($prefecture_code);
+
+        $meeting_places = DB::table('meeting_places')
+            ->where('prefecture_code', $operator, $prefecture_code)
+            ->where('publish_status', 0)
+            ->orWhere('meeting_places.user_uuid', $user_uuid)
+            ->get(
+                '*'
+            );
+
+        $data = [
+            'auth_uuid' => $user_uuid,
+            'meeting_places' => $meeting_places
+        ];
 
         return response()->json($data);
     }

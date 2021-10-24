@@ -26,7 +26,7 @@ class Ride extends Model
 
     /**
      * ridesと紐付いたrideParticipantの総数を取得
-     * 
+     *
      * @return int
      */
     public function getRideParticipantCountAttribute()
@@ -36,7 +36,7 @@ class Ride extends Model
 
     /**
      * ログインユーザーがride_participantsに存在するかチェック
-     * 
+     *
      * @param void
      * @return bool
      */
@@ -50,7 +50,7 @@ class Ride extends Model
 
     /**
      * ride_routes_uuidとuser_uuidが一致した場合trueを返す
-     * 
+     *
      * @param void
      * @return bool
      */
@@ -62,7 +62,7 @@ class Ride extends Model
 
     /**
      * $user_idとログインユーザの一致チェック
-     * 
+     *
      * @param string $user_id
      * @return bool
      */
@@ -78,11 +78,11 @@ class Ride extends Model
 
     /**
      * 都道府県コードからSQLの演算子を返す
-     * 
+     *
      * @param int $code
      * @return string
      */
-    public function getOpeByCode($code)
+    public function getOperatorByPrefectureCode($code)
     {
         if($code<1 || $code>47){
             return '!=';
@@ -92,7 +92,7 @@ class Ride extends Model
 
     /**
      * 引数からsqlに用いる時間の最小値と最大値の配列を返す
-     * 
+     *
      * @param int $time_appoint
      * @return array $result
      */
@@ -137,7 +137,7 @@ class Ride extends Model
 
     /**
      * 引数からsqlに用いる強度の最小値と最大値の配列を返す
-     * 
+     *
      * @param int $intstRange
      * @return array $result
      */

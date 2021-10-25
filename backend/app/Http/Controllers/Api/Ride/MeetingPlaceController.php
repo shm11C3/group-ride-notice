@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateMeetingPlaceRequest;
+use App\Http\Requests\RegisterMeetingPlaceRequest;
 use Illuminate\Support\Str;
 use App\Models\Ride;
 
@@ -41,14 +42,8 @@ class MeetingPlaceController extends Controller
             ]);
 
             if($request['save_status']){
-
                 //保存するを選択した場合
-                DB::table('saved_meeting_places')
-                ->insert([
-                    'meeting_place_uuid' => $meeting_place_uuid,
-                    'user_uuid' => $user_uuid,
-                    'meeting_place_category_id' => 0,
-                ]);
+                $this->saveMeetingPlace($user_uuid, $meeting_place_uuid);
             }
 
             $data = [
@@ -63,6 +58,39 @@ class MeetingPlaceController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    /**
+     * 集合場所登録
+     *
+     * @param string RegisterMeetingPlaceRequest
+     * @return response
+     */
+    public function registerMeetingPlace(RegisterMeetingPlaceRequest $request)
+    {
+        $register = $this->saveMeetingPlace(Auth::user()->uuid, $request['meeting_place_uuid']);
+
+        $result = ['status' => $register];
+        return response()->json($result);
+    }
+
+    /**
+     * 集合場所登録テーブルに挿入
+     *
+     * @param string $meeting_place_uuid
+     * @param string $user_uuid
+     * @return bool
+     */
+    public function saveMeetingPlace(string $user_uuid, string $meeting_place_uuid)
+    {
+        DB::table('saved_meeting_places')
+        ->insert([
+            'meeting_place_uuid' => $meeting_place_uuid,
+            'user_uuid' => $user_uuid,
+            'meeting_place_category_id' => 0,
+        ]);
+
+        return true;
     }
 
     /**
@@ -108,9 +136,12 @@ class MeetingPlaceController extends Controller
             ->where('prefecture_code', $operator, $prefecture_code)
             ->where('publish_status', 0)
             ->orWhere('meeting_places.user_uuid', $user_uuid)
-            ->get(
+            ->where('prefecture_code', $operator, $prefecture_code)
+            ->orderBy('created_at' ,'desc')
+            ->select(
                 '*'
-            );
+            )
+            ->simplePaginate(60);
 
         $data = [
             'auth_uuid' => $user_uuid,

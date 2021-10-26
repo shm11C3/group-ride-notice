@@ -132,16 +132,38 @@ class MeetingPlaceController extends Controller
 
         $operator = $this->ride->getOperatorByPrefectureCode($prefecture_code);
 
-        $meeting_places = DB::table('meeting_places')
+        $meeting_places_dbData = DB::table('meeting_places')
             ->where('prefecture_code', $operator, $prefecture_code)
             ->where('publish_status', 0)
             ->orWhere('meeting_places.user_uuid', $user_uuid)
             ->where('prefecture_code', $operator, $prefecture_code)
-            ->orderBy('created_at' ,'desc')
+            ->orderBy('id' ,'desc')
             ->select(
                 '*'
             )
             ->simplePaginate(60);
+
+        // (array) 保存済みの集合場所
+        $registeredMeetingPlaces = $this->ride->isRegisteredMeetingPlace($meeting_places_dbData, $user_uuid);
+
+        // すでにsaved_meeting_placesに登録済みかを判定し、オブジェクトを作成
+        foreach($meeting_places_dbData as $i => $meeting_place_dbData){
+
+            $meeting_place_uuid = $meeting_place_dbData->uuid;
+
+            if(array_search($meeting_place_uuid, $registeredMeetingPlaces) !== false){
+                $registered = true; // 登録済みの場合
+
+            }else{
+                $registered = false; // 登録済みの場合
+            }
+
+            //結果からオブジェクトを作成
+            $meeting_places[$i] = (object) [
+                'data' => $meeting_place_dbData,
+                'isRegistered' => $registered
+            ];
+        }
 
         $data = [
             'auth_uuid' => $user_uuid,

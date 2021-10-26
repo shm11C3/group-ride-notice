@@ -165,4 +165,46 @@ class Ride extends Model
 
         return $result;
     }
+
+    /**
+     * 保存済みされている集合場所を配列で返す
+     *
+     * @param object $meeting_places_dbData
+     * @param string $user_uuid
+     *
+     * @return array $registeredMeetingPlaces_arr
+     */
+    public function isRegisteredMeetingPlace(object $meeting_places_dbData, string $user_uuid)
+    {
+        $sql = DB::table('saved_meeting_places');
+
+        foreach($meeting_places_dbData as $meeting_place_dbData){
+            $sql->orWhere('meeting_place_uuid', $meeting_place_dbData->uuid)->where('user_uuid', $user_uuid);
+        }
+
+        $registeredMeetingPlaces = $sql->orderBy('id' ,'desc')
+        ->get('meeting_place_uuid');
+
+        $registeredMeetingPlaces_arr = $this->registeredMeetingPlacesToArray($registeredMeetingPlaces);
+
+        return $registeredMeetingPlaces_arr;
+    }
+
+    /**
+     * registeredMeetingPlacesを配列に変換
+     *
+     * @param $requests
+     * @return $results
+     */
+    public function registeredMeetingPlacesToArray(object $registeredMeetingPlaces)
+    {
+        $requests = $registeredMeetingPlaces;
+        $results = [];
+
+        foreach($requests as $i => $request){
+            $results[$i] = $request->meeting_place_uuid;
+        }
+
+        return $results;
+    }
 }

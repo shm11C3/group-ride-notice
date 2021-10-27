@@ -66,18 +66,31 @@
                 </button>
             </div>
         </div>
+        <div v-if="!saveMeetingPlaceStatus && saveMeetingPlaceStatus.length != 0">
+            <div class="alert alert-info alert-dismissible fade show m-2" role="alert">
+                解除しました！
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
         <div v-for="(mp, i) in meetingPlaces" class="media shadow m-2">
             <div class="media-body m-2">
                 <div class="btn-toolbar">
                     <div class="mp_name">
-                        <h5>@{{ mp.name }}</h5>
+                        <h5>@{{ mp.data.name }}</h5>
                     </div>
                     <div class="text-right ml-auto">
-                        <button v-on:click="saveMeetingPlace(i)" type="button" class="btn btn-success">保存する</button>
+                        <div v-if="mp.isRegistered">
+                            <button v-on:click="saveMeetingPlace(i)" type="button" class="btn btn-secondary">保存解除</button>
+                        </div>
+                        <div v-else>
+                            <button v-on:click="saveMeetingPlace(i)" type="button" class="btn btn-success">保存する</button>
+                        </div>
                     </div>
                 </div>
-                <p>@{{ prefecture[mp.prefecture_code] }}</p>
-                <p style="white-space:pre-wrap; word-wrap:break-word;">@{{ mp.address }}</p>
+                <p>@{{ prefecture[mp.data.prefecture_code] }}</p>
+                <p style="white-space:pre-wrap; word-wrap:break-word;">@{{ mp.data.address }}</p>
             </div>
         </div>
     </div>

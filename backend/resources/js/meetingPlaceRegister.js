@@ -74,7 +74,7 @@ new Vue({
                 const data = res.data;
 
                 this.auth_uuid = data.auth_uuid;
-                this.meetingPlaces = data.meeting_places.data;
+                this.meetingPlaces = data.meeting_places;
 
                 this.resIsExist = Boolean(data.meeting_places.next_page_url)
             });
@@ -90,8 +90,14 @@ new Vue({
             this.initialLoad();
         },
 
+        /**
+         *
+         * @param {*} i
+         */
         saveMeetingPlace: function(i){
-            const meeting_place_uuid = this.meetingPlaces[i].uuid;
+            this.saveMeetingPlaceStatus = '';
+
+            const meeting_place_uuid = this.meetingPlaces[i].data.uuid;
             const url = '../../api/post/registerMeetingPlace';
 
             const data = {
@@ -109,6 +115,7 @@ new Vue({
 
             }).then(res => {
                 this.saveMeetingPlaceStatus = res.data.status;
+                this.meetingPlaces[i].isRegistered = res.data.status;
             });
         }
     }

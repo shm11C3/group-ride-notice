@@ -13,6 +13,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "laravel-admin-ext/log-viewer": "^1.0",
         "laravel/framework": "^8.54",
+        "laravel/passport": "^10.1",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3"

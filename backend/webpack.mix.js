@@ -35,4 +35,4 @@ mix.js('resources/js/userConfig.js', 'public/js/userConfig.js').vue();
 mix.js('resources/js/deleteUser.js', 'public/js/deleteUser.js').vue();
 mix.js('resources/js/participated.js', 'public/js/participated.js').vue();
 mix.js('resources/js/search.js', 'public/js/search.js').vue();
-
+mix.js('resources/js/meetingPlaceRegister.js', 'public/js/meetingPlaceRegister.js').vue();

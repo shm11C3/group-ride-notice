@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateMeetingPlaceRequest;
+use App\Http\Requests\RegisterMeetingPlaceRequest;
 use Illuminate\Support\Str;
 use App\Models\Ride;
 
@@ -19,7 +20,7 @@ class MeetingPlaceController extends Controller
 
     /**
      * 集合場所を作成
-     * 
+     *
      * @param App\Http\Requests\CreateMeetingPlaceRequest
      * @return bool
      */
@@ -41,14 +42,8 @@ class MeetingPlaceController extends Controller
             ]);
 
             if($request['save_status']){
-
                 //保存するを選択した場合
-                DB::table('saved_meeting_places')
-                ->insert([
-                    'meeting_place_uuid' => $meeting_place_uuid,
-                    'user_uuid' => $user_uuid,
-                    'meeting_place_category_id' => 0,
-                ]);
+                $this->saveMeetingPlace($user_uuid, $meeting_place_uuid, true);
             }
 
             $data = [
@@ -66,8 +61,54 @@ class MeetingPlaceController extends Controller
     }
 
     /**
+     * 集合場所登録
+     *
+     * @param string RegisterMeetingPlaceRequest
+     * @return response
+     */
+    public function registerMeetingPlace(RegisterMeetingPlaceRequest $request)
+    {
+        $register = $this->saveMeetingPlace(Auth::user()->uuid, $request['meeting_place_uuid'], false);
+
+        $result = ['status' => $register];
+        return response()->json($result);
+    }
+
+    /**
+     * 集合場所登録テーブルに挿入
+     *
+     * @param string $meeting_place_uuid
+     * @param string $user_uuid
+     * @param bool $notExist              // 未登録が確定している場合 true
+     * @return bool
+     */
+    public function saveMeetingPlace(string $user_uuid, string $meeting_place_uuid, bool $notExist)
+    {
+        if($notExist || !$this->ride->meetingPlaceIsSaved($user_uuid, $meeting_place_uuid)){
+            // 登録
+            DB::table('saved_meeting_places')
+                ->insert([
+                'meeting_place_uuid' => $meeting_place_uuid,
+                'user_uuid' => $user_uuid,
+                'meeting_place_category_id' => 0,
+            ]);
+
+            return true;
+
+        }else{
+            // 解除
+            DB::table('saved_meeting_places')
+                ->where('user_uuid', $user_uuid)
+                ->where('meeting_place_uuid', $meeting_place_uuid)
+                ->delete();
+
+            return false;
+        }
+    }
+
+    /**
      * 保存した集合場所を取得
-     * 
+     *
      * @param void
      * @return object $data
      */
@@ -87,6 +128,60 @@ class MeetingPlaceController extends Controller
         ]);
 
         $data = ['data'=>$dbData, 'key'=>'saved_meeting_places'];
+
+        return response()->json($data);
+    }
+
+    /**
+     * 公開されているすべての集合場所を取得
+     *
+     * @param int $prefecture_code
+     * @return response
+     */
+    public function getAllMeetingPlaces($prefecture_code)
+    {
+        $user = Auth::user();
+        $user_uuid = $user->uuid ?? 0;
+
+        $operator = $this->ride->getOperatorByPrefectureCode($prefecture_code);
+
+        $meeting_places_dbData = DB::table('meeting_places')
+            ->where('prefecture_code', $operator, $prefecture_code)
+            ->where('publish_status', 0)
+            ->orWhere('meeting_places.user_uuid', $user_uuid)
+            ->where('prefecture_code', $operator, $prefecture_code)
+            ->orderBy('id' ,'desc')
+            ->select(
+                '*'
+            )
+            ->simplePaginate(60);
+
+        // (array) 保存済みの集合場所
+        $registeredMeetingPlaces = $this->ride->isRegisteredMeetingPlace($meeting_places_dbData, $user_uuid);
+
+        // すでにsaved_meeting_placesに登録済みかを判定し、オブジェクトを作成
+        foreach($meeting_places_dbData as $i => $meeting_place_dbData){
+
+            $meeting_place_uuid = $meeting_place_dbData->uuid;
+
+            if(array_search($meeting_place_uuid, $registeredMeetingPlaces) !== false){
+                $registered = true; // 登録済みの場合
+
+            }else{
+                $registered = false; // 登録済みの場合
+            }
+
+            //結果からオブジェクトを作成
+            $meeting_places[$i] = (object) [
+                'data' => $meeting_place_dbData,
+                'isRegistered' => $registered
+            ];
+        }
+
+        $data = [
+            'auth_uuid' => $user_uuid,
+            'meeting_places' => $meeting_places
+        ];
 
         return response()->json($data);
     }

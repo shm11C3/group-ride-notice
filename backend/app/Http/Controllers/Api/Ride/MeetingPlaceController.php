@@ -43,7 +43,7 @@ class MeetingPlaceController extends Controller
 
             if($request['save_status']){
                 //保存するを選択した場合
-                $this->saveMeetingPlace($user_uuid, $meeting_place_uuid);
+                $this->saveMeetingPlace($user_uuid, $meeting_place_uuid, true);
             }
 
             $data = [
@@ -68,7 +68,7 @@ class MeetingPlaceController extends Controller
      */
     public function registerMeetingPlace(RegisterMeetingPlaceRequest $request)
     {
-        $register = $this->saveMeetingPlace(Auth::user()->uuid, $request['meeting_place_uuid']);
+        $register = $this->saveMeetingPlace(Auth::user()->uuid, $request['meeting_place_uuid'], false);
 
         $result = ['status' => $register];
         return response()->json($result);
@@ -79,18 +79,31 @@ class MeetingPlaceController extends Controller
      *
      * @param string $meeting_place_uuid
      * @param string $user_uuid
+     * @param bool $notExist              // 未登録が確定している場合 true
      * @return bool
      */
-    public function saveMeetingPlace(string $user_uuid, string $meeting_place_uuid)
+    public function saveMeetingPlace(string $user_uuid, string $meeting_place_uuid, bool $notExist)
     {
-        DB::table('saved_meeting_places')
-        ->insert([
-            'meeting_place_uuid' => $meeting_place_uuid,
-            'user_uuid' => $user_uuid,
-            'meeting_place_category_id' => 0,
-        ]);
+        if($notExist || !$this->ride->meetingPlaceIsSaved($user_uuid, $meeting_place_uuid)){
+            // 登録
+            DB::table('saved_meeting_places')
+                ->insert([
+                'meeting_place_uuid' => $meeting_place_uuid,
+                'user_uuid' => $user_uuid,
+                'meeting_place_category_id' => 0,
+            ]);
 
-        return true;
+            return true;
+
+        }else{
+            // 解除
+            DB::table('saved_meeting_places')
+                ->where('user_uuid', $user_uuid)
+                ->where('meeting_place_uuid', $meeting_place_uuid)
+                ->delete();
+
+            return false;
+        }
     }
 
     /**

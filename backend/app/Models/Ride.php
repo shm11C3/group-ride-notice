@@ -207,4 +207,17 @@ class Ride extends Model
 
         return $results;
     }
+
+    public function meetingPlaceIsSaved(string $user_uuid, string $meeting_place_uuid)
+    {
+        $isExist = DB::table('saved_meeting_places')
+            ->where('user_uuid', $user_uuid)
+            ->where('meeting_place_uuid', $meeting_place_uuid)
+            ->exists();
+
+        if($isExist){
+            return true;
+        }
+        return false;
+    }
 }

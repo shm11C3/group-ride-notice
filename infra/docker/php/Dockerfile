@@ -1,5 +1,4 @@
 FROM php:8.0-fpm-buster
-LABEL maintainer="ucan-lab <yes@u-can.pro>"
 SHELL ["/bin/bash", "-oeux", "pipefail", "-c"]
 
 # timezone environment

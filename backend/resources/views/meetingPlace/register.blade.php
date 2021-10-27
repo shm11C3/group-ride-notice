@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <p>@{{ prefecture[mp.data.prefecture_code] }}</p>
+                <p>@{{ prefecture[mp.data.prefecture_code-1] }}</p>
                 <p style="white-space:pre-wrap; word-wrap:break-word;">@{{ mp.data.address }}</p>
             </div>
         </div>

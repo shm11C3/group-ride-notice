@@ -168,7 +168,7 @@ class MeetingPlaceController extends Controller
                 $registered = true; // 登録済みの場合
 
             }else{
-                $registered = false; // 登録済みの場合
+                $registered = false; // 登録済みでない場合
             }
 
             //結果からオブジェクトを作成

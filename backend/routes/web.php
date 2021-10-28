@@ -51,6 +51,8 @@ Route::get('api/search/{request}', [SearchController::class, 'search'])->name('s
 
 Route::get('api/get/meeting-places/{prefecture_code}', [MeetingPlaceController::class, 'getAllMeetingPlaces'])->whereNumber('prefecture_code')->name('getAllMeetingPlaces');
 
+Route::get('api/get/ride_routes/{lap_status}', [RideRouteCOntroller::class, 'getAllRideRoutes'])->whereNumber('lap_status')->name('getAllRideRoutes');
+
 
 //非ログイン時
 Route::group(['middleware' => ['guest']], function () {

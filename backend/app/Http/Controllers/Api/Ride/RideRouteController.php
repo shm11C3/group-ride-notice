@@ -19,7 +19,7 @@ class RideRouteController extends Controller
 
     /**
      * ライドルートを作成
-     * 
+     *
      * @param App\Http\Requests\CreateRideRouteRequest
      * @return bool
      */
@@ -43,7 +43,7 @@ class RideRouteController extends Controller
             ]);
 
             if($request['save_status']){
-        
+
                 //保存するを選択した場合
                 DB::table('saved_ride_routes')
                 ->insert([
@@ -69,7 +69,7 @@ class RideRouteController extends Controller
 
     /**
      * 保存したルートを取得
-     * 
+     *
      * @param void
      * @return object $data
      */
@@ -90,14 +90,14 @@ class RideRouteController extends Controller
             'comment',
             'publish_status',
         ]);
-        
+
         $data = ['data'=>$dbData, 'key'=>'saved_ride_routes'];
 
         return response()->json($data);
     }
 
     /**
-     * 
+     *
      * @param int $lap_status
      * @return response
      */
@@ -115,6 +115,11 @@ class RideRouteController extends Controller
             ->orderBy('id' ,'desc')
             ->select('*')
             ->simplePaginate(60);
+
+        if(!isset($ride_routes[0])){
+            // クエリ結果が存在しない場合
+            return response()->json();
+        }
 
         // (array) 保存済みのルート
         $registeredRideRoutes = $this->ride->isRegisteredRideRoute($ride_routes, $user_uuid);

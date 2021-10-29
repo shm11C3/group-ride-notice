@@ -156,6 +156,11 @@ class MeetingPlaceController extends Controller
             )
             ->simplePaginate(60);
 
+        if(!isset($meeting_places_dbData[0])){
+            // クエリ結果が存在しない場合
+            return response()->json();
+        }
+
         // (array) 保存済みの集合場所
         $registeredMeetingPlaces = $this->ride->isRegisteredMeetingPlace($meeting_places_dbData, $user_uuid);
 

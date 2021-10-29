@@ -12,6 +12,5 @@
     "/js/deleteUser.js": "/js/deleteUser.js",
     "/js/participated.js": "/js/participated.js",
     "/js/search.js": "/js/search.js",
-    "/js/meetingPlaceRegister.js": "/js/meetingPlaceRegister.js",
-    "/css/app.css": "/css/app.css"
+    "/js/meetingPlaceRegister.js": "/js/meetingPlaceRegister.js"
 }

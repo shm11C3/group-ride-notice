@@ -26,7 +26,7 @@ class Ride extends Model
 
     /**
      * ridesと紐付いたrideParticipantの総数を取得
-     * 
+     *
      * @return int
      */
     public function getRideParticipantCountAttribute()
@@ -36,7 +36,7 @@ class Ride extends Model
 
     /**
      * ログインユーザーがride_participantsに存在するかチェック
-     * 
+     *
      * @param void
      * @return bool
      */
@@ -50,7 +50,7 @@ class Ride extends Model
 
     /**
      * ride_routes_uuidとuser_uuidが一致した場合trueを返す
-     * 
+     *
      * @param void
      * @return bool
      */
@@ -62,7 +62,7 @@ class Ride extends Model
 
     /**
      * $user_idとログインユーザの一致チェック
-     * 
+     *
      * @param string $user_id
      * @return bool
      */
@@ -78,11 +78,11 @@ class Ride extends Model
 
     /**
      * 都道府県コードからSQLの演算子を返す
-     * 
+     *
      * @param int $code
      * @return string
      */
-    public function getOpeByCode($code)
+    public function getOperatorByPrefectureCode($code)
     {
         if($code<1 || $code>47){
             return '!=';
@@ -92,7 +92,7 @@ class Ride extends Model
 
     /**
      * 引数からsqlに用いる時間の最小値と最大値の配列を返す
-     * 
+     *
      * @param int $time_appoint
      * @return array $result
      */
@@ -137,7 +137,7 @@ class Ride extends Model
 
     /**
      * 引数からsqlに用いる強度の最小値と最大値の配列を返す
-     * 
+     *
      * @param int $intstRange
      * @return array $result
      */
@@ -164,5 +164,111 @@ class Ride extends Model
         ];
 
         return $result;
+    }
+
+    /**
+     * 保存されている集合場所を配列で返す
+     *
+     * @param object $meeting_places_dbData
+     * @param string $user_uuid
+     *
+     * @return array $registeredMeetingPlaces_arr
+     */
+    public function isRegisteredMeetingPlace(object $meeting_places_dbData, string $user_uuid)
+    {
+        $sql = DB::table('saved_meeting_places');
+
+        foreach($meeting_places_dbData as $meeting_place_dbData){
+            $sql->orWhere('meeting_place_uuid', $meeting_place_dbData->uuid)->where('user_uuid', $user_uuid);
+        }
+
+        $registeredMeetingPlaces = $sql->orderBy('id' ,'desc')
+        ->get('meeting_place_uuid');
+
+        $registeredMeetingPlaces_arr = $this->registeredMeetingPlacesToArray($registeredMeetingPlaces);
+
+        return $registeredMeetingPlaces_arr;
+    }
+
+    /**
+     * registeredMeetingPlacesを配列に変換
+     *
+     * @param $requests
+     * @return $results
+     */
+    public function registeredMeetingPlacesToArray(object $registeredMeetingPlaces)
+    {
+        $requests = $registeredMeetingPlaces;
+        $results = [];
+
+        foreach($requests as $i => $request){
+            $results[$i] = $request->meeting_place_uuid;
+        }
+
+        return $results;
+    }
+
+    /**
+     * 集合場所が保存されているか確認
+     * 
+     * @param string $user_uuid
+     * @param string $meeting_place_uuid
+     * 
+     * @return bool 
+     */
+    public function meetingPlaceIsSaved(string $user_uuid, string $meeting_place_uuid)
+    {
+        $isExist = DB::table('saved_meeting_places')
+            ->where('user_uuid', $user_uuid)
+            ->where('meeting_place_uuid', $meeting_place_uuid)
+            ->exists();
+
+        if($isExist){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 保存されているルートを配列で返す
+     * 
+     * @param object $ride_routes
+     * @param string $user_uuid
+     * 
+     * @return array $registeredRideRoute_arr
+     */
+    public function isRegisteredRideRoute(object $ride_routes, string $user_uuid)
+    {
+        $sql = DB::table('saved_ride_routes');
+
+        foreach($ride_routes as $ride_route){
+            $sql->orWhere('route_uuid', $ride_route->uuid)->where('user_uuid', $user_uuid);
+        }
+
+        $registeredRide_routes = $sql->orderBy('id' ,'desc')
+        ->get('route_uuid');
+
+        $ride_routes_arr = $this->registeredRideRoutesToArray($registeredRide_routes);
+
+        return $ride_routes_arr;
+        
+    }
+
+    /**
+     * ride_routesを配列に変換
+     *
+     * @param $requests
+     * @return $results
+     */
+    public function registeredRideRoutesToArray(object $registeredRideRoutes)
+    {
+        $requests = $registeredRideRoutes;
+        $results = [];
+
+        foreach($requests as $i => $request){
+            $results[$i] = $request->route_uuid;
+        }
+
+        return $results;
     }
 }

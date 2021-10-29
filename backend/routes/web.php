@@ -49,6 +49,11 @@ Route::get('api/get/weather/{prefecture_code}', [WeatherController::class, 'getW
 
 Route::get('api/search/{request}', [SearchController::class, 'search'])->name('search');
 
+Route::get('api/get/meeting-places/{prefecture_code}', [MeetingPlaceController::class, 'getAllMeetingPlaces'])->whereNumber('prefecture_code')->name('getAllMeetingPlaces');
+
+Route::get('api/get/ride_routes/{lap_status}', [RideRouteCOntroller::class, 'getAllRideRoutes'])->whereNumber('lap_status')->name('getAllRideRoutes');
+
+
 //非ログイン時
 Route::group(['middleware' => ['guest']], function () {
 
@@ -68,11 +73,11 @@ Route::group(['middleware' => ['guest']], function () {
 
 //ログイン時
 Route::group(['middleware' => ['auth']], function () {
-    
+
     //GET
     Route::get('/dashboard', [AuthController::class, 'showDashboard'])->name('showDashboard'); //ダッシュボード
 
-    Route::get('/create-ride', [RideViewController::class, 'showRideForm'])->name('createRideForm'); 
+    Route::get('/create-ride', [RideViewController::class, 'showRideForm'])->name('createRideForm');
 
     Route::get('/my-ride', [RideViewController::class, 'showRideAdmin'])->name('rideAdmin');
 
@@ -83,6 +88,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('user/config/delete', [AuthController::class, 'showDeleteUser'])->name('showDeleteUser');
 
     Route::get('my-rides', [RideViewController::class, 'showMyRides'])->name('showMyRides');
+
+    ROute::get('meeting-place/register', [RideViewController::class, 'showMeetingPlaceRegisterForm'])->name('showMeetingPlaceRegisterForm');
 
 
     //POST
@@ -120,6 +127,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/post/participation/delete', [ParticipationController::class, 'cancelParticipation'])->name('cancelParticipationRegister');
 
     Route::post('api/post/profile/update', [UserProfileController::class, 'updateUserProfile'])->name('updateUserProfile');
+
+    Route::post('api/post/registerMeetingPlace', [MeetingPlaceController::class, 'registerMeetingPlace'])->whereUuid('meeting_place_uuid')->name('registerMeetingPlace');
 });
 
 

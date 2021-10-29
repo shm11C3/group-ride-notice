@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('title', '検索')
 @section('content')
-<div id="app">
+<div id="app" v-cloak>
     <div v-if="httpErrors">
         <div v-for="(httpError, index) in httpErrors">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">

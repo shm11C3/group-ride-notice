@@ -24,7 +24,7 @@ class RideController extends Controller
 
     /**
      * ライドを作成
-     * 
+     *
      * @param App\Http\Requests\CreateRideRequest
      * @return bool
      */
@@ -74,7 +74,7 @@ class RideController extends Controller
 
     /**
      * ライドをアップデート
-     * 
+     *
      * @param App\Http\Requests\UpdateRideRequest
      * @return response
      */
@@ -100,7 +100,7 @@ class RideController extends Controller
     }
 
     /**
-     * 
+     *
      * @param App\Http\Requests\UpdatePublishStatusRequest;
      * @return response
      */
@@ -122,18 +122,18 @@ class RideController extends Controller
 
     /**
      * ライドを取得
-     * 
+     *
      * @param void
      * @return object $rides
      */
     public function getRides($time_appoint, $prefecture_code, $intensityRange)
-    {        
+    {
         $user = Auth::user();
         $user_uuid = $user->uuid ?? 0;
 
 
         $time = $this->ride->createTimeSql($time_appoint);
-        $operator = $this->ride->getOpeByCode($prefecture_code);
+        $operator = $this->ride->getOperatorByPrefectureCode($prefecture_code);
         $intensity = $this->ride->getIntstByRange($intensityRange);
 
 
@@ -192,7 +192,7 @@ class RideController extends Controller
 
     /**
      * ユーザー関連ライドをすべて取得
-     * 
+     *
      * @param void
      * @return object $rides
      */
@@ -226,7 +226,7 @@ class RideController extends Controller
 
         $data = [
             'rides' => $rides,
-            'user_uuid' => $user_uuid    
+            'user_uuid' => $user_uuid
         ];
 
         return response()->json($data);
@@ -234,7 +234,7 @@ class RideController extends Controller
 
     /**
      * rides.uuidからライドを取得
-     * 
+     *
      * @param string uuid
      * @return response
      */
@@ -276,7 +276,7 @@ class RideController extends Controller
 
     /**
      * rides.uuidと一致かつログインユーザのライドを取得
-     * 
+     *
      * @param string uuid
      * @return response
      */

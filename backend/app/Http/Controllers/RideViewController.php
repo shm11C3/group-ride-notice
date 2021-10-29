@@ -50,4 +50,12 @@ class RideViewController extends Controller
     {
         return view('ride.participated');
     }
+
+    /**
+     * 集合場所検索・登録フォームを表示
+     */
+    public function showMeetingPlaceRegisterForm()
+    {
+        return view('meetingPlace.register');
+    }
 }

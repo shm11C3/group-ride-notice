@@ -73,10 +73,16 @@ new Vue({
                 this.isLoad = false;
                 const data = res.data;
 
-                this.auth_uuid = data.auth_uuid;
-                this.meetingPlaces = data.meeting_places;
+                if(data.auth_uuid){
+                    this.auth_uuid = data.auth_uuid;
+                    this.meetingPlaces = data.meeting_places;
 
-                this.resIsExist = Boolean(data.meeting_places.next_page_url)
+                    this.resIsExist = Boolean(data.meeting_places.next_page_url);
+
+                    this.$forceUpdate();
+                }else{
+                    this.resIsExist = false;
+                }
             });
         },
 

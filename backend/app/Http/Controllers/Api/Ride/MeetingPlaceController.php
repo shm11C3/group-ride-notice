@@ -158,7 +158,9 @@ class MeetingPlaceController extends Controller
 
         if(!isset($meeting_places_dbData[0])){
             // クエリ結果が存在しない場合
-            return response()->json();
+            $result = ['exist' => false];
+
+            return response()->json($result);
         }
 
         // (array) 保存済みの集合場所
@@ -185,7 +187,8 @@ class MeetingPlaceController extends Controller
 
         $data = [
             'auth_uuid' => $user_uuid,
-            'meeting_places' => $meeting_places
+            'meeting_places' => $meeting_places,
+            'exist' => true
         ];
 
         return response()->json($data);

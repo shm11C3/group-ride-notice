@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRouteRequest;
+use App\Http\Requests\RegisterRideRouteRequest;
 use App\Models\Ride;
 
 class RideRouteController extends Controller
@@ -45,12 +46,7 @@ class RideRouteController extends Controller
             if($request['save_status']){
 
                 //保存するを選択した場合
-                DB::table('saved_ride_routes')
-                ->insert([
-                    'route_uuid' => $ride_route_uuid,
-                    'user_uuid' => $user_uuid,
-                    'route_category_id' => 0,
-                ]);
+                $this->saveRideRoute($user_uuid, $ride_route_uuid, true);
             }
 
             $data = [
@@ -65,6 +61,55 @@ class RideRouteController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    /**
+     * ライドルートの登録
+     *
+     * @param App\Http\Requests\RegisterRideRouteRequest
+     * @return response
+     */
+    public function registerMeetingPlace(RegisterRideRouteRequest $request)
+    {
+        $register = $this->saveRideRoute(Auth::user()->uuid, $request['ride_route_uuid'], false);
+
+        $result = ['status' => $register];
+
+        return response()->json($result);
+    }
+
+    /**
+     * ライドルート登録テーブルに挿入
+     *
+     * @param string $user_uuid
+     * @param string $ride_route_uuid
+     * @param bool $notExist
+     *
+     * @return bool
+     */
+    public function saveRideRoute(string $user_uuid, string $ride_route_uuid, bool $notExist)
+    {
+        // rideRouteIsSaved() はクエリ発行するので必ず後へ
+        if($notExist || !$this->ride->rideRouteIsSaved($user_uuid, $ride_route_uuid)){
+            // 登録
+            DB::table('saved_ride_routes')
+                ->insert([
+                    'route_uuid' => $ride_route_uuid,
+                    'user_uuid' => $user_uuid,
+                    'route_category_id' => 0,
+            ]);
+
+            return true;
+
+        }else{
+            // 解除
+            DB::table('saved_ride_routes')
+                ->where('user_uuid', $user_uuid)
+                ->where('route_uuid', $ride_route_uuid)
+                ->delete();
+
+            return false;
+        }
     }
 
     /**

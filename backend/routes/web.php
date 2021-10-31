@@ -130,7 +130,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('api/post/profile/update', [UserProfileController::class, 'updateUserProfile'])->name('updateUserProfile');
 
-    Route::post('api/post/registerMeetingPlace', [MeetingPlaceController::class, 'registerMeetingPlace'])->whereUuid('meeting_place_uuid')->name('registerMeetingPlace');
+    Route::post('api/post/registerMeetingPlace', [MeetingPlaceController::class, 'registerMeetingPlace'])->name('registerMeetingPlace');
+
+    Route::post('api/post/registerRideRoute', [RideRouteController::class, 'registerMeetingPlace'])->name('registerMeetingPlace');
 });
 
 

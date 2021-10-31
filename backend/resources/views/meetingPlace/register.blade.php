@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('title', '集合場所登録')
 @section('content')
+<a class="btn btn-primary mb-4" href="{{ route('showRegisterRideRouteForm') }}">ルート・コース登録へ</a>
 <div id="app" v-cloak>
     <div class="col-12 col-lg-3 form-group mr-1">
         <div class="mr-2">

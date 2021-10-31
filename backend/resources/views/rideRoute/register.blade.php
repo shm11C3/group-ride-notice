@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('title', '集合場所登録')
 @section('content')
+    <a class="btn btn-primary mb-4" href="{{ route('showMeetingPlaceRegisterForm') }}">集合場所登録へ</a>
 <div id="app" v-cloak>
     <div class="radio-btns">
         <div class="form-check">
@@ -17,28 +18,23 @@
         </div>
     </div>
     <div v-if="rideRoutes.length">
-        <div>
-
-        </div>
-        <div>
-
-        </div>
-        <div v-for="(rr, i) in rideRoutes" class="shadow m-2">
+        <div v-for="(rr, i) in rideRoutes" class="shadow m-2 p-1">
             <div class="media-body m-2 ">
                 <div class="btn-toolbar">
                     <div class="rr_name">
                         <h5>@{{ rr.data.name }}</h5>
                     </div>
-                    <div class="text-right ml-auto">
+                    <div class="text-right ml-auto m-1">
                         <div v-if="rr.isRegistered">
-                            <button type="button" class="btn btn-secondary">保存解除</button>
+                            <button v-on:click="saveRideRoute(i)" type="button" class="btn btn-secondary">保存解除</button>
                         </div>
                         <div v-else>
-                            <button type="button" class="btn btn-success">保存する</button>
+                            <button v-on:click="saveRideRoute(i)" type="button" class="btn btn-success">保存する</button>
                         </div>
                     </div>
                 </div>
-                <p>@{{  }}</p>
+                <p>@{{ rr.data.distance }}km</p>
+                <p>@{{ rr.data.elevation }}m up</p>
                 <p style="white-space:pre-wrap; word-wrap:break-word;">@{{ rr.data.comment  }}</p>
             </div>
         </div>
@@ -53,7 +49,7 @@
     </div>
     <div v-else>
         <div v-if="!resIsExist && !isLoad">
-            <div class="alert alert-secondary" role="alert">
+            <div class="alert alert-secondary m-2" role="alert">
                 データがありません
             </div>
         </div>

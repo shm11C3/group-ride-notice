@@ -11,7 +11,7 @@ new Vue({
         lap_status_request: 1,
         resIsExist: false,
         auth_uuid: '',
-        saveRideRoute: '',
+        saveRideRouteStatus: '',
 
         lapStatus: ['active', ''],
     },
@@ -84,6 +84,44 @@ new Vue({
             this.lap_status_request = request;
 
             this.initialLoad();
+        },
+
+        /**
+         * ride_routeを保存
+         *
+         * @param {*} i
+         */
+        saveRideRoute: function(i){
+            this.saveRideRouteStatus = '';
+
+            const ride_route_uuid = this.rideRoutes[i].data.uuid;
+            const url = '../api/post/registerRideRoute';
+
+            const data = {
+                "ride_route_uuid" : ride_route_uuid
+            }
+
+            fetch(url,
+                {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        withCredentials: true
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(res => {
+                    this.saveRideRouteStatus = res.status;
+                    this.rideRoutes[i].isRegistered = res.status;
+
+                })
+                .catch(e => {
+                    console.error(e);
+                });
         }
     }
 })

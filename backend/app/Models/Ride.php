@@ -167,7 +167,7 @@ class Ride extends Model
     }
 
     /**
-     * 保存済みされている集合場所を配列で返す
+     * 保存されている集合場所を配列で返す
      *
      * @param object $meeting_places_dbData
      * @param string $user_uuid
@@ -208,6 +208,14 @@ class Ride extends Model
         return $results;
     }
 
+    /**
+     * 集合場所が保存されているか確認
+     * 
+     * @param string $user_uuid
+     * @param string $meeting_place_uuid
+     * 
+     * @return bool 
+     */
     public function meetingPlaceIsSaved(string $user_uuid, string $meeting_place_uuid)
     {
         $isExist = DB::table('saved_meeting_places')
@@ -219,5 +227,48 @@ class Ride extends Model
             return true;
         }
         return false;
+    }
+
+    /**
+     * 保存されているルートを配列で返す
+     * 
+     * @param object $ride_routes
+     * @param string $user_uuid
+     * 
+     * @return array $registeredRideRoute_arr
+     */
+    public function isRegisteredRideRoute(object $ride_routes, string $user_uuid)
+    {
+        $sql = DB::table('saved_ride_routes');
+
+        foreach($ride_routes as $ride_route){
+            $sql->orWhere('route_uuid', $ride_route->uuid)->where('user_uuid', $user_uuid);
+        }
+
+        $registeredRide_routes = $sql->orderBy('id' ,'desc')
+        ->get('route_uuid');
+
+        $ride_routes_arr = $this->registeredRideRoutesToArray($registeredRide_routes);
+
+        return $ride_routes_arr;
+        
+    }
+
+    /**
+     * ride_routesを配列に変換
+     *
+     * @param $requests
+     * @return $results
+     */
+    public function registeredRideRoutesToArray(object $registeredRideRoutes)
+    {
+        $requests = $registeredRideRoutes;
+        $results = [];
+
+        foreach($requests as $i => $request){
+            $results[$i] = $request->route_uuid;
+        }
+
+        return $results;
     }
 }

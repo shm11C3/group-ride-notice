@@ -107,11 +107,11 @@ class User extends Authenticatable
         '鹿児島県',
         '沖縄県'
     ];
-    
+
     /**
      * ロック時間算出
      * ロック時間は32秒から2の累乗で増加
-     * 
+     *
      * @param int $locked_flg
      * @return int $lockTime
      */
@@ -125,7 +125,7 @@ class User extends Authenticatable
 
     /**
      * ロック時間からの経過時間算出
-     * 
+     *
      * @param string $locked_at
      * @return int
      */
@@ -139,7 +139,7 @@ class User extends Authenticatable
 
     /**
      * アカウントロックチェック
-     * 
+     *
      * @param object $user
      * @return bool
      */
@@ -149,8 +149,8 @@ class User extends Authenticatable
         $lockTime = $this->lockTime($user->locked_flg);
 
         if ($user->locked_flg > 0 && $lockTime > $lockLaterTime) {
-            
-            return true; 
+
+            return true;
         }
 
         return false;
@@ -158,7 +158,7 @@ class User extends Authenticatable
 
     /**
      * 残りロック時間算出
-     * 
+     *
      * @param int $lockTime, $timeCount
      * @return int
      */
@@ -169,7 +169,7 @@ class User extends Authenticatable
 
     /**
      * 秒数を$hours時間$minutes分$seconds秒に変換
-     * 
+     *
      * @param int $sec
      * @return string
      */
@@ -189,7 +189,7 @@ class User extends Authenticatable
 
     /**
      * ユーザーロックデータをリセット
-     * 
+     *
      * @param $user
      */
     public function unlockAccount($user)
@@ -202,7 +202,7 @@ class User extends Authenticatable
 
     /**
      * アカウントロック
-     * 
+     *
      * @param $user
      */
     public function lockAccount($user)

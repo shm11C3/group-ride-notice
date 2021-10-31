@@ -61,7 +61,7 @@ new Vue({
         fetchMeetingPlaces: function(){
             this.isLoad = true;
 
-            const url = `http://www.localhost/api/get/meeting-places/${this.prefecture_code_request}?page=${this.meeting_place_page}`;
+            const url = `../api/get/meeting-places/${this.prefecture_code_request}?page=${this.meeting_place_page}`;
 
             axios.get(url)
             .catch(error =>{

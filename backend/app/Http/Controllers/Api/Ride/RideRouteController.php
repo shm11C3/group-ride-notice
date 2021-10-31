@@ -8,12 +8,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRouteRequest;
+use App\Models\Ride;
 
 class RideRouteController extends Controller
 {
+    public function __construct(Ride $ride)
+    {
+        $this->ride = $ride;
+    }
+
     /**
      * ライドルートを作成
-     * 
+     *
      * @param App\Http\Requests\CreateRideRouteRequest
      * @return bool
      */
@@ -37,7 +43,7 @@ class RideRouteController extends Controller
             ]);
 
             if($request['save_status']){
-        
+
                 //保存するを選択した場合
                 DB::table('saved_ride_routes')
                 ->insert([
@@ -63,7 +69,7 @@ class RideRouteController extends Controller
 
     /**
      * 保存したルートを取得
-     * 
+     *
      * @param void
      * @return object $data
      */
@@ -84,8 +90,61 @@ class RideRouteController extends Controller
             'comment',
             'publish_status',
         ]);
-        
+
         $data = ['data'=>$dbData, 'key'=>'saved_ride_routes'];
+
+        return response()->json($data);
+    }
+
+    /**
+     *
+     * @param int $lap_status
+     * @return response
+     */
+    public function getAllRideRoutes(int $lap_status)
+    {
+        $user = Auth::user();
+        $user_uuid = $user->uuid ?? 0;
+
+
+        $ride_routes = DB::table('ride_routes')
+            ->where('lap_status', $lap_status)
+            ->where('publish_status', 0) // 公開されているルート
+            ->orWhere('lap_status', $lap_status)
+            ->where('ride_routes.user_uuid', $user_uuid) // ユーザ自身のルート
+            ->orderBy('id' ,'desc')
+            ->select('*')
+            ->simplePaginate(60);
+
+        if(!isset($ride_routes[0])){
+            // クエリ結果が存在しない場合
+            return response()->json();
+        }
+
+        // (array) 保存済みのルート
+        $registeredRideRoutes = $this->ride->isRegisteredRideRoute($ride_routes, $user_uuid);
+
+        foreach($ride_routes as $i => $ride_route) {
+            $ride_route_uuid = $ride_route->uuid;
+
+            if(array_search($ride_route_uuid, $registeredRideRoutes) !== false ) {
+                $registered = true; // 登録済みの場合
+
+            }else{
+                $registered = false; // 登録済みでない場合
+            }
+
+            // 結果からオブジェクトを作成
+            $result[$i] = (object) [
+                'data' => $ride_route,
+                'isRegistered' => $registered
+            ];
+        }
+
+        $data = [
+            'auth_uuid' => $user_uuid,
+            'ride_routes' => $result
+        ];
 
         return response()->json($data);
     }

@@ -15,13 +15,13 @@
           <li @if(request()->path() === 'search') class="nav-item active" @else class="nav-item" @endif>
             <a class="nav-link" href="{{ route('showSearch') }}">検索する<span class="sr-only">(current)</span></a>
           </li>
-          <li @if(request()->path() === 'create-ride' || request()->path() === 'meeting-place/register') class="nav-item dropdown active" @else  class="nav-item dropdown" @endif>
+          <li @if(request()->path() === 'create-ride' || request()->path() === 'meeting-place/register' || request()->path() === 'ride-route/register') class="nav-item dropdown active" @else  class="nav-item dropdown" @endif>
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               ライド管理
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{{ route('createRideForm') }}">ライドを作成</a>
-              <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="bottom" title="この機能は近日実装予定です！">コースを登録</a>
+              <a class="dropdown-item" href="{{ route('showRegisterRideRouteForm') }}">コースを登録</a>
               <a class="dropdown-item" href="{{ route('showMeetingPlaceRegisterForm') }}">集合場所を登録</a>
             </div>
           </li>

@@ -51,7 +51,7 @@ Route::get('api/search/{request}', [SearchController::class, 'search'])->name('s
 
 Route::get('api/get/meeting-places/{prefecture_code}', [MeetingPlaceController::class, 'getAllMeetingPlaces'])->whereNumber('prefecture_code')->name('getAllMeetingPlaces');
 
-Route::get('api/get/ride_routes/{lap_status}', [RideRouteCOntroller::class, 'getAllRideRoutes'])->whereNumber('lap_status')->name('getAllRideRoutes');
+Route::get('api/get/ride-routes/{lap_status}', [RideRouteCOntroller::class, 'getAllRideRoutes'])->whereNumber('lap_status')->name('getAllRideRoutes');
 
 
 //非ログイン時
@@ -89,7 +89,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('my-rides', [RideViewController::class, 'showMyRides'])->name('showMyRides');
 
-    ROute::get('meeting-place/register', [RideViewController::class, 'showMeetingPlaceRegisterForm'])->name('showMeetingPlaceRegisterForm');
+    Route::get('meeting-place/register', [RideViewController::class, 'showMeetingPlaceRegisterForm'])->name('showMeetingPlaceRegisterForm');
+
+    Route::get('ride-route/register', [RideViewController::class, 'showRegisterRideRouteForm'])->name('showRegisterRideRouteForm');
 
 
     //POST

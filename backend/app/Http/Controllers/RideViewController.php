@@ -58,4 +58,12 @@ class RideViewController extends Controller
     {
         return view('meetingPlace.register');
     }
+
+    /**
+     *
+     */
+    public function showRegisterRideRouteForm()
+    {
+        return view('rideRoute.register');
+    }
 }

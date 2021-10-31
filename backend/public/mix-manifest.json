@@ -13,5 +13,6 @@
     "/js/participated.js": "/js/participated.js",
     "/js/search.js": "/js/search.js",
     "/js/meetingPlaceRegister.js": "/js/meetingPlaceRegister.js",
+    "/js/registerRideRoute.js": "/js/registerRideRoute.js",
     "/css/app.css": "/css/app.css"
 }

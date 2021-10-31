@@ -103,7 +103,7 @@
         </div>
     </div>
     <div v-else>
-        <div v-if="!resIsExist && isLoad">
+        <div v-if="!resIsExist && !isLoad">
             <div class="alert alert-secondary" role="alert">
                 データがありません
             </div>

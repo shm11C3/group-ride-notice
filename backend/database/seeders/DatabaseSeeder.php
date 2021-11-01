@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
         UserProfile::factory($this->numberOfUsers)->create();
         Ride::factory($this->numberOfRides)->create();
         RideParticipant::factory($this->numberOfRideParticipants)->create();
-        RideRoute::factory(1000)->create();
-        MeetingPlace::factory(1000)->create();
+        RideRoute::factory(100)->create();
+        MeetingPlace::factory(100)->create();
     }
 }

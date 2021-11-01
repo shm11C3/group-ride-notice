@@ -142,6 +142,7 @@ class RideRouteController extends Controller
     }
 
     /**
+     *  すべてのルートを取得
      *
      * @param int $lap_status
      * @return response
@@ -160,6 +161,8 @@ class RideRouteController extends Controller
             ->orderBy('id' ,'desc')
             ->select('*')
             ->simplePaginate(60);
+
+        $nextPage = $ride_routes->nextPageUrl();
 
         if(!isset($ride_routes[0])){
             // クエリ結果が存在しない場合
@@ -188,7 +191,8 @@ class RideRouteController extends Controller
 
         $data = [
             'auth_uuid' => $user_uuid,
-            'ride_routes' => $result
+            'ride_routes' => $result,
+            'next_page_url' => $nextPage
         ];
 
         return response()->json($data);

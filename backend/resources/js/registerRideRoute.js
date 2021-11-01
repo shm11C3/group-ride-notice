@@ -46,6 +46,10 @@ new Vue({
             this.ride_route_page = 1;
             this.fetchRideRoutes();
         },
+        addLoad: function (){
+            this.ride_route_page++;
+            this.fetchRideRoutes();
+        },
 
         /**
          * ライドルートリストを取得
@@ -64,9 +68,12 @@ new Vue({
 
                 if(data.auth_uuid){
                     this.auth_uuid = data.auth_uuid;
-                    this.rideRoutes = data.ride_routes;
 
-                    this.resIsExist = Boolean(data.ride_routes.next_page_url);
+                    data.ride_routes.forEach(element => {
+                        this.rideRoutes.push(element);
+                    });
+
+                    this.resIsExist = Boolean(data.next_page_url);
 
                     this.$forceUpdate();
                 }else{
@@ -117,6 +124,7 @@ new Vue({
                 .then(res => {
                     this.saveRideRouteStatus = res.status;
                     this.rideRoutes[i].isRegistered = res.status;
+
 
                 })
                 .catch(e => {

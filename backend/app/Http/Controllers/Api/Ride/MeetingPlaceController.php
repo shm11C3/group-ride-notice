@@ -156,6 +156,8 @@ class MeetingPlaceController extends Controller
             )
             ->simplePaginate(60);
 
+        $nextPage = $meeting_places_dbData->nextPageUrl();
+
         if(!isset($meeting_places_dbData[0])){
             // クエリ結果が存在しない場合
             $result = ['exist' => false];
@@ -188,7 +190,8 @@ class MeetingPlaceController extends Controller
         $data = [
             'auth_uuid' => $user_uuid,
             'meeting_places' => $meeting_places,
-            'exist' => true
+            'exist' => true,
+            'next_page_url' => $nextPage
         ];
 
         return response()->json($data);

@@ -75,9 +75,12 @@ new Vue({
 
                 if(data.auth_uuid){
                     this.auth_uuid = data.auth_uuid;
-                    this.meetingPlaces = data.meeting_places;
 
-                    this.resIsExist = Boolean(data.meeting_places.next_page_url);
+                    data.meeting_places.forEach(element => {
+                        this.meetingPlaces.push(element);
+                    });
+
+                    this.resIsExist = Boolean(data.next_page_url);
 
                     this.$forceUpdate();
                 }else{

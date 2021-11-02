@@ -15,6 +15,9 @@ mix.sourceMaps().js('node_modules/popper.js/dist/popper.js', 'public/js').source
 
 mix.js('resources/js/app.js', 'public/js')
   .js('resources/js/submit.js', 'public/js')
+  .js('resources/js/constants/constant.js', 'public/js')
+  .js('resources/js/constants/user.js', 'public/js/userConstant.js')
+  .js('resources/js/constants/ride.js', 'public/js/rideConstant.js')
   .sass('resources/sass/app.scss', 'public/css', {
       sassOptions: {
         includePaths: [

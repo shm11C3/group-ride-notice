@@ -1,4 +1,7 @@
 import Vue from 'vue';
+import {passwordRule, emailRule, nameRule} from './constants/user'
+
+const reg = emailRule.reg;
 
 new Vue({
     el: '#app',
@@ -26,7 +29,7 @@ new Vue({
         },
 
         isValidName: function() {
-            if(this.name.length > 0 && this.name.length < 32){
+            if(this.name.length > 0 && this.name.length < nameRule.max){
                 return true
 
             }else{
@@ -36,14 +39,13 @@ new Vue({
 
         isValidEmail: function() {
             const email = this.email;
-            const reg = new RegExp(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/);
 
             const emailValid = reg.test(email);
 
             if(email.length == 0){
                 return 3;
 
-            }else if (!emailValid || email.length>255){                
+            }else if (!emailValid || email.length > emailRule.max){
                 return false;
 
             }else{
@@ -56,7 +58,7 @@ new Vue({
             if(password.length == 0){
                 return 3;
 
-            }else if(password.length < 8 || password.length > 64){
+            }else if(password.length < passwordRule.min || password.length > passwordRule.max){
                 return false;
 
             }else{
@@ -107,11 +109,11 @@ new Vue({
                 case false:
                     this.emailClass = 'form-control is-invalid';
                     break;
-                
+
                 case true:
                     this.emailClass = 'form-control is-valid';
                     break;
-                
+
                 case 3:
                     this.emailClass = 'form-control';
                     break;
@@ -122,14 +124,14 @@ new Vue({
             switch(this.isValidPassword){
                 case false:
                     this.passwordClass = 'form-control is-invalid';
-                    this.passwordError = 'パスワードは6文字以上64文字以内で設定してください';
+                    this.passwordError = `パスワードは${passwordRule.min}文字以上${passwordRule.max}文字以内で設定してください`;
                     break;
-                
+
                 case true:
                     this.passwordClass = 'form-control is-valid';
                     this.passwordError = '';
                     break;
-                
+
                 case 3:
                     this.passwordClass = 'form-control';
                     this.passwordError = '';

@@ -147,10 +147,5 @@ class RideRouteController extends Controller
         ];
 
         return response()->json($data);
-
-        dd($registeredRideRoutes);
-
-
-
     }
 }

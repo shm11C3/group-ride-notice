@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import jQuery, { data } from 'jquery'
+import {prefecture, intensityStyle, intensityComment} from './constants/constant'
 global.jquery = jQuery
 global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -20,22 +21,16 @@ new Vue({
 
         nameClass: 'form-control',
         nameErrComment: '',
-        
+
         commentClass: 'form-control',
         commentErrComment: '',
 
         //固定値
-        prefecture:["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県",
-                    "茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県",
-                    "新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県",
-                    "静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県",
-                    "奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県",
-                    "徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県",
-                    "熊本県","大分県","宮崎県","鹿児島県","沖縄県"],
+        prefecture: prefecture,
 
         publish_status_arr: ['公開', '限定公開', '非公開'],
 
-        
+
         //送信データ
         selectedRideRoute: '',
         name: '',
@@ -61,34 +56,14 @@ new Vue({
         selectedLap_status: false,
 
          //入力補足
-        intensityStyle: [
-            'intst-lowest',
-            'intst-lowest',
-            'intst-endurance',
-            'intst-tempo',
-            'intst-LactateThreshold',
-            'intst-VO2Max',
-            'intst-AnaerobicCapacity',
-            'intst-NeuromuscularPower',
-            'intst-highest'
-        ],
+        intensityStyle: intensityStyle,
 
-        intensityComment: [
-            'ゆるポタ(非競技勢向け)。体力や技術の向上を目的としないライドなど。',
-            'ゆるポタ(競技勢向け)。体力や技術の向上を目的としないライドや回復走など。',
-            '(L1-L2) LSDなどの低強度エンデュランストレーニング。もしくは技術を目的とした練習。',
-            '(L3) テンポ走などのエンデュランストレーニングや1時間以上のペース走、峠TTなど。',
-            '(L4) インターバル10-60分のFTP、筋持久力の向上を目的としたトレーニングや峠TT、ペース走など。',
-            '(L5) インターバル3-8分のVO2maxの向上を目的としたトレーニングや登坂アタックなど。',
-            '(L6) インターバル2分以下の無酸素能力の向上を目的としたトレーニングや登坂アタックなど。',
-            '(L7) インターバル30秒以下のスプリント能力の向上を目的としたトレーニング。',
-            'レース走などレース強度での走行。時間に問わず、レース同様に力を出し切るトレーニング・練習。',
-        ],
+        intensityComment: intensityComment,
 
         intensityInfo: '',
     },
 
-    mounted() {        
+    mounted() {
         const param = this.getQueryParam();
         this.getRide(param);
     },
@@ -104,10 +79,10 @@ new Vue({
                  * this.name.length
                  * this.comment.length;
 
-        
+
             let intst = this.intensity;
             let laps = this.num_of_laps;
-        
+
             if(intst >= 0 && intst <= 10 && formLength != 0 && laps>=0 && laps<=255){
                 return true;
 
@@ -123,7 +98,7 @@ new Vue({
          */
         selectedRideRouteKey(){
             let rideRoute = this.rideRoutes.data[this.selectedRideRouteKey];
-            
+
             this.selectedRideRoute = rideRoute.uuid;
             this.selectedLap_status = rideRoute.lap_status
         },
@@ -179,10 +154,10 @@ new Vue({
 
         /**
          * this.intensityから強度の説明のキーを返す
-         * 
+         *
          * @returns string
          */
-         showIntensityInfo: function(intensity){        
+         showIntensityInfo: function(intensity){
             if(intensity == 0){
                 return 0;
 
@@ -191,7 +166,7 @@ new Vue({
 
             }else if(intensity < 4){
                 return 2;
-            
+
             }else if(intensity < 5){
                 return 3;
 
@@ -203,7 +178,7 @@ new Vue({
 
             }else if(intensity < 9){
                 return 6;
-            
+
             }else if(intensity < 10){
                 return 7;
 
@@ -237,7 +212,7 @@ new Vue({
 
                 let route_uuid = self.ride[0].ride_routes_uuid;
                 let ride_route_index = self.rideRoutes.data.findIndex((el) => el.uuid === route_uuid);
-                
+
                 this.selectedRideRouteKey = ride_route_index;
             });
 
@@ -289,20 +264,20 @@ new Vue({
                 "num_of_laps":this.num_of_laps,
                 "comment":this.comment,
             }
-      
+
             let axiosPost = axios.create({
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
               withCredentials: true
             });
 
             axiosPost.post(url, data)
-            
+
             .catch(error => {
                 console.log(error);
                 this.httpErrors.push(error);
 
                 this.isPush = false;
-              
+
             }).then(res => {
 
               if(res.status){
@@ -317,8 +292,8 @@ new Vue({
 
         /**
          * 公開ステータスの更新
-         * 
-         * @param {*} publish_status 
+         *
+         * @param {*} publish_status
          */
         updatePublishStatus: function(publish_status){
             this.update = false;
@@ -338,11 +313,11 @@ new Vue({
               });
 
             axiosPost.post(url, data)
-            
+
             .catch(error => {
                 console.log(error);
                 this.httpErrors.push(error);
-                
+
             }).then(res => {
                 this.update = true;
             });

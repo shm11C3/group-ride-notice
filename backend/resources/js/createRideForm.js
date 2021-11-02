@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import jQuery, { data } from 'jquery'
+import {intensityStyle, intensityComment} from './constants/constant'
+import {commentRule, nameRule, lapRule} from './constants/ride'
 global.jquery = jQuery
 global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -15,7 +17,7 @@ new Vue({
             'form-control is-invalid', //min, 2
             'form-control is-invalid', //max, 3
         ],
-        
+
         //受け取ったデータ
         meetingPlaces: {},
         rideRoutes: {},
@@ -27,7 +29,7 @@ new Vue({
 
         nameClass: 'form-control',
         nameErrComment: '',
-        
+
         commentClass: 'form-control',
         commentErrComment: '',
 
@@ -39,29 +41,8 @@ new Vue({
         rr_isPush: false,
 
         //入力補足
-        intensityStyle: [
-            'intst-lowest',
-            'intst-lowest',
-            'intst-endurance',
-            'intst-tempo',
-            'intst-LactateThreshold',
-            'intst-VO2Max',
-            'intst-AnaerobicCapacity',
-            'intst-NeuromuscularPower',
-            'intst-highest'
-        ],
-
-        intensityComment: [
-            'ゆるポタ(非競技勢向け)。体力や技術の向上を目的としないライドなど。',
-            'ゆるポタ(競技勢向け)。体力や技術の向上を目的としないライドや回復走など。',
-            '(L1-L2) LSDなどの低強度エンデュランストレーニング。もしくは技術を目的とした練習。',
-            '(L3) テンポ走などのエンデュランストレーニングや1時間以上のペース走、峠TTなど。',
-            '(L4) インターバル10-60分のFTP、筋持久力の向上を目的としたトレーニングや峠TT、ペース走など。',
-            '(L5) インターバル3-8分のVO2maxの向上を目的としたトレーニングや登坂アタックなど。',
-            '(L6) インターバル2分以下の無酸素能力の向上を目的としたトレーニングや登坂アタックなど。',
-            '(L7) インターバル30秒以下のスプリント能力の向上を目的としたトレーニング。',
-            'レース走などレース強度での走行。時間に問わず、レース同様に力を出し切るトレーニング・練習。',
-        ],
+        intensityStyle: intensityStyle,
+        intensityComment: intensityComment,
 
         intensityInfo: '',
 
@@ -102,23 +83,24 @@ new Vue({
     },
 
     mounted() {
-        this.getMeetingPlaces();
-        this.getRideRoutes();
+        this.fetchMeetingPlaces();
+        this.fetchRideRoutes();
     },
 
     computed :{
         /**
          * selectedMeetingPlaceのバリデーションチェック
-         * 
+         *
          * @returns bool
          */
         isValidSelectedMeetingPlace: function(){
-            if(this.selectedMeetingPlace.length == 36){
+            const uuidLength = 36;
+            if(this.selectedMeetingPlace.length == uuidLength){
                 return true;
 
             }else if(this.selectedMeetingPlace.length == 0){
                 return false;
-            
+
             }else{
                 return 'create';
             }
@@ -126,7 +108,7 @@ new Vue({
 
         /**
          * selectedRideRouteのバリデーションチェック
-         * 
+         *
          * @returns bool
          */
         isValidSelectedRideRoute: function(){
@@ -135,7 +117,7 @@ new Vue({
 
             }else if(this.selectedRideRouteKey === 'create'){
                 return 'create';
-            
+
             }else{
                 return true;
             }
@@ -143,7 +125,7 @@ new Vue({
 
         /**
          * nameのバリデーションチェック
-         * 
+         *
          * @returns int status
          */
         isValidName: function(){
@@ -153,7 +135,7 @@ new Vue({
             if(name.length == 0){
                 status = 2;
 
-            }else if(name.length > 32){
+            }else if(name.length > nameRule.max){
                 status = 3;
 
             }else{
@@ -165,7 +147,7 @@ new Vue({
 
         /**
          * time_appointのバリデーションチェック
-         * 
+         *
          * @returns bool
          */
         isValidTime_appoint: function(){
@@ -179,7 +161,7 @@ new Vue({
 
         /**
          * commentのバリデーションチェック
-         * 
+         *
          * @returns int status
          */
          isValidComment: function(){
@@ -188,7 +170,7 @@ new Vue({
             if(this.comment.length == 0){
                 status = 2;
 
-            }else if(this.comment.length > 1024){
+            }else if(this.comment.length > commentRule.max){
                 status = 3;
             }else{
                 status = true;
@@ -199,7 +181,7 @@ new Vue({
 
         /**
          * すべてのフォームバリデートがtrueであることをチェック
-         * 
+         *
          * @returns bool
          */
         isInValidForms: function(){
@@ -208,7 +190,7 @@ new Vue({
                 || this.isValidSelectedRideRoute == false
                 || this.isValidName != true
                 || this.isValidTime_appoint == false
-                || this.isValidComment != true 
+                || this.isValidComment != true
                 || this.isNum_of_lapsIsExist == false
             ){
                 return true;
@@ -219,12 +201,12 @@ new Vue({
 
         /**
          * this.intensityから強度の説明のキーを返す
-         * 
+         *
          * @returns string
          */
          showIntensityInfo: function(){
             let intensity = this.intensity;
-            
+
             if(intensity == 0){
                 return 0;
 
@@ -233,7 +215,7 @@ new Vue({
 
             }else if(intensity < 4){
                 return 2;
-            
+
             }else if(intensity < 5){
                 return 3;
 
@@ -245,7 +227,7 @@ new Vue({
 
             }else if(intensity < 9){
                 return 6;
-            
+
             }else if(intensity < 10){
                 return 7;
 
@@ -256,7 +238,7 @@ new Vue({
 
         /**
          * dateとtimeをtime_appoint型にフォーマット
-         * 
+         *
          * @returns string
          */
         formatToDateTime: function(){
@@ -269,9 +251,9 @@ new Vue({
         isNum_of_lapsIsExist: function(){
             let laps = Number(this.num_of_laps);
 
-            if(this.selectedLap_status == true && (laps <= 0 || laps > 255)){
+            if(this.selectedLap_status == true && (laps <= 0 || laps > lapRule.max)){
                 return false;
-            
+
             }else{
                 return true;
             }
@@ -289,7 +271,7 @@ new Vue({
 
                 this.selectedRideRoute = rideRoute.uuid;
                 this.selectedLap_status = rideRoute.lap_status;
-            
+
             }else{
                 this.selectedLap_status = false;
                 this.num_of_laps = 0;
@@ -315,11 +297,10 @@ new Vue({
          */
         isValidName(){
             const form = '名前';
-            const max = '32';
             let key = Number(this.isValidName);
 
             this.nameClass = this.form_control[key];
-            this.nameErrComment = this.getValidationMessage(form, max, key);
+            this.nameErrComment = this.getValidationMessage(form, nameRule.max, key);
         },
 
         /**
@@ -327,11 +308,10 @@ new Vue({
          */
         isValidComment(){
             const form = 'ライドの説明';
-            const max = '1024';
             let key = Number(this.isValidComment);
 
             this.commentClass = this.form_control[key];
-            this.commentErrComment = this.getValidationMessage(form, max, key);
+            this.commentErrComment = this.getValidationMessage(form, commentRule.max, key);
         },
 
         /**
@@ -368,7 +348,7 @@ new Vue({
         mp_save_status(){
             if(this.mp_save_status){
                 this.mp_publish_status = '';
-            
+
             }else{
                 this.rr_publish_status = 2;
             }
@@ -390,12 +370,12 @@ new Vue({
         /**
          * 保存した集合場所を取得
          */
-        getMeetingPlaces: function(){
+        fetchMeetingPlaces: function(){
             this.isLoad = true;
             const self = this;
 
             const url = 'api/get/savedMeetingPlaces';
-            
+
             axios.get(url)
             .catch(error =>{
                 console.log(error);
@@ -413,7 +393,7 @@ new Vue({
         /**
          * 保存した集合場所を取得
          */
-        getRideRoutes: function(){
+        fetchRideRoutes: function(){
             this.isLoad = true;
             const self = this;
 
@@ -433,8 +413,8 @@ new Vue({
 
         /**
          * 押されたボタンの引数をthis.publish_statusに代入
-         * 
-         * @param {*} val 
+         *
+         * @param {*} val
          */
         inputPublishStatus: function(val){
             this.publish_status = Number(val);
@@ -443,8 +423,8 @@ new Vue({
 
         /**
          * 押されたボタンの引数をthis.publish_statusに代入
-         * 
-         * @param {*} val 
+         *
+         * @param {*} val
          */
         mp_inputPublishStatus: function(val){
             this.mp_publish_status = Number(val);
@@ -453,8 +433,8 @@ new Vue({
 
         /**
          * 都道府県コードをmp_prefecture_codeに代入
-         * 
-         * @param {*} val 
+         *
+         * @param {*} val
          */
         mp_inputPrefecture_code: function(val){
             this.mp_prefecture_code = val.target.value;
@@ -462,8 +442,8 @@ new Vue({
 
         /**
          * 押されたボタンの引数をthis.publish_statusに代入
-         * 
-         * @param {*} val 
+         *
+         * @param {*} val
          */
         rr_inputPublishStatus: function(val){
             this.rr_publish_status = Number(val);
@@ -473,7 +453,7 @@ new Vue({
         getValidationMessage: function(form, max, key){
             const message = [
                 '',                                       //false
-                '',                                       //true 
+                '',                                       //true
                 `${form}は必須です`,                       //min
                 `${form}は${max}文字以内で入力してください`, //max
             ];
@@ -501,20 +481,20 @@ new Vue({
                 "comment":this.comment,
                 "publish_status":this.publish_status
             }
-      
+
             let axiosPost = axios.create({
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
               withCredentials: true
             });
 
             axiosPost.post(url, data)
-            
+
             .catch(error => {
                 console.log(error);
                 this.httpErrors.push(error);
 
                 this.isPush = false;
-              
+
             }).then(res => {
 
               if(res.data.status){
@@ -547,12 +527,12 @@ new Vue({
             });
 
             axiosPost.post(url, data)
-            
+
             .catch(error => {
                 console.log(error);
 
                 this.mp_httpErrors.push(error);
-                
+
                 this.mp_isPush = false;
 
             }).then(res => {
@@ -599,12 +579,12 @@ new Vue({
             });
 
             axiosPost.post(url, data)
-            
+
             .catch(error => {
                 console.log(error);
 
                 this.rr_httpErrors.push(error);
-                
+
                 this.rr_isPush = false;
 
             }).then(res => {
@@ -622,7 +602,7 @@ new Vue({
                 this.rideRoutes.data.push(data);
 
                 this.resetModals();
-                
+
                 $('#rideRouteModal').modal('hide');
                 this.rr_isPush = false;
             });

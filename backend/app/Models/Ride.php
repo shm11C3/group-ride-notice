@@ -210,11 +210,11 @@ class Ride extends Model
 
     /**
      * 集合場所が保存されているか確認
-     * 
+     *
      * @param string $user_uuid
      * @param string $meeting_place_uuid
-     * 
-     * @return bool 
+     *
+     * @return bool
      */
     public function meetingPlaceIsSaved(string $user_uuid, string $meeting_place_uuid)
     {
@@ -231,10 +231,10 @@ class Ride extends Model
 
     /**
      * 保存されているルートを配列で返す
-     * 
+     *
      * @param object $ride_routes
      * @param string $user_uuid
-     * 
+     *
      * @return array $registeredRideRoute_arr
      */
     public function isRegisteredRideRoute(object $ride_routes, string $user_uuid)
@@ -251,7 +251,7 @@ class Ride extends Model
         $ride_routes_arr = $this->registeredRideRoutesToArray($registeredRide_routes);
 
         return $ride_routes_arr;
-        
+
     }
 
     /**
@@ -270,5 +270,27 @@ class Ride extends Model
         }
 
         return $results;
+    }
+
+    /**
+     * ライドルートが保存されているか確認
+     *
+     * @param string $user_uuid
+     * @param string $ride_route_uuid
+     *
+     * @return bool
+     */
+    public function rideRouteIsSaved(string $user_uuid, string $ride_route_uuid)
+    {
+        $isExist = DB::table('saved_ride_routes')
+            ->where('user_uuid', $user_uuid)
+            ->where('route_uuid', $ride_route_uuid)
+            ->exists();
+
+
+        if($isExist){
+            return true;
+        }
+        return false;
     }
 }

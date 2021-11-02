@@ -1,4 +1,7 @@
 import Vue from 'vue';
+import {passwordRule, emailRule} from './constants/user'
+
+const reg = emailRule.reg;
 
 new Vue({
     el: '#app',
@@ -11,15 +14,13 @@ new Vue({
     computed: {
 
         isInput: function() {
-            if(this.email && this.password.length >= 6 && this.isInValidEmail) {
+            if(this.email && this.password.length >= passwordRule.min && this.isInValidEmail) {
                 return true;
             }
         },
 
         isInValidEmail: function() {
-            const reg = new RegExp(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/);
-
-            if(reg.test(this.email) || this.email.length>255){
+            if(reg.test(this.email) || this.email.length > emailRule.max){
                 return true;
             }
         }

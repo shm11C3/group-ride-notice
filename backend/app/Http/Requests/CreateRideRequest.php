@@ -32,7 +32,7 @@ class CreateRideRequest extends FormRequest
             'intensity' => 'required|min:0|max:10',
             'num_of_laps' => 'numeric|min:0|max:255',
             'comment' => 'required|string|min:1|max:1024',
-            'publish_status' => 'required|min:0|max:3'
+            'publish_status' => 'required|min:0|max:2'
         ];
     }
 }

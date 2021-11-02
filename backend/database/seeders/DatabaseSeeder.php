@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\MeetingPlace;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\Ride;
 use App\Models\RideParticipant;
+use App\Models\RideRoute;
 
 class DatabaseSeeder extends Seeder
 {
@@ -43,5 +45,7 @@ class DatabaseSeeder extends Seeder
         UserProfile::factory($this->numberOfUsers)->create();
         Ride::factory($this->numberOfRides)->create();
         RideParticipant::factory($this->numberOfRideParticipants)->create();
+        RideRoute::factory(100)->create();
+        MeetingPlace::factory(100)->create();
     }
 }

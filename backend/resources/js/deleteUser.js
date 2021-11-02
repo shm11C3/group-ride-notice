@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import {passwordRule} from './constants/user'
 
 new Vue({
     el: '#app',
@@ -10,7 +11,7 @@ new Vue({
 
     computed: {
         isValidInput: function(){
-            return (this.inputDelete == 'delete_me' && this.password.length >= 8);
+            return (this.inputDelete == 'delete_me' && this.password.length >= passwordRule.min);
         }
     },
 

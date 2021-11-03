@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Ride\RideRouteController;
 use App\Http\Controllers\Api\Ride\RideController;
 use App\Http\Controllers\Api\Ride\WeatherController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\User\FollowController;
 use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
@@ -133,6 +134,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/post/registerMeetingPlace', [MeetingPlaceController::class, 'registerMeetingPlace'])->name('registerMeetingPlace');
 
     Route::post('api/post/registerRideRoute', [RideRouteController::class, 'registerMeetingPlace'])->name('registerMeetingPlace');
+
+    Route::post('api/post/follow', [FollowController::class, 'follow'])->name('follow');
 });
 
 

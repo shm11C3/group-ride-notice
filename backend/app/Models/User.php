@@ -13,6 +13,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function followers()
+    {
+      return $this->hasMany(Follow::class, 'user_to', 'uuid');
+    }
+
     public function rides()
     {
         return $this->belongsToMany(Ride::class, 'ride_participants', 'user_uuid', 'uuid');
@@ -107,6 +112,25 @@ class User extends Authenticatable
         '鹿児島県',
         '沖縄県'
     ];
+
+    /**
+     * フォロワーオブジェクト内に第2引数のユーザによるフォローが存在するか確認
+     *
+     * @param object $followers
+     * @param string $user_uuid
+     * @return bool $result
+     */
+    public function getUserFollowed(object $followers, string $user_uuid)
+    {
+        $result = false;
+
+        foreach($followers as $follower){
+            if($follower->user_by === $user_uuid){
+                $result = true;
+            }
+        }
+        return $result;
+    }
 
     /**
      * ロック時間算出

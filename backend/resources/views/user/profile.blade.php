@@ -18,7 +18,11 @@
             </div>
             @else
             <div id="app" class="btn-group ml-auto mb-5">
-                <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォローする</button>
+                @if($userFollowed)
+                <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォロー解除</button>
+                @else
+                <button v-on:click="follow" type="button" class="btn btn-success">フォローする</button>
+                @endif
             </div>
             @endif
             @endauth

@@ -10,6 +10,11 @@ class Follow extends Model
 {
     use HasFactory;
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_by', 'uuid');
+    }
+
     public function isFollowed(string $user_by, string $user_to){
         $isFollowed = DB::table('follows')
             ->where('user_by', $user_by)

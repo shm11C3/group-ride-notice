@@ -40,3 +40,4 @@ mix.js('resources/js/participated.js', 'public/js/participated.js').vue();
 mix.js('resources/js/search.js', 'public/js/search.js').vue();
 mix.js('resources/js/meetingPlaceRegister.js', 'public/js/meetingPlaceRegister.js').vue();
 mix.js('resources/js/registerRideRoute.js', 'public/js/registerRideRoute.js').vue();
+mix.js('resources/js/userProfile.js', 'public/js/userProfile.js').vue();

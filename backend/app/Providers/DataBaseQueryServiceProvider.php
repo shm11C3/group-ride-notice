@@ -39,6 +39,10 @@ class DataBaseQueryServiceProvider extends ServiceProvider
                     $binding = "'{$binding->toDateTimeString()}'";
                 } elseif ($binding instanceof DateTime) {
                     $binding = "'{$binding->format('Y-m-d H:i:s')}'";
+                }elseif (is_object($binding)) {
+                    // Str::uuidメソッドを使用した際にオブジェクト形式で出力されるので文字列に変換
+                    $binding_obj = $binding;
+                    $binding = strval($binding_obj);
                 }
 
                 $sql = preg_replace('/\\?/', $binding, $sql, 1);

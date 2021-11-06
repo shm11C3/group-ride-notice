@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\Ride\WeatherController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\User\FollowController;
 use App\Http\Controllers\RideViewController;
-use App\Http\Controllers\ParticipationController;
+use App\Http\Controllers\Api\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\SearchViewController;
 use App\Http\Controllers\UserViewController;
@@ -105,7 +105,7 @@ Route::group(['middleware' => ['auth']], function () {
     //GET API
     Route::get('api/get/savedMeetingPlaces', [MeetingPlaceController::class, 'getSavedMeetingPlaces'])->name('getSavedMeetingPlaces');
 
-    Route::get('api/get/savedRideRoutes', [RideRouteController::class, 'getSavedRideRoutes'])->name('getSavedMeetingPlaces');
+    Route::get('api/get/savedRideRoutes', [RideRouteController::class, 'getSavedRideRoutes'])->name('getSavedRideRoutes');
 
     Route::get('api/get/my-rides/{option}', [RideController::class, 'getRidesRelatedToAuthorizedUser'])->whereNumber('option')->name('getMyRides');
 
@@ -133,7 +133,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('api/post/registerMeetingPlace', [MeetingPlaceController::class, 'registerMeetingPlace'])->name('registerMeetingPlace');
 
-    Route::post('api/post/registerRideRoute', [RideRouteController::class, 'registerMeetingPlace'])->name('registerMeetingPlace');
+    Route::post('api/post/registerRideRoute', [RideRouteController::class, 'registerMeetingPlace'])->name('registerRideRoute');
 
     Route::post('api/post/follow', [FollowController::class, 'follow'])->name('follow');
 });

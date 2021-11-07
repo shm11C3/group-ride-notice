@@ -48,7 +48,12 @@ class DataBaseQueryServiceProvider extends ServiceProvider
                 $sql = preg_replace('/\\?/', $binding, $sql, 1);
             }
 
-            Log::debug('SQL', ['sql' => $sql, 'time' => "{$query->time} ms"]);
+            Log::channel('sql')->debug('SQL', ['sql' => $sql, 'time' => "{$query->time} ms"]);
+
+            if ($query->time > 15) {
+                // TODO 自動でEXPLAINを実行
+                Log::channel('queryAlert')->debug('Slow Query', ['sql' => $sql, 'time' => "{$query->time} ms"]);
+            }
         });
 
         Event::listen(TransactionBeginning::class, function (TransactionBeginning $event): void {

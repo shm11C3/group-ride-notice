@@ -18,7 +18,7 @@
             </div>
             @else
             <div id="app" class="btn-group ml-auto mb-5">
-                <div @if($userFollowed) v-if="!followBtnStatus" @else v-if="followBtnStatus" @endif>
+                <div @if($userFollowed) v-if="followBtnStatus" @else v-if="!followBtnStatus" @endif>
                     <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォロー解除</button>
                 </div>
                 <div v-else>

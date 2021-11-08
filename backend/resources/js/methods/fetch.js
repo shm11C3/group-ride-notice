@@ -26,8 +26,10 @@ export const postFollow = (user_to)=>{
         })
         .then(res => {
             console.log(res);
+            return res.status;
         })
         .catch(e => {
             console.error(e);
+            return e;
         });
 }

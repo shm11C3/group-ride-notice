@@ -6,6 +6,7 @@ new Vue({
     el: '#app',
     data: {
         user_to : '',
+        followBtnStatus: true
     },
 
     mounted() {
@@ -18,6 +19,7 @@ new Vue({
          */
         follow: function(){
             postFollow(this.user_to);
+            this.followBtnStatus = !this.followBtnStatus;
         }
     }
 })

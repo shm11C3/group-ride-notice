@@ -36,18 +36,18 @@ class FollowController extends Controller
         }
 
         if($this->follow->isFollowed($auth->uuid, $user_to)){
-            // フォロー外の場合
+            // フォロー済みの場合
             DB::table('follows')
                 ->where('user_by', $auth->uuid)
                 ->where('user_to', $user_to)
                 ->delete();
 
-            $data = ['status' => 'follow'];
+            $data = ['status' => 'unfollow'];
 
             return response()->json($data);
 
         }else{
-            // フォロー済みの場合
+            // フォロー外の場合
             $uuid = Str::uuid();
 
             DB::table('follows')
@@ -57,7 +57,7 @@ class FollowController extends Controller
                     'user_by' => $auth->uuid
                 ]);
 
-            $data = ['status' => 'unfollow'];
+            $data = ['status' => 'follow'];
 
             return response()->json($data);
         }

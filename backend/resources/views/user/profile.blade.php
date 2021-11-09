@@ -12,17 +12,18 @@
                 </p>
             </div>
             @auth
-            @if(Auth::user()->uuid === $user->uuid)
+            @if(Auth::getUser()->uuid === $user->uuid)
             <div class="btn-group ml-auto mb-5">
                 <a type="button" class="btn btn-outline-secondary" href="{{ route('showConfig') }}">プロフィールを編集</a>
             </div>
             @else
             <div id="app" class="btn-group ml-auto mb-5">
-                @if($userFollowed)
-                <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォロー解除</button>
-                @else
-                <button v-on:click="follow" type="button" class="btn btn-success">フォローする</button>
-                @endif
+                <div @if($userFollowed) v-if="followBtnStatus" @else v-if="!followBtnStatus" @endif>
+                    <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォロー解除</button>
+                </div>
+                <div v-else>
+                    <button v-on:click="follow" type="button" class="btn btn-success">フォローする</button>
+                </div>
             </div>
             @endif
             @endauth

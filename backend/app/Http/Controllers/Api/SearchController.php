@@ -7,19 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Search;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Ride;
 
 class SearchController extends Controller
 {
-    public function __construct(Search $search)
+    public function __construct(Search $search, User $user)
     {
         $this->search = $search;
+        $this->user = $user;
     }
 
     /**
      * 検索用API
-     * 
+     *
      * @param string $request
      * @return response
      */
@@ -33,29 +35,29 @@ class SearchController extends Controller
             ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
             ->join('users', 'host_user_uuid', 'users.uuid');
 
-        $query_users = User::query()
+        $query_users = User::with('followers.user')
             ->join('user_profiles', 'user_uuid', 'users.uuid');
 
 
         foreach($searchWordArr as $value){
             $searchWord = $this->search->escapeMetaCharacters_byStr($value);
 
-            $query_users->where('name', 'LIKE', $searchWord);
-            $query_users->orWhere('user_intro', 'LIKE', $searchWord);
-            $query_users->orWhere('fb_username', 'LIKE', $searchWord);
-            $query_users->orWhere('tw_username', 'LIKE', $searchWord);
-            $query_users->orWhere('ig_username', 'LIKE', $searchWord);
+            $query_rides->where('rides.name', 'LIKE', $searchWord)
+            ->where('rides.publish_status', 0)
+            ->orWhere('rides.comment', 'LIKE', $searchWord)
+            ->orWhere('meeting_places.name', 'LIKE', $searchWord)
+            ->orWhere('meeting_places.address', 'LIKE', $searchWord)
+            ->orWhere('ride_routes.name', 'LIKE', $searchWord)
+            ->orWhere('ride_routes.comment', 'LIKE', $searchWord);
 
-            $query_rides->where('rides.publish_status', 0);
-            $query_rides->where('rides.name', 'LIKE', $searchWord);
-            $query_rides->orWhere('rides.comment', 'LIKE', $searchWord);
-            $query_rides->orWhere('meeting_places.name', 'LIKE', $searchWord);
-            $query_rides->orWhere('meeting_places.address', 'LIKE', $searchWord);
-            $query_rides->orWhere('ride_routes.name', 'LIKE', $searchWord);
-            $query_rides->orWhere('ride_routes.comment', 'LIKE', $searchWord);
+            $query_users->where('name', 'LIKE', $searchWord)
+            ->orWhere('user_intro', 'LIKE', $searchWord)
+            ->orWhere('fb_username', 'LIKE', $searchWord)
+            ->orWhere('tw_username', 'LIKE', $searchWord)
+            ->orWhere('ig_username', 'LIKE', $searchWord);
         }
 
-        
+
         $rides = $query_rides->select([
             'rides.uuid',
             'host_user_uuid',
@@ -78,9 +80,10 @@ class SearchController extends Controller
             'ride_routes.comment as rr_comment',
             'users.name as user_name'
         ])
-        ->simplePaginate(15);
-        
+        ->simplePaginate(20);
+
         $users = $query_users->select([
+            'users.uuid',
             'users.uuid as user_uuid',
             'name',
             'prefecture_code',
@@ -92,7 +95,20 @@ class SearchController extends Controller
             'tw_username',
             'ig_username',
         ])
-        ->simplePaginate(15);
+        ->simplePaginate(20);
+
+
+        // 検索結果のユーザをフォローしているか
+        if(isset($users[0])) {
+            foreach($users as $user) {
+                $user->userFollowed = false;
+
+                if(!empty($user->followers[0])) {
+                    // フォロワーが存在する場合確認を行い値を代入
+                    $user->userFollowed = $this->user->getUserFollowed($user->followers, Auth::user()->uuid);
+                }
+            }
+        }
 
         $data = [
             'rides' => $rides,

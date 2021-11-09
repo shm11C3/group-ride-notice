@@ -21,11 +21,11 @@ class SearchController extends Controller
      * 一致するライドを取得
      *
      * @param array $keywords
-     * @param int $page_rides
+     * @param int $per_page_rides
      *
      * @return object $rides
      */
-    private function queryRides(array $keywords, int $page_rides)
+    private function queryRides(array $keywords, int $per_page_rides)
     {
         $query_rides = Ride::with('rideParticipants.user')
             ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
@@ -66,7 +66,7 @@ class SearchController extends Controller
             'ride_routes.comment as rr_comment',
             'users.name as user_name'
         ])
-        ->simplePaginate($page_rides);
+        ->simplePaginate($per_page_rides);
 
         return $rides;
     }
@@ -75,11 +75,11 @@ class SearchController extends Controller
      * 一致するユーザを取得
      *
      * @param array $keywords
-     * @param int $page_users
+     * @param int $per_page_users
      *
      * @return object $users
      */
-    private function queryUsers(array $keywords, int $page_users)
+    private function queryUsers(array $keywords, int $per_page_users)
     {
         $query_users = User::with('followers.user')
             ->join('user_profiles', 'user_uuid', 'users.uuid');
@@ -108,7 +108,7 @@ class SearchController extends Controller
             'tw_username',
             'ig_username',
         ])
-        ->simplePaginate($page_users);
+        ->simplePaginate($per_page_users);
 
         if(isset($users[0])) {
             return $users;
@@ -141,28 +141,28 @@ class SearchController extends Controller
 
         // 取得するレコード数
         if($page === 1){
-            $page_rides = 5;
+            $per_page_rides = 5;
         }else{
-            $page_rides = 60;
+            $per_page_rides = 60;
         }
 
         if($page === 1){
-            $page_users = 5;
+            $per_page_users = 5;
         }else{
-            $page_users = 60;
+            $per_page_users = 60;
         }
 
         $keywords_arr = $this->search->spaceSubstitute($keyword); //検索キーワード配列
 
         // $optionの値に応じてクエリメソッドを呼び出す
         if($option === 'all' || $option === 'rides'){
-            $rides = $this->queryRides($keywords_arr, $page_rides);
+            $rides = $this->queryRides($keywords_arr, $per_page_rides);
         }else{
             $rides = (object) ['status' => false];
         }
 
         if($option === 'all' || $option === 'users'){
-            $users = $this->queryUsers($keywords_arr, $page_users);
+            $users = $this->queryUsers($keywords_arr, $per_page_users);
         }else{
             $users = (object) ['status' => false];
         }

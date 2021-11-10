@@ -158,13 +158,13 @@ class SearchController extends Controller
         if($option === 'all' || $option === 'rides'){
             $rides = $this->queryRides($keywords_arr, $per_page_rides);
         }else{
-            $rides = (object) ['status' => false];
+            $rides = (object) ['status' => false, 'data' => []];
         }
 
         if($option === 'all' || $option === 'users'){
             $users = $this->queryUsers($keywords_arr, $per_page_users);
         }else{
-            $users = (object) ['status' => false];
+            $users = (object) ['status' => false, 'data' => []];
         }
 
         $data = [

@@ -1,15 +1,14 @@
 import Vue from 'vue';
-import jQuery, { data } from 'jquery'
-import axios from 'axios';
 import {prefecture} from './constants/constant'
-global.jquery = jQuery
-global.$ = jQuery
-window.$ = window.jQuery = require('jquery')
-window.axios = require('axios');
 
 new Vue({
     el: '#app',
     data: {
+        option: 0,
+        option_arr:['all', 'rides', 'users'],
+        page: 1,
+        acceptAddLoad: false,
+
         prefecture: prefecture,
 
         searchWord: '',
@@ -22,6 +21,22 @@ new Vue({
         users: [],
 
         replacedUser_intro: '',
+
+        nextRidesIsExist: true,
+        nextUsersIsExist: true,
+    },
+
+    mounted() {
+        this.observer = new IntersectionObserver((entries) => {
+            const entry = entries[0];
+
+            if (entry && entry.isIntersecting && this.dataIsExist && this.acceptAddLoad) {
+                this.addLoad();
+            }
+        });
+
+        const observe_element = this.$refs.observe_element;
+        this.observer.observe(observe_element);
     },
 
     methods: {
@@ -33,31 +48,68 @@ new Vue({
         },
         submit: function(){
             if (!this.canSubmit || this.isLoad || !this.searchWord) return;
-            this.isLoad = true;
 
+            this.initialize();
+            this.fetchSearch();
+        },
+        initialize: function() {
+            this.option = 0;
+            this.page = 1;
             this.rides = [];
             this.users = [];
-
-            let url = `api/search/${this.searchWord}`;
-
-            axios.get(url)
-            .catch(error =>{
-                console.error(error);
-                this.httpErrors.push(error);
-                this.isLoad = false;
-
-            }).then(res =>{
-                this.rides = res.data.rides.data;
-                this.users = res.data.users.data;
-
-                this.dataIsExist = !Boolean(this.rides.length + this.users.length);
-
-                this.isLoad = false;
-            });
+            this.httpErrors = [];
+            this.acceptAddLoad = false;
+            this.dataIsExist = false;
+            this.nextRidesIsExist = true;
+            this.nextUsersIsExist = true;
         },
 
-        openCancelParticipateModal: function(){
+        fetchSearch: function() {
+            this.isLoad = true;
 
+            const url = `api/search/${this.searchWord}/${this.option_arr[this.option]}?page=${this.page}`;
+
+            fetch(url)
+            .then(response => {
+                return response.json();
+            })
+            .then(res => {
+                res.rides.data.forEach(el => this.rides.push(el));
+                res.users.data.forEach(el => this.users.push(el));
+
+                if (!res.rides.next_page_url) {
+                    this.nextRidesIsExist = false;
+                }
+
+                if (!res.users.next_page_url) {
+                    this.nextUsersIsExist = false;
+                }
+
+                this.dataIsExist = Boolean(res.rides.data.length + res.users.data.length);
+
+
+            }).catch(e => {
+                console.log(e);
+                this.httpErrors.push(e);
+            });
+
+            this.isLoad = false;
+        },
+
+        addLoad: function(){
+            this.page++;
+            this.fetchSearch();
+        },
+
+        /**
+         * 更に読み込むボタン押下時
+         *
+         * @param {*} option
+         */
+        addLoadBtn: function(option){
+            this.option = option;
+            this.acceptAddLoad = true;
+            this.addLoad();
         }
     }
 });

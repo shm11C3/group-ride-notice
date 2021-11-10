@@ -48,7 +48,7 @@ Route::get('api/get/profile/{user_uuid}', [UserProfileController::class, 'getUse
 
 Route::get('api/get/weather/{prefecture_code}', [WeatherController::class, 'getWeather'])->whereNumber('prefecture_code')->name('getWeather');
 
-Route::get('api/search/{request}', [SearchController::class, 'search'])->name('search');
+Route::get('api/search/{keyword}/{option}', [SearchController::class, 'search'])->name('search');
 
 Route::get('api/get/meeting-places/{prefecture_code}', [MeetingPlaceController::class, 'getAllMeetingPlaces'])->whereNumber('prefecture_code')->name('getAllMeetingPlaces');
 

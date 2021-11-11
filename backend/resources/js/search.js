@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import {prefecture} from './constants/constant'
+import {postFollow} from './methods/fetch'
 
 new Vue({
     el: '#app',
@@ -74,8 +75,8 @@ new Vue({
                 return response.json();
             })
             .then(res => {
-                res.rides.data.forEach(el => this.rides.push(el));
-                res.users.data.forEach(el => this.users.push(el));
+                res.rides.data.forEach(ride => this.rides.push(ride));
+                res.users.data.forEach(user => this.users.push(user));
 
                 if (!res.rides.next_page_url) {
                     this.nextRidesIsExist = false;
@@ -110,6 +111,18 @@ new Vue({
             this.option = option;
             this.acceptAddLoad = true;
             this.addLoad();
+        },
+
+        /**
+         * フォロー/フォロー解除ボタン押下時
+         *
+         * @param {*} user_uuid
+         */
+        follow: function (user_uuid, i) {
+            let result =  '';
+            postFollow(user_uuid).then(res => {
+                this.users[i].userFollowed = res.follow;
+            });
         }
     }
 });

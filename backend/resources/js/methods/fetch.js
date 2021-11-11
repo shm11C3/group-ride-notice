@@ -11,7 +11,7 @@ export const postFollow = (user_to)=>{
         "user_to" : user_to
     }
 
-    fetch(url,
+    return fetch(url,
         {
             method: 'POST',
             headers: {
@@ -25,8 +25,7 @@ export const postFollow = (user_to)=>{
             return response.json();
         })
         .then(res => {
-            console.log(res);
-            return res.status;
+            return res;
         })
         .catch(e => {
             console.error(e);

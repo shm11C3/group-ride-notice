@@ -42,7 +42,7 @@ class FollowController extends Controller
                 ->where('user_to', $user_to)
                 ->delete();
 
-            $data = ['status' => 'unfollow'];
+            $data = ['status' => 'unfollow', 'follow' => false];
 
             return response()->json($data);
 
@@ -57,7 +57,7 @@ class FollowController extends Controller
                     'user_by' => $auth->uuid
                 ]);
 
-            $data = ['status' => 'follow'];
+            $data = ['status' => 'follow', 'follow' => true];
 
             return response()->json($data);
         }

@@ -154,26 +154,30 @@
     <div v-if="option == 0 || option == 2">
         <div v-if="users.length">
             <h6 class="mt-4 ml-4">見つかったユーザー</h6>
-            <div v-for="user in users" class="media shadow m-4">
-                <svg class="bd-placeholder-img align-self-start profile-img" width="64" height="64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 64x64"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" ></text></svg>
+            <div v-for="(user, i) in users" class="media shadow m-4">
+                <a class=text-decoration-none v-bind:href="'user/'+user.user_uuid">
+                    <svg class="bd-placeholder-img align-self-start profile-img" width="64" height="64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 64x64"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" ></text></svg>
+                </a>
                 <div class="media-body m-2">
                     <div class="btn-toolbar">
                         <div class="username-title">
+                            <a class=text-decoration-none v-bind:href="'user/'+user.user_uuid">
                                 <p>
                                     <span class="font-weight-bold">@{{ user.name }}</span><br>
                                     @{{ prefecture[user.prefecture_code-1] }}
                                 </p>
+                            </a>
                         </div>
                         @auth
                         <div class="btn-group ml-auto">
-                            <div v-if="user.userFollowed">
-                                <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォロー解除</button>
+                            <div v-if="!user.userFollowed && user.uuid != '{{ Auth::getUser()->uuid }}'">
+                                <button v-on:click="follow(user.uuid, i)" type="button" class="btn btn-success">フォローする</button>
                             </div>
-                            <div v-else-if="user.uuid == '{{ Auth::user()->uuid }}'">
-                                <a type="button" class="btn btn-outline-secondary" href="{{ route('showConfig') }}">プロフィールを編集</a>
+                            <div v-else-if="user.userFollowed && user.uuid != '{{ Auth::getUser()->uuid }}'">
+                                <button v-on:click="follow(user.uuid, i)" type="button" class="btn btn-outline-secondary">フォロー解除</button>
                             </div>
                             <div v-else>
-                                <button v-on:click="follow" type="button" class="btn btn-success">フォローする</button>
+                                <a type="button" class="btn btn-outline-secondary" href="{{ route('showConfig') }}">プロフィールを編集</a>
                             </div>
                         </div>
                         @endauth

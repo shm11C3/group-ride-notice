@@ -23,4 +23,19 @@ class Follow extends Model
 
         return $isFollowed;
     }
+
+    /**
+     * $user_uuidのフォロワーを返す
+     *
+     * @param string $user_uuid
+     * @return object
+     */
+    public function getUsersFollowers(string $user_uuid)
+    {
+        return DB::table('follows')
+            ->where('user_to', $user_uuid)
+            ->get([
+                'user_by'
+            ]);
+    }
 }

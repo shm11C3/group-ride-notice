@@ -10,16 +10,15 @@ use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRequest;
 use App\Http\Requests\UpdateRideRequest;
 use App\Http\Requests\UpdatePublishStatusRequest;
-use App\Models\User;
+use App\Models\Follow;
 use App\Models\Ride;
-use App\Models\RideParticipant;
-use Dotenv\Parser\Value;
 
 class RideController extends Controller
 {
-    public function __construct(Ride $ride)
+    public function __construct(Ride $ride, Follow $follow)
     {
         $this->ride = $ride;
+        $this->follow = $follow;
     }
 
     /**
@@ -128,33 +127,49 @@ class RideController extends Controller
      */
     public function getRides($time_appoint, $prefecture_code, $intensityRange)
     {
-        $user = Auth::user();
-        $user_uuid = $user->uuid ?? 0;
-
+        $user_uuid = Auth::user()->uuid ?? 0;
 
         $time = $this->ride->createTimeSql($time_appoint);
         $operator = $this->ride->getOperatorByPrefectureCode($prefecture_code);
         $intensity = $this->ride->getIntstByRange($intensityRange);
 
+        $query_rides = Ride::with('rideParticipants');
 
-        $rides = Ride::with('rideParticipants')
+        // 公開されているライドを取得
+        $query_rides->where('rides.publish_status', 0)
+            ->where('time_appoint', '>', $time[0])
+            ->where('time_appoint', '<', $time[1])
+            ->where('meeting_places.prefecture_code', $operator, $prefecture_code)
+            ->where('intensity', '>=', $intensity[0])
+            ->where('intensity', '<=', $intensity[1]);
 
-            //rides.publish_status = 0
-                ->where('rides.publish_status', 0)
+        if($user_uuid){
+            // ログイン済みの場合
+            // 自分が開催するライドを取得
+            $query_rides->orWhere('host_user_uuid', $user_uuid)
                 ->where('time_appoint', '>', $time[0])
                 ->where('time_appoint', '<', $time[1])
                 ->where('meeting_places.prefecture_code', $operator, $prefecture_code)
                 ->where('intensity', '>=', $intensity[0])
-                ->where('intensity', '<=', $intensity[1])
-            //host_user_uuid = $user_uuid
-                ->orWhere('host_user_uuid', $user_uuid)
-                ->where('time_appoint', '>', $time[0])
-                ->where('time_appoint', '<', $time[1])
-                ->where('meeting_places.prefecture_code', $operator, $prefecture_code)
-                ->where('intensity', '>=', $intensity[0])
-                ->where('intensity', '<=', $intensity[1])
+                ->where('intensity', '<=', $intensity[1]);
 
-            ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
+            $followers = $this->follow->getUsersFollowers($user_uuid);
+            if(isset($followers[0])){
+                // フォロワーが主催する限定公開ライドを取得
+                foreach($followers as $follower){
+                    $query_rides->orWhere('host_user_uuid', $follower->user_by)
+                    ->where('rides.publish_status', 1)
+                    ->where('time_appoint', '>', $time[0])
+                    ->where('time_appoint', '<', $time[1])
+                    ->where('meeting_places.prefecture_code', $operator, $prefecture_code)
+                    ->where('intensity', '>=', $intensity[0])
+                    ->where('intensity', '<=', $intensity[1]);
+                }
+
+            }
+
+        }
+            $rides = $query_rides->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
             ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
             ->join('users', 'host_user_uuid', 'users.uuid')
             ->orderBy('rides.created_at' ,'desc')

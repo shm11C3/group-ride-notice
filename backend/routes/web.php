@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\SearchViewController;
 use App\Http\Controllers\UserViewController;
+use App\Models\Follow;
 use App\Models\Ride;
 
 /*
@@ -53,6 +54,10 @@ Route::get('api/search/{keyword}/{option}', [SearchController::class, 'search'])
 Route::get('api/get/meeting-places/{prefecture_code}', [MeetingPlaceController::class, 'getAllMeetingPlaces'])->whereNumber('prefecture_code')->name('getAllMeetingPlaces');
 
 Route::get('api/get/ride-routes/{lap_status}', [RideRouteCOntroller::class, 'getAllRideRoutes'])->whereNumber('lap_status')->name('getAllRideRoutes');
+
+Route::get('api/get/follows/{user_by}', [FollowController::class, 'getFollows'])->whereUuid('user_by')->name('getFollows');
+
+Route::get('api/get/followers/{user_to}', [FollowController::class, 'getFollowers'])->whereUuid('user_to')->name('getFollowers');
 
 
 //非ログイン時

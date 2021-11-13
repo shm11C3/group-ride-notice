@@ -24,6 +24,9 @@ class UserViewController extends Controller
 
     /**
      * ユーザーのプロフィールページを表示
+     *
+     * @param string $user_uuid
+     * @return view 'user\{user_uuid}'
      */
     public function showUser(string $user_uuid)
     {
@@ -43,11 +46,12 @@ class UserViewController extends Controller
             ]);
 
         if(isset($user[0])){
+            $auth_user = Auth::user()->uuid ?? 0;
             $follower_isExist = !empty($user[0]->followers[0]);
 
-            if($follower_isExist){
+            if($follower_isExist || $auth_user){
                 // フォロー済みの場合True
-                $userFollowed = $this->user->getUserFollowed($user[0]->followers, Auth::user()->uuid);
+                $userFollowed = $this->user->getUserFollowed($user[0]->followers, $auth_user);
 
             }else{
                 $userFollowed = false;

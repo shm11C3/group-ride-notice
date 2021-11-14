@@ -25,17 +25,58 @@ class Follow extends Model
     }
 
     /**
-     * $user_uuidのフォロワーを返す
+     * $user_uuid のフォロワーを返す
      *
      * @param string $user_uuid
      * @return object
      */
-    public function getUsersFollowers(string $user_uuid)
+    public function getFollowersBy_user_uuid(string $user_uuid)
     {
         return DB::table('follows')
             ->where('user_to', $user_uuid)
             ->get([
                 'user_by'
             ]);
+    }
+
+    /**
+     * $user_uuid のフォローを返す
+     *
+     * @param string $user_uuid
+     * @return object
+     */
+    public function getFollowsBy_user_uuid(string $user_uuid)
+    {
+        return DB::table('follows')
+            ->where('user_by', $user_uuid)
+            ->get([
+                'user_to'
+            ]);
+    }
+
+    /**
+     * @param object $follows
+     * @return array $follows_arr
+     */
+    public function follows_to_arr(object $follows)
+    {
+        $follows_arr = [];
+        foreach($follows as $follow){
+            array_push($follows_arr, $follow->user_to);
+        }
+        return $follows_arr;
+    }
+
+    /**
+     * @param object $follows
+     * @return array $follows_arr
+     */
+    public function followers_to_arr(object $followers)
+    {
+        $followers_arr = [];
+        foreach($followers as $follower){
+            array_push($followers_arr, $follower->user_by);
+        }
+        return $followers_arr;
     }
 }

@@ -41,7 +41,7 @@ Route::get('/search', [SearchViewController::class, 'showSearch'])->name('showSe
 
 
 //GET API
-Route::get('api/get/rides/{time_appoint}/{prefecture_code}/{intensity}', [RideController::class, 'getRides'])->whereNumber('time_appoint', 'prefecture_code', 'intensityRange')->name('getRides');
+Route::get('api/get/rides/{time_appoint}/{prefecture_code}/{intensity}/{filterFollow}', [RideController::class, 'getRides'])->whereNumber('time_appoint', 'prefecture_code', 'intensityRange', 'filterFollow')->name('getRides');
 
 Route::get('api/get/ride/{ride_uuid}', [RideController::class, 'getRideBy_rides_uuid'])->whereUuid('ride_uuid')->name('getRide');
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Follow;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -19,8 +20,6 @@ class RideApiTest extends TestCase
         parent::setUp();
         $this->user = User::where('id', 1)->first();
         $this->post = Ride::where('id', 1)->first();
-
-
     }
 
     public function testGetRides()
@@ -54,15 +53,23 @@ class RideApiTest extends TestCase
             //検証 (ログイン時)
             dump($testingApi_url);
             $response->assertStatus(200)
-                ->assertJsonFragment(['publish_status' => 0]) // 公開設定のライド
-                ->assertJsonFragment(['publish_status' => 1]);  // 限定公開設定のライド
+                ->assertJsonFragment(['publish_status' => 0]); // 公開設定のライド
         }
 
         $response = $this->getJson($testingApi_urls['all_follows']);
-        $response->assertJsonMissing(['publish_status' => 2]); // 非公開設定のライド
+        $response->assertJsonMissing(['publish_status' => 2])
+            ->assertJsonMissing(['host_user_uuid' => $this->user->uuid]); // 非公開設定のライド
 
         $response = $this->getJson($testingApi_urls['all']);
-        $response->assertJsonMissing(['publish_status' => 2]); // 公開設定のライド
 
+        $response->assertJsonFragment([
+                // 自アカウントの限定公開設定のライドは取得できる
+                'host_user_uuid' => $this->user->uuid,
+                'publish_status' => 1
+            ])->assertJsonFragment([
+                // 自アカウントの限定公開設定のライドは取得できる
+                'host_user_uuid' => $this->user->uuid,
+                'publish_status' => 2
+            ]);
     }
 }

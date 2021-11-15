@@ -33,6 +33,9 @@ services:
       - MYSQL_PASSWORD=${DB_PASS:-secret}
       - MYSQL_ROOT_PASSWORD=${DB_PASS:-secret}
 
+  db-testing:
+    build: ./infra/docker/mysql
+
   pma:
     image: phpmyadmin/phpmyadmin
     environment:

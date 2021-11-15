@@ -42,7 +42,7 @@ class FollowController extends Controller
                 ->where('user_to', $user_to)
                 ->delete();
 
-            $data = ['status' => 'unfollow'];
+            $data = ['status' => 'unfollow', 'follow' => false];
 
             return response()->json($data);
 
@@ -54,12 +54,58 @@ class FollowController extends Controller
                 ->insert([
                     'uuid' => $uuid,
                     'user_to' => $user_to,
-                    'user_by' => $auth->uuid
+                    'user_by' => $auth->uuid,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
 
-            $data = ['status' => 'follow'];
+            $data = ['status' => 'follow', 'follow' => true];
 
             return response()->json($data);
         }
+    }
+
+    /**
+     * $user_by がフォローしているユーザを取得
+     *
+     * @param string $user_by
+     * @return Response
+     */
+    public function getFollows(string $user_by)
+    {
+        $follows = DB::table('follows')
+            ->where('user_by', $user_by)
+            ->join('users', 'users.uuid', 'user_to')
+            ->join('user_profiles', 'user_uuid', 'user_to')
+            ->orderBy('follows.created_at', 'desc')
+            ->get([
+               'users.uuid',
+               'name',
+               'user_profile_img_path'
+            ]);
+
+        return response()->json($follows);
+    }
+
+    /**
+     * $user_to をフォローしているユーザを取得
+     *
+     * @param string $user_to
+     * @param Response
+     */
+    public function getFollowers(string $user_to)
+    {
+        $followers = DB::table('follows')
+            ->where('user_to', $user_to)
+            ->join('users', 'users.uuid', 'user_to')
+            ->join('user_profiles', 'user_uuid', 'user_to')
+            ->orderBy('follows.created_at', 'desc')
+            ->get([
+               'users.uuid',
+               'name',
+               'user_profile_img_path'
+            ]);
+
+        return response()->json($followers);
     }
 }

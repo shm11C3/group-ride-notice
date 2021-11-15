@@ -23,6 +23,7 @@ new Vue({
         time_appoint: 0,
         prefecture_code: 0,
         intensity: 0,
+        filterFollow: 0,
 
 
         //状態
@@ -49,7 +50,7 @@ new Vue({
         this.observer = new IntersectionObserver((entries) => {
             const entry = entries[0];
 
-            if (entry && entry.isIntersecting && this.resIsExist) {
+            if (entry && entry.isIntersecting && this.resIsExist && !this.next_isLoad) {
                 this.addLoad();
             }
         });
@@ -65,20 +66,20 @@ new Vue({
         initialLoad: function(){
             this.rides = [];
             this.page = 1;
-            this.getRides();
+            this.fetchRides();
         },
         addLoad: function (){
             this.page++;
-            this.getRides();
+            this.fetchRides();
         },
 
         /**
          * ライドの取得
          */
-        getRides: function(){
+        fetchRides: function(){
             this.isLoad = true;
 
-            let url = `/api/get/rides/${this.time_appoint}/${this.prefecture_code}/${this.intensity}?page=${this.page}`;
+            const url = `/api/get/rides/${this.time_appoint}/${this.prefecture_code}/${this.intensity}/${Number(this.filterFollow)}?page=${this.page}`;
 
             axios.get(url)
             .catch(error =>{
@@ -90,10 +91,13 @@ new Vue({
                 const data = res.data.rides.data;
                 const auth = Boolean(res.data.user_uuid);
 
-                data.forEach(element => this.rides.push(element));
-                this.isLoad = false;
+                if(data){
+                    data.forEach(ride => this.rides.push(ride));
+                }
 
-                this.resIsExist = Boolean(res.data.rides.next_page_url);
+                this.resIsExist = Boolean(res.data.next_page_url);
+
+                this.isLoad = false;
 
                 if(auth && !this.resNextIsExist){
                     this.getNextRide();
@@ -139,6 +143,10 @@ new Vue({
 
         input_intensity: function(val){
             this.intensity = val.target.value;
+            this.initialLoad();
+        },
+
+        input_filterFollow: function(){
             this.initialLoad();
         },
 

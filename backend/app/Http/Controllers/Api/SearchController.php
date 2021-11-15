@@ -110,7 +110,8 @@ class SearchController extends Controller
         ])
         ->simplePaginate($per_page_users);
 
-        if(isset($users[0])) {
+
+        if(!isset($users[0])) {
             return $users;
         }
 

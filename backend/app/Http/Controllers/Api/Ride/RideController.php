@@ -132,7 +132,7 @@ class RideController extends Controller
      *
      * @return object $rides
      */
-    public function getRides(int $time_appoint, int $prefecture_code, int $intensityRange, int $filterFollow)
+    public function getRides(int $time_appoint, int $prefecture_code, int $intensityRange, bool $filterFollow)
     {
         $user_uuid = Auth::user()->uuid ?? 0;
 

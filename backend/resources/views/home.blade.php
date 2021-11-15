@@ -86,7 +86,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-2 col-lg-8">
-                                
+
                             </div>
                         </div>
                         <p class="mb-0 mt-3">強度：@{{ next_ride.intensity }}</p>
@@ -207,6 +207,10 @@
         <div class="col-12 col-lg-3">
         </div>
     </div>
+    <div class="mt-2">
+        <input v-on:change="input_filterFollow" value="true" v-bind:disabled="isLoad" type="checkbox" v-model="filterFollow">
+        <label for="filterFollow" class="ml-1">フォロー中のユーザのみ表示</label>
+    </div>
     <div class="rides">
         <div v-if="httpErrors">
             <div v-for="(httpError, index) in httpErrors">
@@ -279,7 +283,7 @@
                                     </p>
                                     <span class="text-muted additional-txt">メッセージ</span>
                                     <textarea class="form-control" v-model="participateComment"></textarea>
-                                    
+
                                 </div>
                                 <div class="modal-footer">
                                     <div v-if="pt_isPush">
@@ -300,7 +304,7 @@
                 </div>
             </div>
             @endauth
-            <!---->        
+            <!---->
             <div v-for="(ride, index) in rides" class="media ride shadow mt-4">
                 <a v-bind:href="'/user/'+ride.host_user_uuid">
                     <svg class="bd-placeholder-img align-self-start profile-img" width="64" height="64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 64x64"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" ></text></svg>

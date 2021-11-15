@@ -119,7 +119,6 @@ new Vue({
          * @param {*} user_uuid
          */
         follow: function (user_uuid, i) {
-            let result =  '';
             postFollow(user_uuid).then(res => {
                 this.users[i].userFollowed = res.follow;
             });

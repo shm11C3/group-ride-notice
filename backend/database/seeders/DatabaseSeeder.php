@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
     public $numberOfUsers = 100;
 
-    public $numberOfRides = 1000;
+    public $numberOfRides = 10000;
 
     public $numberOfRideParticipants = 3000;
 

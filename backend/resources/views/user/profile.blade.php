@@ -12,9 +12,18 @@
                 </p>
             </div>
             @auth
-            @if(Auth::user()->uuid === $user->uuid)
+            @if(Auth::getUser()->uuid === $user->uuid)
             <div class="btn-group ml-auto mb-5">
                 <a type="button" class="btn btn-outline-secondary" href="{{ route('showConfig') }}">プロフィールを編集</a>
+            </div>
+            @else
+            <div id="app" class="btn-group ml-auto mb-5">
+                <div @if($userFollowed) v-if="followBtnStatus" @else v-if="!followBtnStatus" @endif>
+                    <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォロー解除</button>
+                </div>
+                <div v-else>
+                    <button v-on:click="follow" type="button" class="btn btn-success">フォローする</button>
+                </div>
             </div>
             @endif
             @endauth
@@ -34,7 +43,7 @@
                 <span class="text-muted additional-txt">Facebookアカウント</span><br>
                 @if(strlen($user->fb_username) > 0)
                 <a style="color: rgb(0, 174, 255)" href="https://Facebook.com/{{ $user->fb_username }}" target="_blank" rel="noopener noreferrer">{{ $user->fb_username }}</a>
-                @endif    
+                @endif
             </div>
             <div class="user-url mt-2">
                 <span class="text-muted additional-txt">Twitterアカウント</span><br>
@@ -43,7 +52,7 @@
                 @endif
             </div>
             <div class="user-url mt-2">
-                
+
                 <span class="text-muted additional-txt">Instagramアカウント</span><br>
                 @if(strlen($user->ig_username) > 0)
                 <a style="color: rgb(0, 174, 255)" href="https://www.instagram.com/{{ $user->ig_username }}" target="_blank" rel="noopener noreferrer">{{ $user->ig_username }}</a>
@@ -53,4 +62,7 @@
     </div>
 </div>
 <div></div>
+@if(Auth::check() && Auth::user()->uuid !== $user->uuid)
+<script src="{{ mix('js/userProfile.js') }}"></script>
+@endif
 @endsection

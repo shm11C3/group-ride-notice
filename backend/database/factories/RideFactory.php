@@ -23,7 +23,12 @@ class RideFactory extends Factory
      */
     public function definition()
     {
+        static $order = 0;
+
         $seeder = new DatabaseSeeder;
+
+        $a = $order++;
+        $publish_status = $a%3;
 
         return [
             'uuid' => $this->faker->uuid(),
@@ -35,7 +40,7 @@ class RideFactory extends Factory
             'intensity' => $this->faker->numberBetween(0, 10),
             'num_of_laps' => $this->faker->numberBetween(0, 30),
             'comment' => $this->faker->sentence(),
-            'publish_status' => $this->faker->numberBetween(0, 2),
+            'publish_status' => $publish_status,
         ];
     }
 }

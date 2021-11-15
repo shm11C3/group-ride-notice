@@ -39,12 +39,21 @@ class DataBaseQueryServiceProvider extends ServiceProvider
                     $binding = "'{$binding->toDateTimeString()}'";
                 } elseif ($binding instanceof DateTime) {
                     $binding = "'{$binding->format('Y-m-d H:i:s')}'";
+                }elseif (is_object($binding)) {
+                    // Str::uuidメソッドを使用した際にオブジェクト形式で出力されるので文字列に変換
+                    $binding_obj = $binding;
+                    $binding = strval($binding_obj);
                 }
 
                 $sql = preg_replace('/\\?/', $binding, $sql, 1);
             }
 
-            Log::debug('SQL', ['sql' => $sql, 'time' => "{$query->time} ms"]);
+            Log::channel('sql')->debug('SQL', ['sql' => $sql, 'time' => "{$query->time} ms"]);
+
+            if ($query->time > 15) {
+                // TODO 自動でEXPLAINを実行
+                Log::channel('queryAlert')->debug('Slow Query', ['sql' => $sql, 'time' => "{$query->time} ms"]);
+            }
         });
 
         Event::listen(TransactionBeginning::class, function (TransactionBeginning $event): void {

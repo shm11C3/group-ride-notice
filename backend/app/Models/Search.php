@@ -11,47 +11,49 @@ class Search extends Model
 
     /**
      * キーワードのメタ文字をエスケープ
-     * @param array $searchWord
-     * @return array $$searchWordArr
+     * @param array $searchWords_arr
+     * @return array $replaced_searchWord_arr
      */
-    public function escapeMetaCharacters_byArr(array $searchWordArr)
+    public function escapeMetaCharacters_byArr(array $searchWords_arr)
     {
-        foreach($searchWordArr as $i => $searchWord){
-            $searchWordArr[$i] = '%' . addcslashes($searchWord, '%_\\') . '%';
+        $replaced_SearchWords_arr = [];
+        foreach($searchWords_arr as $searchWord){
+            array_push($replaced_SearchWords_arr, '%' . addcslashes($searchWord, '%_\\') . '%');
         }
-        
-        return $searchWordArr;
+        return $replaced_SearchWords_arr;
     }
 
     /**
      * キーワードのメタ文字をエスケープ
-     * @param string $$searchWord
-     * @return string $$searchWord
+     * @param string $searchWord
+     * @return string
      */
     public function escapeMetaCharacters_byStr(string $searchWord)
     {
-        $searchWord = '%' . addcslashes($searchWord, '%_\\') . '%';
-        
-        return $searchWord;
+        return '%' . addcslashes($searchWord, '%_\\') . '%';
     }
 
     /**
      * スペースを置換
+     *
+     * @param string $request
+     * @return array
      */
-    public function spaceSubstitute($request)
+    public function spaceSubstitute(string $request)
     {
         $substitutedSpace = mb_convert_kana($request, 's');
 
-        //$searchWord = "'".preg_replace("/( |　)+/u", "','", $request)."'";
+        return preg_split('/[\s,]+/', $substitutedSpace, -1, PREG_SPLIT_NO_EMPTY);
+    }
 
-        //$searchWordArr = preg_split('/[\s,]+/', $substitutedSpace, "");
-
-        //dd($searchWord);
-
-        $searchWordArr = preg_split('/[\s,]+/', $substitutedSpace, -1, PREG_SPLIT_NO_EMPTY);
-
-        //dd($searchWordArr);
-
-        return $searchWordArr;
+    /**
+     * 受け取った検索文字列をエスケープ済みの配列に変換
+     *
+     * @param string $request
+     * @return array
+     */
+    public function generateSearchArray(string $keyword)
+    {
+        return $this->escapeMetaCharacters_byArr($this->spaceSubstitute($keyword));
     }
 }

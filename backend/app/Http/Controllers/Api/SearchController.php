@@ -32,16 +32,14 @@ class SearchController extends Controller
             ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
             ->join('users', 'host_user_uuid', 'users.uuid');
 
-        foreach($keywords as $value){
-            $keyword = $this->search->escapeMetaCharacters_byStr($value);
-
-            $query_rides->where('rides.name', 'LIKE', $keyword)
-            ->where('rides.publish_status', 0)
-            ->orWhere('rides.comment', 'LIKE', $keyword)
-            ->orWhere('meeting_places.name', 'LIKE', $keyword)
-            ->orWhere('meeting_places.address', 'LIKE', $keyword)
-            ->orWhere('ride_routes.name', 'LIKE', $keyword)
-            ->orWhere('ride_routes.comment', 'LIKE', $keyword);
+        foreach($keywords as $keyword){
+            $query_rides
+                ->where('rides.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                ->orWhere('rides.comment', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                ->orWhere('meeting_places.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                ->orWhere('meeting_places.address', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                ->orWhere('ride_routes.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                ->orWhere('ride_routes.comment', 'LIKE', $keyword)->where('rides.publish_status', 0);
         }
 
         $rides = $query_rides->select([
@@ -85,9 +83,7 @@ class SearchController extends Controller
             ->join('user_profiles', 'user_uuid', 'users.uuid');
 
 
-        foreach($keywords as $value){
-            $keyword = $this->search->escapeMetaCharacters_byStr($value);
-
+        foreach($keywords as $keyword){
             $query_users->where('name', 'LIKE', $keyword)
             ->orWhere('user_intro', 'LIKE', $keyword)
             ->orWhere('fb_username', 'LIKE', $keyword)
@@ -153,7 +149,7 @@ class SearchController extends Controller
             $per_page_users = 60;
         }
 
-        $keywords_arr = $this->search->spaceSubstitute($keyword); //検索キーワード配列
+        $keywords_arr = $this->search->generateSearchArray($keyword); //検索キーワード配列
 
         // $optionの値に応じてクエリメソッドを呼び出す
         if($option === 'all' || $option === 'rides'){

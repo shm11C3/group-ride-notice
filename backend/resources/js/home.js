@@ -88,14 +88,14 @@ new Vue({
                 this.isLoad = false;
 
             }).then(res =>{
-                const data = res.data.rides.data;
                 const auth = Boolean(res.data.user_uuid);
 
-                if(data){
-                    data.forEach(ride => this.rides.push(ride));
+                const rides_data = res.data.rides;
+                if(rides_data.data){
+                    rides_data.data.forEach(ride => this.rides.push(ride));
                 }
 
-                this.resIsExist = Boolean(res.data.next_page_url);
+                this.resIsExist = Boolean(rides_data.next_page_url);
 
                 this.isLoad = false;
 

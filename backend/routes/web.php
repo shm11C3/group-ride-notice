@@ -40,25 +40,31 @@ Route::get('/user/{user_uuid}', [UserViewController::class, 'showUser'])->whereU
 Route::get('/search', [SearchViewController::class, 'showSearch'])->name('showSearch');
 
 
-//GET API
+// GET API
+
+// 検索
+Route::get('api/search/{keyword}/{option}', [SearchController::class, 'search'])->name('search');
+
+// ライド関連
 Route::get('api/get/rides/{time_appoint}/{prefecture_code}/{intensity}/{filterFollow}', [RideController::class, 'getRides'])->whereNumber('time_appoint', 'prefecture_code', 'intensityRange', 'filterFollow')->name('getRides');
 
 Route::get('api/get/ride/{ride_uuid}', [RideController::class, 'getRideBy_rides_uuid'])->whereUuid('ride_uuid')->name('getRide');
 
-Route::get('api/get/profile/{user_uuid}', [UserProfileController::class, 'getUserProfile'])->whereUuid('user_uuid')->name('getUserProfile');
-
 Route::get('api/get/weather/{prefecture_code}', [WeatherController::class, 'getWeather'])->whereNumber('prefecture_code')->name('getWeather');
-
-Route::get('api/search/{keyword}/{option}', [SearchController::class, 'search'])->name('search');
 
 Route::get('api/get/meeting-places/{prefecture_code}', [MeetingPlaceController::class, 'getAllMeetingPlaces'])->whereNumber('prefecture_code')->name('getAllMeetingPlaces');
 
 Route::get('api/get/ride-routes/{lap_status}', [RideRouteCOntroller::class, 'getAllRideRoutes'])->whereNumber('lap_status')->name('getAllRideRoutes');
 
+// ユーザープロフィール関連
+Route::get('api/get/profile/{user_uuid}', [UserProfileController::class, 'getUserProfile'])->whereUuid('user_uuid')->name('getUserProfile');
+
+Route::get('api/get/userRides/{user_uuid}', [RideController::class, 'getUserRides'])->whereUuid('user_uuid')->name('getUserRides');
+
+// フォロー関係
 Route::get('api/get/follows/{user_by}', [FollowController::class, 'getFollows'])->whereUuid('user_by')->name('getFollows');
 
 Route::get('api/get/followers/{user_to}', [FollowController::class, 'getFollowers'])->whereUuid('user_to')->name('getFollowers');
-
 
 //非ログイン時
 Route::group(['middleware' => ['guest']], function () {

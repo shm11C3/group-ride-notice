@@ -20,9 +20,11 @@ class RideApiTest extends TestCase
         parent::setUp();
         $this->user = User::where('id', 1)->first();
         $this->post = Ride::where('id', 1)->first();
+
+
     }
 
-    public function testGetRides()
+    public function test_getRides()
     {
         $testingApi_urls = [
             'all' => '/api/get/rides/0/0/0/0?page=1',
@@ -39,7 +41,6 @@ class RideApiTest extends TestCase
             $response = $this->getJson($testingApi_url); // すべてのライドを取得
 
             //検証 (非ログイン時)
-            dump($testingApi_url);
             $response->assertStatus(200)
                 ->assertJsonFragment(['publish_status' => 0]) // 公開設定のライド
                 ->assertJsonMissing(['publish_status' => 1])  // 限定公開設定のライド
@@ -51,7 +52,6 @@ class RideApiTest extends TestCase
             $response = $this->actingAs($this->user)->getJson($testingApi_url); // すべてのライドを取得
 
             //検証 (ログイン時)
-            dump($testingApi_url);
             $response->assertStatus(200)
                 ->assertJsonFragment(['publish_status' => 0]); // 公開設定のライド
         }
@@ -71,5 +71,24 @@ class RideApiTest extends TestCase
                 'host_user_uuid' => $this->user->uuid,
                 'publish_status' => 2
             ]);
+    }
+
+    public function test_getUserRides()
+    {
+        $response = $this->getJson('/api/get/userRides/241cec9d-7d70-64e2-827e-379efdff0a66');
+
+        $response->assertStatus(200)
+            ->assertJsonFragment(['publish_status' => 0]) // 公開設定のライド
+            ->assertJsonMissing(['publish_status' => 1])  // 限定公開設定のライド
+            ->assertJsonMissing(['publish_status' => 2]);
+
+        $response = $this->actingAs($this->user)->getJson('/api/get/userRides/241cec9d-7d70-64e2-827e-379efdff0a66');
+
+        $response->assertStatus(200)
+            ->assertJsonFragment(['publish_status' => 0]) // 公開設定のライド
+            ->assertJsonFragment(['publish_status' => 1])  // 限定公開設定のライド
+            ->assertJsonFragment(['publish_status' => 2]); // 非公開設定のライド
+
+        $response = $this->actingAs($this->user)->getJson('/api/get/userRides/241cec9d-7d70-64e2-827e-379efdff0a66');
     }
 }

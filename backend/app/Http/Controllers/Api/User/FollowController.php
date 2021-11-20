@@ -78,11 +78,12 @@ class FollowController extends Controller
             ->join('users', 'users.uuid', 'user_to')
             ->join('user_profiles', 'user_uuid', 'user_to')
             ->orderBy('follows.created_at', 'desc')
-            ->get([
+            ->select([
                'users.uuid',
                'name',
                'user_profile_img_path'
-            ]);
+            ])
+            ->simplePaginate(100);
 
         return response()->json($follows);
     }
@@ -97,14 +98,15 @@ class FollowController extends Controller
     {
         $followers = DB::table('follows')
             ->where('user_to', $user_to)
-            ->join('users', 'users.uuid', 'user_to')
-            ->join('user_profiles', 'user_uuid', 'user_to')
+            ->join('users', 'users.uuid', 'user_by')
+            ->join('user_profiles', 'user_uuid', 'user_by')
             ->orderBy('follows.created_at', 'desc')
-            ->get([
+            ->select([
                'users.uuid',
                'name',
                'user_profile_img_path'
-            ]);
+            ])
+            ->simplePaginate(100);
 
         return response()->json($followers);
     }

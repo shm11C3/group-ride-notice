@@ -23,7 +23,6 @@ new Vue({
         userRides: [],
         follows: [],
         followers: [],
-        //usersDisplay: [],
 
         userRides_page: 1,
         follows_page: 1,
@@ -58,9 +57,18 @@ new Vue({
         /**
          * フォロー/フォロー解除ボタン押下時
          */
-         follow: function(){
-            postFollow(this.user_uuid);
-            this.followBtnStatus = !this.followBtnStatus;
+         follow: function(user_uuid, index){
+            postFollow(user_uuid);
+
+            if(index == false){
+                this.followBtnStatus = !this.followBtnStatus;
+
+            }else if(this.activeTab == this.follows_index){
+                this.follows[index].userFollowed = !this.follows[index].userFollowed;
+
+            }else{
+                this.followers[index].userFollowed = !this.followers[index].userFollowed;
+            }
         },
 
         /**

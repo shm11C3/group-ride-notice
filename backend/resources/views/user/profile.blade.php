@@ -21,10 +21,10 @@
                 @else
                 <div class="btn-group ml-auto mb-5">
                     <div @if($userFollowed) v-if="followBtnStatus" @else v-if="!followBtnStatus" @endif>
-                        <button v-on:click="follow" type="button" class="btn btn-outline-secondary">フォロー解除</button>
+                        <button v-on:click="follow('{{ $user->uuid }}', false)" type="button" class="btn btn-outline-secondary">フォロー解除</button>
                     </div>
                     <div v-else>
-                        <button v-on:click="follow" type="button" class="btn btn-success">フォローする</button>
+                        <button v-on:click="follow('{{ $user->uuid }}', false)" type="button" class="btn btn-success">フォローする</button>
                     </div>
                 </div>
                 @endif
@@ -200,7 +200,16 @@
                                 </p>
                             </a>
                         </div>
-
+                        @auth
+                        <div class="btn-group ml-auto">
+                            <div v-if="!user.userFollowed && user.uuid != '{{ Auth::getUser()->uuid }}'">
+                                <button v-on:click="follow(user.uuid, i)" type="button" class="btn btn-success">フォローする</button>
+                            </div>
+                            <div v-else-if="user.userFollowed && user.uuid != '{{ Auth::getUser()->uuid }}'">
+                                <button v-on:click="follow(user.uuid, i)" type="button" class="btn btn-outline-secondary">フォロー解除</button>
+                            </div>
+                        </div>
+                        @endauth
                     </div>
                     <div class="user-intro border-top">
                         <span class="text-muted additional-txt">自己紹介</span><br>
@@ -227,7 +236,16 @@
                                 </p>
                             </a>
                         </div>
-
+                        @auth
+                        <div class="btn-group ml-auto">
+                            <div v-if="!user.userFollowed && user.uuid != '{{ Auth::getUser()->uuid }}'">
+                                <button v-on:click="follow(user.uuid, i)" type="button" class="btn btn-success">フォローする</button>
+                            </div>
+                            <div v-else-if="user.userFollowed && user.uuid != '{{ Auth::getUser()->uuid }}'">
+                                <button v-on:click="follow(user.uuid, i)" type="button" class="btn btn-outline-secondary">フォロー解除</button>
+                            </div>
+                        </div>
+                        @endauth
                     </div>
                     <div class="user-intro border-top">
                         <span class="text-muted additional-txt">自己紹介</span><br>

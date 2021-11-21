@@ -60,10 +60,10 @@ new Vue({
          follow: function(user_uuid, index){
             postFollow(user_uuid);
 
-            if(index == false){
+            if(index === false){
                 this.followBtnStatus = !this.followBtnStatus;
 
-            }else if(this.activeTab == this.follows_index){
+            }else if(this.activeTab === this.follows_index){
                 this.follows[index].userFollowed = !this.follows[index].userFollowed;
 
             }else{

@@ -365,4 +365,64 @@ class RideController extends Controller
 
         return response()->json($ride);
     }
+
+    /**
+     * ユーザーが作成したライドを取得
+     *
+     * @param string $user_uuid
+     * @return Response
+     */
+    public function getUserRides(string $user_uuid)
+    {
+        $query_rides = Ride::with('rideParticipants');
+
+        $auth_uuid = Auth::user()->uuid ?? 0;
+        if(!$auth_uuid){
+            $query_rides->where('host_user_uuid', $user_uuid)->where('rides.publish_status', 0);
+
+        }elseif($user_uuid === $auth_uuid){
+            $query_rides->where('host_user_uuid', $user_uuid);
+
+        }else{
+            // ログイン時・他のユーザ
+            $isFollower = array_search($user_uuid, $this->follow->followers_to_arr($this->follow->getFollowersBy_user_uuid($auth_uuid)));
+
+            if($isFollower !== false){
+                $query_rides->where('host_user_uuid', $user_uuid)->where('rides.publish_status', 0)
+                    ->orWhere('host_user_uuid', $user_uuid)->where('rides.publish_status', 1);
+            }else{
+                $query_rides->where('host_user_uuid', $user_uuid)->where('rides.publish_status', 0);
+            }
+        }
+
+        $rides = $query_rides->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
+            ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
+            ->join('users', 'host_user_uuid', 'users.uuid')
+            ->orderBy('rides.created_at' ,'desc')
+            ->select([
+                'rides.uuid',
+                'host_user_uuid',
+                'meeting_places_uuid',
+                'ride_routes_uuid',
+                'rides.name as ride_name',
+                'time_appoint',
+                'intensity',
+                'num_of_laps',
+                'rides.comment as ride_comment',
+                'rides.publish_status',
+                'rides.created_at',
+                'rides.updated_at',
+                'meeting_places.name as mp_name',
+                'meeting_places.prefecture_code',
+                'address',
+                'ride_routes.name as rr_name',
+                'elevation',
+                'distance',
+                'ride_routes.comment as rr_comment',
+                'users.name as user_name'
+            ])
+            ->simplePaginate(100);
+
+        return response()->json($rides);
+    }
 }

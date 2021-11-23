@@ -65,7 +65,7 @@ new Vue({
         getQueryParam: function(){
             const param = location.search;
 
-            return param.substr(6,36)
+            return param.substring(6, 42)
         },
 
         /**
@@ -158,8 +158,6 @@ new Vue({
          */
         getWether: function(){
             const url = `api/get/weather/${this.ride.prefecture_code}`;
-
-
 
             axios.get(url)
             .catch(error =>{

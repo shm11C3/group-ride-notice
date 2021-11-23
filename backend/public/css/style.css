@@ -4,7 +4,7 @@
 
 .navbar-brand {
     color: white !important;
-    
+
 }
 
 .text-accent {
@@ -86,12 +86,12 @@
     height: 100px;
 }
 
-.hidden-btn {     
+.hidden-btn {
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
     cursor:pointer;
-    overflow: hidden;        
+    overflow: hidden;
 }
 
 .edit-btn {
@@ -111,3 +111,8 @@
 .twitter {
     color: rgb(29, 155, 240);
 }
+
+.user-tab-active{
+    color: #fff!important;
+    background-color: #2C3E50!important;
+  }

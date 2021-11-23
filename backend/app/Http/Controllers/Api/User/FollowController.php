@@ -8,13 +8,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RegisterFollowRequest;
 use App\Models\Follow;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class FollowController extends Controller
 {
-    public function __construct(Follow $follow)
+    public function __construct(Follow $follow, User $user)
     {
         $this->follow = $follow;
+        $this->user = $user;
     }
 
     /**
@@ -78,11 +80,39 @@ class FollowController extends Controller
             ->join('users', 'users.uuid', 'user_to')
             ->join('user_profiles', 'user_uuid', 'user_to')
             ->orderBy('follows.created_at', 'desc')
-            ->get([
+            ->select([
                'users.uuid',
                'name',
                'user_profile_img_path'
-            ]);
+            ])
+            ->simplePaginate(100);
+
+        if(!isset($follows[0])) {
+            return $follows;
+        }
+
+        $follows_uuid_list = [];
+        foreach($follows as $follow){
+            array_push($follows_uuid_list, $follow->uuid);
+        }
+
+        $followers = DB::table('follows')->whereIn('user_to', $follows_uuid_list)->get(['user_by', 'user_to']);
+        $auth_user = Auth::user()->uuid ?? 0;
+
+        $follower_isExist = false;
+
+        // userFollowedの取得
+        foreach($follows as $follow) {
+            $this->follow->pushFollower_to_user($follow, $followers);
+
+            if($follower_isExist || $auth_user){
+                // フォロー済みの場合True
+                $follow->userFollowed = $this->user->getUserFollowed((object) $follow->followers, $auth_user); // 取得したユーザにフォロワー配列を追加する
+
+            }else{
+                $follow->userFollowed = false;
+            }
+        }
 
         return response()->json($follows);
     }
@@ -95,17 +125,45 @@ class FollowController extends Controller
      */
     public function getFollowers(string $user_to)
     {
-        $followers = DB::table('follows')
+        $follows = DB::table('follows')
             ->where('user_to', $user_to)
-            ->join('users', 'users.uuid', 'user_to')
-            ->join('user_profiles', 'user_uuid', 'user_to')
+            ->join('users', 'users.uuid', 'user_by')
+            ->join('user_profiles', 'user_uuid', 'user_by')
             ->orderBy('follows.created_at', 'desc')
-            ->get([
+            ->select([
                'users.uuid',
                'name',
                'user_profile_img_path'
-            ]);
+            ])
+            ->simplePaginate(100);
 
-        return response()->json($followers);
+        if(!isset($follows[0])) {
+            return $follows;
+        }
+
+        $follows_uuid_list = [];
+        foreach($follows as $follow){
+            array_push($follows_uuid_list, $follow->uuid);
+        }
+
+        $followers = DB::table('follows')->whereIn('user_to', $follows_uuid_list)->get(['user_by', 'user_to']);
+        $auth_user = Auth::user()->uuid ?? 0;
+
+        $follower_isExist = false;
+
+        // userFollowedの取得
+        foreach($follows as $follow) {
+            $this->follow->pushFollower_to_user($follow, $followers);
+
+            if($follower_isExist || $auth_user){
+                // フォロー済みの場合True
+                $follow->userFollowed = $this->user->getUserFollowed((object) $follow->followers, $auth_user); // 取得したユーザにフォロワー配列を追加する
+
+            }else{
+                $follow->userFollowed = false;
+            }
+        }
+
+        return response()->json($follows);
     }
 }

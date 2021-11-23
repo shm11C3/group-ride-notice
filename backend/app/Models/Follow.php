@@ -79,4 +79,22 @@ class Follow extends Model
         }
         return $followers_arr;
     }
+
+    /**
+     * 取得したユーザにフォロワー配列を追加する
+     *
+     * @param object $user
+     * @param object $followers
+     *
+     * @return void
+     */
+    public function pushFollower_to_user(object $user, object $followers)
+    {
+        $user->followers = [];
+        foreach($followers as $follower){
+            if($follower->user_to === $user->uuid){
+                array_push($user->followers, $follower);
+            }
+        }
+    }
 }

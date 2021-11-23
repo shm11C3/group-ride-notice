@@ -19,6 +19,8 @@ class SearchApiTest extends TestCase
         $this->user = User::where('id', 1)->first();
         $this->post = Ride::where('id', 1)->first();
 
+        $this->other_user = User::where('id', 2)->first();
+
         $this->searchWords = [
             'test',
             'テストユーザ',
@@ -31,10 +33,28 @@ class SearchApiTest extends TestCase
     {
 
         $url_all = '/api/search/'.$this->searchWords[0].'/all?page=2';
-        $url_rides = '/api/search/'.$this->searchWords[0].'/rides?page=2';
+        $url_rides = '/api/search/'.$this->searchWords[0].'/rides?page=1';
         $url_users = '/api/search/'.$this->searchWords[0].'/users?page=2';
 
         $response = $this->getJson($url_rides);
+
+        // 非ログイン時
+        $response->assertStatus(200)
+                ->assertJsonFragment(['publish_status' => 0]) // 公開設定のライド
+                ->assertJsonMissing(['publish_status' => 1])  // 限定公開設定のライド
+                ->assertJsonMissing(['publish_status' => 2]); // 非公開設定のライド
+
+
+        // ログイン時 (フォロワーあり)
+        $response = $this->actingAs($this->user)->getJson($url_rides);
+
+        $response->assertStatus(200)
+                ->assertJsonFragment(['publish_status' => 0]) // 公開設定のライド
+                ->assertJsonFragment(['publish_status' => 1])  // 限定公開設定のライド
+                ->assertJsonMissing(['publish_status' => 2]); // 非公開設定のライド
+
+        // ログイン時 (フォロワーなし)
+        $response = $this->actingAs($this->other_user)->getJson($url_rides);
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['publish_status' => 0]) // 公開設定のライド

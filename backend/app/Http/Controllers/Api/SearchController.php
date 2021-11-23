@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Follow;
 use Illuminate\Http\Request;
 use App\Models\Search;
 use Illuminate\Support\Facades\Auth;
@@ -11,10 +12,11 @@ use App\Models\Ride;
 
 class SearchController extends Controller
 {
-    public function __construct(Search $search, User $user)
+    public function __construct(Search $search, User $user, Follow $follow)
     {
         $this->search = $search;
         $this->user = $user;
+        $this->follow = $follow;
     }
 
     /**
@@ -27,19 +29,44 @@ class SearchController extends Controller
      */
     private function queryRides(array $keywords, int $per_page_rides)
     {
+        $auth_user_uuid = Auth::user()->uuid ?? 0;
+
         $query_rides = Ride::with('rideParticipants.user')
             ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
             ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
             ->join('users', 'host_user_uuid', 'users.uuid');
 
-        foreach($keywords as $keyword){
-            $query_rides
-                ->where('rides.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
-                ->orWhere('rides.comment', 'LIKE', $keyword)->where('rides.publish_status', 0)
-                ->orWhere('meeting_places.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
-                ->orWhere('meeting_places.address', 'LIKE', $keyword)->where('rides.publish_status', 0)
-                ->orWhere('ride_routes.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
-                ->orWhere('ride_routes.comment', 'LIKE', $keyword)->where('rides.publish_status', 0);
+        if($auth_user_uuid){
+            $followers = $this->follow->followers_to_arr($this->follow->getFollowersBy_user_uuid($auth_user_uuid));
+
+            foreach($keywords as $keyword){
+                $query_rides
+                    ->where('rides.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('rides.comment', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('meeting_places.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('meeting_places.address', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('ride_routes.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('ride_routes.comment', 'LIKE', $keyword)->where('rides.publish_status', 0)
+
+                    ->where('rides.name', 'LIKE', $keyword)->where('rides.publish_status', 1)->whereIn('host_user_uuid', $followers)
+                    ->orWhere('rides.comment', 'LIKE', $keyword)->where('rides.publish_status', 1)->whereIn('host_user_uuid', $followers)
+                    ->orWhere('meeting_places.name', 'LIKE', $keyword)->where('rides.publish_status', 1)->whereIn('host_user_uuid', $followers)
+                    ->orWhere('meeting_places.address', 'LIKE', $keyword)->where('rides.publish_status', 1)->whereIn('host_user_uuid', $followers)
+                    ->orWhere('ride_routes.name', 'LIKE', $keyword)->where('rides.publish_status', 1)->whereIn('host_user_uuid', $followers)
+                    ->orWhere('ride_routes.comment', 'LIKE', $keyword)->where('rides.publish_status', 1)->whereIn('host_user_uuid', $followers);
+
+            }
+
+        }else{
+            foreach($keywords as $keyword){
+                $query_rides
+                    ->where('rides.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('rides.comment', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('meeting_places.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('meeting_places.address', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('ride_routes.name', 'LIKE', $keyword)->where('rides.publish_status', 0)
+                    ->orWhere('ride_routes.comment', 'LIKE', $keyword)->where('rides.publish_status', 0);
+            }
         }
 
         $rides = $query_rides->select([
@@ -81,7 +108,6 @@ class SearchController extends Controller
     {
         $query_users = User::with('followers.user')
             ->join('user_profiles', 'user_uuid', 'users.uuid');
-
 
         foreach($keywords as $keyword){
             $query_users->where('name', 'LIKE', $keyword)

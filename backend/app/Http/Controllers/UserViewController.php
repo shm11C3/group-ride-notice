@@ -26,7 +26,7 @@ class UserViewController extends Controller
      * ユーザーのプロフィールページを表示
      *
      * @param string $user_uuid
-     * @return view 'user\{user_uuid}'
+     * @return view 'user/{user_uuid}'
      */
     public function showUser(string $user_uuid)
     {

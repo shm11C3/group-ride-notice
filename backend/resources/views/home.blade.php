@@ -208,7 +208,7 @@
         </div>
     </div>
     <div class="mt-2">
-        <input v-on:change="input_filterFollow" value="true" v-bind:disabled="isLoad" type="checkbox" v-model="filterFollow">
+        <input v-on:change="input_filterFollow" value="true" v-bind:disabled="isLoad" type="checkbox" v-model="filterFollow" @guest disabled @endguest>
         <label for="filterFollow" class="ml-1">フォロー中のユーザのみ表示</label>
     </div>
     <div class="rides">

@@ -14,8 +14,7 @@ use App\Http\Controllers\Api\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\SearchViewController;
 use App\Http\Controllers\UserViewController;
-use App\Models\Follow;
-use App\Models\Ride;
+use App\Http\Controllers\GoogleLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -153,3 +152,10 @@ Route::group(['middleware' => ['auth']], function () {
 //HTTP Error
 Route::get('/register/ctrl', [HttpErrorController::class, 'methodNotAllowed']);
 Route::get('/login/ctrl', [HttpErrorController::class, 'methodNotAllowed']);
+
+// Google Auth
+Route::get('/auth/redirect', [GoogleLoginController::class, 'getGoogleAuth'])->name('googleAuth');
+Route::get('/login/callback', [GoogleLoginController::class, 'authGoogleCallback']);
+
+Route::get('/auth/oAuthUser/register', [AuthController::class, 'showRegisterOAuthUser'])->name('showRegisterOAuthUser');
+Route::post('/auth/oAuthUser/post/register', [AuthController::class, 'registerOAuthUser'])->name('registerOAuthUser');

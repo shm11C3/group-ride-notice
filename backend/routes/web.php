@@ -38,6 +38,10 @@ Route::get('/user/{user_uuid}', [UserViewController::class, 'showUser'])->whereU
 
 Route::get('/search', [SearchViewController::class, 'showSearch'])->name('showSearch');
 
+Route::get('privacy-policy', function(){
+    return view('auth.privacy');
+})->name('policy');
+
 
 // GET API
 

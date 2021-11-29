@@ -8,6 +8,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\DeleteUserRequest;
+use App\Http\Requests\RegisterOAuthUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class AuthController extends Controller
 
     /**
      * ユーザ登録フォームを表示
-     * 
+     *
      * @param void
      * @return view
      */
@@ -57,7 +58,7 @@ class AuthController extends Controller
 
     /**
      * ダッシュボードを表示
-     * 
+     *
      * @param void
      * @return Response
      */
@@ -78,8 +79,19 @@ class AuthController extends Controller
     }
 
     /**
+     * OAuthユーザ登録フォームを表示
+     *
+     * @param object $user
+     * @return view
+     */
+    public function showRegisterOAuthUser()
+    {
+        return view('auth.registerOAuthForm');
+    }
+
+    /**
      * ユーザ登録処理
-     * 
+     *
      * @param RegisterRequest
      * @return redirect
      */
@@ -102,7 +114,7 @@ class AuthController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-            
+
             DB::table('user_profiles')
                 ->insert([
                     'user_uuid' => $user_uuid,
@@ -117,10 +129,10 @@ class AuthController extends Controller
         }
 
         $this->user->recordIp($user_uuid, $request->ip(), true);
-        
+
         $credentials = $request->only('email','password');
         $remember = $request['remember'];
-        
+
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
         }
@@ -130,7 +142,7 @@ class AuthController extends Controller
 
     /**
      * ログイン処理
-     * 
+     *
      * @param LoginRequest
      * @return redirect
      */
@@ -159,7 +171,7 @@ class AuthController extends Controller
             $this->user->recordIp($user->uuid, $ip, true);
             $request->session()->regenerate();
 
-            return redirect()->route('showLogin');
+            return redirect()->intended('showDashboard');
         }
 
         //ログイン失敗時 [todo]ログイン試行クライアントIPとロックユーザからログインを制限する
@@ -178,7 +190,7 @@ class AuthController extends Controller
                 $this->user->recordIp($user->uuid, $ip, false);
                 $countDown = $error_countLimit - $error_count;
                 $user->save();
-    
+
                 return back()
                     ->withInput()
                     ->withErrors([
@@ -186,7 +198,7 @@ class AuthController extends Controller
                         'account_lock' => 'あと'.$countDown.'回のエラーでアカウントはロックされます',
                     ]);
             }
-            
+
         }
 
         //ユーザーロック処理
@@ -200,10 +212,10 @@ class AuthController extends Controller
         ->withInput()
         ->withErrors([
             'isInvalidPassword' => 'パスワードが違います',
-            'login_error' => 'パスワードを'.$user->error_count.'回間違えました。アカウントは'.$lockTime_min_sec.'ロックされます',                        
+            'login_error' => 'パスワードを'.$user->error_count.'回間違えました。アカウントは'.$lockTime_min_sec.'ロックされます',
         ]);
 
-        
+
     }
 
     /**
@@ -228,7 +240,7 @@ class AuthController extends Controller
     /**
      * パスワードを更新
      * すべての端末からログアウト
-     * 
+     *
      * @param App\Http\Requests\UpdatePasswordRequest
      * @return redirect
      */
@@ -249,7 +261,7 @@ class AuthController extends Controller
 
     /**
      * アカウントを削除
-     * 
+     *
      * @param App\Http\Requests\DeleteUserRequest
      * @return redirect
      */
@@ -261,5 +273,10 @@ class AuthController extends Controller
             ->delete();
 
         return redirect()->route('showLogin');
+    }
+
+    public function registerOAuthUser(RegisterOAuthUserRequest $request)
+    {
+        dd($request);
     }
 }

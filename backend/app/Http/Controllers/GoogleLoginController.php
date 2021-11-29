@@ -29,7 +29,7 @@ class GoogleLoginController extends Controller
      * ユーザがログインしていない場合の処理
      *
      * @param object $googleUser
-     * @return array $auth_user
+     * @return array $auth_user_arr
      */
     private function loginOrRegisterUser(object $googleUser)
     {
@@ -71,7 +71,7 @@ class GoogleLoginController extends Controller
      * @param object $googleUser
      * @param string $auth_uuid
      *
-     * @return string $auth_uuid
+     * @return string $user_id
      */
     private function createUser(object $googleUser, string $auth_uuid)
     {
@@ -112,7 +112,9 @@ class GoogleLoginController extends Controller
      * Bipokeleログインをしておらずgoogle認証にも登録されていないユーザは連携した上でBipokeleアカウント新規作成
      *
      * @param void
-     * @return redirect showRegisterOAuthUser
+     *
+     * @return redirect showRegisterOAuthUser 新規登録の場合
+     * @return redirect showDashboard         登録済みの場合
      */
     public function authGoogleCallback()
     {

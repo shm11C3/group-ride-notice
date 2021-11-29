@@ -108,6 +108,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('ride-route/register', [RideViewController::class, 'showRegisterRideRouteForm'])->name('showRegisterRideRouteForm');
 
+    Route::get('/auth/oAuthUser/register', [AuthController::class, 'showRegisterOAuthUser'])->name('showRegisterOAuthUser');
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -115,6 +116,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('updatePassword', [AuthController::class, 'updatePassword'])->name('updatePassword');
 
     Route::post('deleteUser', [AuthController::class, 'deleteUser'])->name('deleteUser');
+
+    Route::post('/auth/oAuthUser/post/register', [AuthController::class, 'registerOAuthUser'])->name('registerOAuthUser');
 
     //GET API
     Route::get('api/get/savedMeetingPlaces', [MeetingPlaceController::class, 'getSavedMeetingPlaces'])->name('getSavedMeetingPlaces');
@@ -161,5 +164,3 @@ Route::get('/login/ctrl', [HttpErrorController::class, 'methodNotAllowed']);
 Route::get('/auth/redirect', [GoogleLoginController::class, 'getGoogleAuth'])->name('googleAuth');
 Route::get('/login/callback', [GoogleLoginController::class, 'authGoogleCallback']);
 
-Route::get('/auth/oAuthUser/register', [AuthController::class, 'showRegisterOAuthUser'])->name('showRegisterOAuthUser');
-Route::post('/auth/oAuthUser/post/register', [AuthController::class, 'registerOAuthUser'])->name('registerOAuthUser');

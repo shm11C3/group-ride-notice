@@ -29,34 +29,40 @@ class GoogleLoginController extends Controller
      * ユーザがログインしていない場合の処理
      *
      * @param object $googleUser
-     * @return string $auth_uuid
+     * @return array $auth_user
      */
-    private function loginUser(object $googleUser)
+    private function loginOrRegisterUser(object $googleUser)
     {
         $googleUserData = DB::table('google_users')->where('google_id', $googleUser->id)->get('user_uuid');
+        $registered = true;
+
+        $auth_user = [];
 
         if(!isset($googleUserData[0])){
             // google連携アカウントに一致するBipokeleアカウントが登録されていない場合
             $auth_uuid = Str::uuid();
-            $user_id = $this->createUser($googleUser, $auth_uuid);
+            $auth_id = $this->createUser($googleUser, $auth_uuid);
+
+            $registered = false;
 
         }else{
+            $auth_uuid = $googleUserData[0]->user_uuid;
 
-            $auth_user = User::where('uuid', $googleUserData[0]->user_uuid)->get(['id', 'uuid']);
+            $auth_user = User::where('uuid', $googleUserData[0]->user_uuid)->get('id'); // Google登録テーブルのuuidからユーザを取得
 
-            if(isset($auth_user[0])){
-                $auth_uuid = $auth_user[0]->uuid;
-                $user_id = $auth_user[0]->id;
-
-            }else{
-                // Googleアカウントと連携済みだが、アカウントが存在しない場合
-                $auth_uuid = $googleUserData[0]->user_uuid;
-                $user_id = $this->createUser($googleUser, $auth_uuid);
-            }
+            $auth_id = $auth_user[0]->id ?? $this->createUser($googleUser, $auth_uuid); // 登録ユーザのidを取得、存在しない場合はユーザを登録
+            $registered = isset($auth_user[0]); // ユーザが登録済みの場合true
         }
-        Auth::loginUsingId($user_id, $remember = true);
 
-        return $auth_uuid;
+        $auth_user_arr = [
+            'id' => $auth_id,
+            'uuid' => $auth_uuid,
+            'registered' => $registered
+        ];
+
+        Auth::loginUsingId($auth_user_arr['id'], $remember = true);
+
+        return $auth_user_arr;
     }
 
     /**
@@ -117,15 +123,36 @@ class GoogleLoginController extends Controller
         }
 
         // ログインしていない場合、ログインまたは登録を行いユーザのuuidを取得
-        $auth_uuid = Auth::user()->uuid ?? $this->loginUser($googleUser);
+        $user = Auth::user();
+
+        if(!$user){
+            $auth_user = $this->loginOrRegisterUser($googleUser);
+
+        }else{
+            $auth_user = [
+                'id' => $user->id,
+                'uuid' => $user->uuid,
+                'registered' => true
+            ];
+        }
 
         GoogleUser::firstOrCreate([
             'google_id' => $googleUser->id,
         ], [
-            'user_uuid' => $auth_uuid
+            'user_uuid' => $auth_user['uuid']
         ]);
 
-        return redirect()->route('showRegisterOAuthUser');
+        if($auth_user['registered']){
+            return redirect()->route('showDashboard');
+        }
+
+        $user_data = [
+            'uuid' => $auth_user['uuid'],
+            'name' => $googleUser->nickname ?? $googleUser->name,
+            'user_profile_img_path' => $googleUser->avatar
+        ];
+
+        return redirect()->route('showRegisterOAuthUser', ['user' => $user_data]); //新規登録の場合
     }
 }
 

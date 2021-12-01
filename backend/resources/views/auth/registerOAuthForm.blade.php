@@ -17,8 +17,9 @@
 <div id="app" v-cloak>
   <form class="login-form" method="POST" action="{{ route('registerOAuthUser') }}">
     @csrf
-    <div class="form-group">
-      <img class="d-block mx-auto" alt="userProfileImg" v-bind:src="user_profile_img_path">
+    <div class="form-group mt-4">
+      <p class="mb-2">プロフィール写真</p>
+      <img class="rounded" alt="userProfileImg" v-bind:src="user_profile_img_path">
     </div>
     <div class="form-group">
       <label for="inputName">名前</label>
@@ -26,12 +27,12 @@
       <small id="nameInfo" class="form-text text-muted">公序良俗に反する内容は入力しないでください</small>
     </div>
     <div class="form-group">
-      <label for="select1">お住まいの都道府県</label>
-      <select name="prefecture_code" class="form-control" id="select1">
+      <label for="prefecture_code">お住まいの都道府県</label>
+      <select v-model="prefecture_code" name="prefecture_code" class="form-control" id="select1">
         <option value="0">選択してください</option>
         <option v-for="(prefecture, i) in prefecture_arr" v-bind:value="i+1">@{{ prefecture }}</option>
       </select>
-      <div class="text-right">
+      <div class="text-right mt-4">
         <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-success">保存</button>
       </div>
     </div>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\GoogleUser;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -149,12 +148,12 @@ class GoogleLoginController extends Controller
         }
 
         $user_data = [
-            'uuid' => $auth_user['uuid'],
+            'uuid' => (string) $auth_user['uuid'],
             'name' => $googleUser->nickname ?? $googleUser->name,
             'user_profile_img_path' => $googleUser->avatar
         ];
 
-        return redirect()->route('showRegisterOAuthUser', ['user' => $user_data]); //新規登録の場合
+        return redirect()->route('showRegisterOAuthUser', $user_data); //新規登録の場合
     }
 }
 

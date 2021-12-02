@@ -275,8 +275,23 @@ class AuthController extends Controller
         return redirect()->route('showLogin');
     }
 
+    /**
+     * OAuthユーザ新規登録後のデータ更新処理
+     *
+     * @param App\Http\Requests\RegisterOAuthUserRequest
+     * @return redirect
+     */
     public function registerOAuthUser(RegisterOAuthUserRequest $request)
     {
-        dd($request);
+        $auth_user = Auth::user();
+
+        DB::table('users')
+            ->where('uuid', $auth_user->uuid)
+            ->update([
+                'name' => $request['name'],
+                'prefecture_code' => $request['prefecture_code']
+            ]);
+
+        return redirect()->route('showDashboard');
     }
 }

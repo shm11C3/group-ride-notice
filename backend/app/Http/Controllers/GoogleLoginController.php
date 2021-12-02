@@ -47,10 +47,11 @@ class GoogleLoginController extends Controller
         }else{
             $auth_uuid = $googleUserData[0]->user_uuid;
 
-            $auth_user = User::where('uuid', $googleUserData[0]->user_uuid)->get('id'); // Google登録テーブルのuuidからユーザを取得
+            $auth_user = User::where('uuid', $googleUserData[0]->user_uuid)->get(['id', 'prefecture_code']); // Google登録テーブルのuuidからユーザを取得
 
             $auth_id = $auth_user[0]->id ?? $this->createUser($googleUser, $auth_uuid); // 登録ユーザのidを取得、存在しない場合はユーザを登録
-            $registered = isset($auth_user[0]); // ユーザが登録済みの場合true
+
+            $registered = ($auth_user[0]->prefecture_code !== "0"); // ユーザが登録済みの場合true
         }
 
         $auth_user_arr = [

@@ -9,11 +9,16 @@
                 <span class="col-lg-3 text-lg-right profile-label">名前</span><span class="col-lg-9 font-weight-bold">{{ $user[0]->name }}</span>
             </div>
             <div class="row p-3 border-bottom">
-                <span class="col-lg-3 text-lg-right profile-label">メールアドレス</span><span class="col-lg-9 font-weight-bold">{{ $user[0]->email }}</span>
+                <span class="col-lg-3 text-lg-right profile-label">
+                    @if($user[0]->login_status === 'email')メールアドレス@else 連携アカウント @endif
+                </span>
+                <span class="col-lg-9 font-weight-bold">
+                    @if($user[0]->login_status === 'email'){{ $user[0]->email }} @elseif($user[0]->login_status === 'google') <img  src="{{ asset('img/google_icon.png') }}"> @else  @endif
+                </span>
             </div>
             <div class="row p-3 border-bottom">
                 <span class="col-lg-3 text-lg-right profile-label">都道府県</span><span class="col-lg-9 font-weight-bold">{{ $prefecture }}</span>
-            </div>    
+            </div>
         </div>
         <div class="col-sm-4">
             <div class="logout-btn">

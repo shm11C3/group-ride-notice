@@ -131,6 +131,18 @@ class GoogleLoginController extends Controller
             $auth_user = $this->loginOrRegisterUser($googleUser);
 
         }else{
+            // ログイン済みの場合
+            // すでにGoogleIdが存在していた場合エラー画面にリターンする
+            if(DB::table('google_users')->where('google_id', $googleUser->id)->exists()){
+                return redirect()->route('showGoogleUserAlreadyRegistered');
+            }
+
+            /**
+             * [TODO]
+             * 上のGoogleUser存在チェッククエリと下のGoogleUser作成クエリで処理が重複しているので一括で実行するようにする　
+             */
+
+
             $auth_user = [
                 'id' => $user->id,
                 'uuid' => $user->uuid,

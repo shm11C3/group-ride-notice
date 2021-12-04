@@ -110,6 +110,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/auth/oAuthUser/register', [AuthController::class, 'showRegisterOAuthUser'])->name('showRegisterOAuthUser');
 
+    Route::get('auth/oauth/error/isExist', function(){
+        return view('auth.errors/isExist');
+    })->name('showGoogleUserAlreadyRegistered');
+
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 

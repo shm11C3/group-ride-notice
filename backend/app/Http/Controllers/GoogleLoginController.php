@@ -126,35 +126,35 @@ class GoogleLoginController extends Controller
 
         // ログインしていない場合、ログインまたは登録を行いユーザのuuidを取得
         $user = Auth::user();
-
-        if(!$user){
-            $auth_user = $this->loginOrRegisterUser($googleUser);
-
-        }else{
-            // ログイン済みの場合
-            // すでにGoogleIdが存在していた場合エラー画面にリターンする
-            if(DB::table('google_users')->where('google_id', $googleUser->id)->exists()){
+        if($user){
+            // ログイン時
+            // すでに連携済みのGoogleアカウントだった場合エラー画面にリターンする
+            $google_user_result = DB::table('google_users')->where('google_id', $googleUser->id)->limit(1)->get('id');
+            if(isset($google_user_result[0])){
                 return redirect()->route('showGoogleUserAlreadyRegistered');
             }
-
-            /**
-             * [TODO]
-             * 上のGoogleUser存在チェッククエリと下のGoogleUser作成クエリで処理が重複しているので一括で実行するようにする　
-             */
-
 
             $auth_user = [
                 'id' => $user->id,
                 'uuid' => $user->uuid,
                 'registered' => true
             ];
-        }
 
-        GoogleUser::firstOrCreate([
-            'google_id' => $googleUser->id,
-        ], [
-            'user_uuid' => $auth_user['uuid']
-        ]);
+            GoogleUser::create([
+                'google_id' => $googleUser->id,
+                'user_uuid' => $user->uuid
+            ]);
+
+        }else{
+            // ログインしていない場合、ログイン・登録処理を行う
+            $auth_user = $this->loginOrRegisterUser($googleUser);
+
+            GoogleUser::firstOrCreate([
+                'google_id' => $googleUser->id,
+            ], [
+                'user_uuid' => $auth_user['uuid']
+            ]);
+        }
 
         if($auth_user['registered']){
             return redirect()->route('showDashboard');

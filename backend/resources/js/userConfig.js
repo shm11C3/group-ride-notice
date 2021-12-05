@@ -1,11 +1,10 @@
 import Vue from 'vue';
-import jQuery, { data } from 'jquery'
 import axios from 'axios';
-import {prefecture} from './constants/constant'
-global.jquery = jQuery
-global.$ = jQuery
-window.$ = window.jQuery = require('jquery')
+import {prefecture} from './constants/constant';
+import WindowHelper from './methods/method';
+
 window.axios = require('axios');
+const windowHelper = new WindowHelper();
 
 new Vue({
     el: '#app',
@@ -43,12 +42,14 @@ new Vue({
     },
 
     mounted(){
-        this.getUserProfile();
+        this.fetchUserProfile();
     },
 
     methods:{
         /**
-         * pageStatus変更
+         * 表示する画面を変更させる
+         *
+         * @param {int} page
          */
         changePage: function(page){
             this.pageStatus = page;
@@ -56,7 +57,10 @@ new Vue({
             this.listBtnStatus[page] = 'active';
         },
 
-        getUserProfile: function(){
+        /**
+         * ユーザのプロフィールをAPIから取得
+         */
+        fetchUserProfile: function(){
             this.profile_isLoad = true;
 
             const url = '../api/get/my-profile';
@@ -69,22 +73,23 @@ new Vue({
 
             }).then(res=>{
                 this.profile = res.data[0];
-                this.created_at = this.replaceDate(this.profile.created_at);
+                this.created_at = windowHelper.replaceDate(this.profile.created_at);
 
-                if(this.profile.user_intro){
-                    this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
-                }
+                this.replacedUser_introArr = windowHelper.splitByLineFeed(this.profile.user_intro);
 
                 this.profile_isLoad = false;
 
             });
         },
 
+        /**
+         * フォームのデータをオブジェクトにまとめ、アップデートAPIにデータを送信
+         */
         profile_update: function(){
             this.httpErrors = '';
             this.update = false;
             this.isPush = true;
-            this.closeAllForm();
+            this.closeAllEditForm();
 
             const url = '../api/post/profile/update';
 
@@ -104,7 +109,6 @@ new Vue({
             });
 
             axiosPost.post(url, data)
-
             .catch(({response}) => {
                 const errors = response.data.errors;
                 let errorArr = [];
@@ -126,6 +130,10 @@ new Vue({
               });
         },
 
+        /**
+         * Editボタンを押下した時にそれぞれの項目の編集フォームを表示を変える
+         * trueの場合フォームを表示、falseでプレビュー画面を表示
+         */
         name_openUpdate: function(){
             this.name_formStatus = !this.name_formStatus;
         },
@@ -148,22 +156,15 @@ new Vue({
             this.user_intro_formStatus = !this.user_intro_formStatus;
         },
 
-        closeAllForm: function(){
+        /**
+         * フォームの編集フォームをすべて閉じる
+         */
+        closeAllEditForm: function(){
             this.name_formStatus = this.prefecture_formStatus = this.url_formStatus
             = this.fb_username_formStatus = this.tw_username_formStatus
             = this.ig_username_formStatus = this.user_intro_formStatus = false;
 
-            if(this.profile.user_intro){
-                this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
-            }
+            this.replacedUser_introArr = windowHelper.splitByLineFeed(this.profile.user_intro);
         },
-
-        replaceDate: function(dateParam){
-            let year = dateParam.substring(0,4)+'年';
-            let date = dateParam.substring(5,7)+'月'+dateParam.substring(8,10)+'日';
-            let time = dateParam.substring(10,16);
-
-            return [year, date, time];
-        }
     }
 });

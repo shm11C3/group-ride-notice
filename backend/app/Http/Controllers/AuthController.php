@@ -75,13 +75,6 @@ class AuthController extends Controller
                 'users.created_at',
             ]);
 
-        if($user[0]->google_user){
-            $user[0]->login_status = 'google';
-
-        }else{
-            $user[0]->login_status = 'email';
-        }
-
         $prefecture =  $this->user->prefecture_arr[$user[0]->prefecture_code];
 
         return view('auth.dashboard', ['user' => $user, 'prefecture' => $prefecture]);

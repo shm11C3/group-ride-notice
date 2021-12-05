@@ -13,7 +13,7 @@
                     メールアドレス
                 </span>
                 <span class="col-lg-9 font-weight-bold">
-                    @if($user[0]->email){{ $user[0]->email }} @else 登録無し@endif
+                    @if($user[0]->email){{ $user[0]->email }} @else 登録なし@endif
                 </span>
             </div>
             <div class="row p-3 border-bottom">

@@ -14,8 +14,7 @@ use App\Http\Controllers\Api\ParticipationController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\SearchViewController;
 use App\Http\Controllers\UserViewController;
-use App\Models\Follow;
-use App\Models\Ride;
+use App\Http\Controllers\GoogleLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +37,10 @@ Route::get('/ride', [RideViewController::class, 'showRide'])->name('showRide');
 Route::get('/user/{user_uuid}', [UserViewController::class, 'showUser'])->whereUuid('user_uuid')->name('showUser');
 
 Route::get('/search', [SearchViewController::class, 'showSearch'])->name('showSearch');
+
+Route::get('privacy-policy', function(){
+    return view('auth.privacy');
+})->name('policy');
 
 
 // GET API
@@ -105,6 +108,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('ride-route/register', [RideViewController::class, 'showRegisterRideRouteForm'])->name('showRegisterRideRouteForm');
 
+    Route::get('/auth/oAuthUser/register', [AuthController::class, 'showRegisterOAuthUser'])->name('showRegisterOAuthUser');
+
+    Route::get('auth/oauth/error/isExist', function(){
+        return view('auth.errors/isExist');
+    })->name('showGoogleUserAlreadyRegistered');
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -112,6 +120,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('updatePassword', [AuthController::class, 'updatePassword'])->name('updatePassword');
 
     Route::post('deleteUser', [AuthController::class, 'deleteUser'])->name('deleteUser');
+
+    Route::post('/auth/oAuthUser/post/register', [AuthController::class, 'registerOAuthUser'])->name('registerOAuthUser');
 
     //GET API
     Route::get('api/get/savedMeetingPlaces', [MeetingPlaceController::class, 'getSavedMeetingPlaces'])->name('getSavedMeetingPlaces');
@@ -153,3 +163,8 @@ Route::group(['middleware' => ['auth']], function () {
 //HTTP Error
 Route::get('/register/ctrl', [HttpErrorController::class, 'methodNotAllowed']);
 Route::get('/login/ctrl', [HttpErrorController::class, 'methodNotAllowed']);
+
+// Google Auth
+Route::get('/auth/redirect', [GoogleLoginController::class, 'getGoogleAuth'])->name('googleAuth');
+Route::get('/login/callback', [GoogleLoginController::class, 'authGoogleCallback']);
+

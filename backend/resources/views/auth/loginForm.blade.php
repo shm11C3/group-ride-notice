@@ -2,6 +2,9 @@
 @section('title','ログイン')
 @section('content')
 <h2>ログイン</h2>
+<a class=”btn btn-block btn-social btn-google” href="{{ route('googleAuth') }}">
+  <img src="{{ asset('img/buttons/google/btn_google_signin_light_normal_web.png') }}" alt="google_login">
+</a>
 @if ($errors->any())
   @foreach ($errors->all() as $error)
     <div class="alert alert-danger alert-dismissible fade show" role="alert">

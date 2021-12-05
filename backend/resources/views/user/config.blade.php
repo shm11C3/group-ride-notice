@@ -46,7 +46,7 @@
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.name }}</span>
                         </div>
-                    </div>                
+                    </div>
                 </div>
 
                 <div class="row p-3 border-bottom">
@@ -62,7 +62,7 @@
                         <div v-else>
                             <span class="font-weight-bold">@{{ prefecture[profile.prefecture_code-1] }}</span>
                         </div>
-                    </div>                
+                    </div>
                 </div>
                 <div class="row p-3 border-bottom">
                     <span class="col-lg-4 text-lg-right profile-label">ホームページ <button class="hidden-btn" v-on:click="url_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
@@ -73,7 +73,7 @@
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.user_url }}</span>
                         </div>
-                    </div>                
+                    </div>
                 </div>
                 <div class="row p-3 border-bottom">
                     <span class="col-lg-4 text-lg-right profile-label">Facebookユーザ名 <button class="hidden-btn" v-on:click="fb_username_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
@@ -92,7 +92,7 @@
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.fb_username }}</span>
                         </div>
-                    </div>                
+                    </div>
                 </div>
 
                 <div class="row p-3 border-bottom">
@@ -112,7 +112,7 @@
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.tw_username }}</span>
                         </div>
-                    </div>                
+                    </div>
                 </div>
 
                 <div class="row p-3 border-bottom">
@@ -132,7 +132,7 @@
                         <div v-else>
                             <span class="font-weight-bold">@{{ profile.ig_username }}</span>
                         </div>
-                    </div>                
+                    </div>
                 </div>
                 <div class="row p-3 border-bottom">
                     <span class="col-lg-4 text-lg-right profile-label">自己紹介 <button class="hidden-btn" v-on:click="user_intro_openUpdate"><i class="fas fa-edit edit-btn"></i></button></span>
@@ -164,7 +164,14 @@
                 </div>
                 <div class="row p-3 border-bottom">
                     <span class="col-lg-4 text-lg-right profile-label">メールアドレス</span>
-                    <span class="col-lg-8 font-weight-bold">@{{ profile.email }}</span>
+                    <span v-if="profile.email" class="col-lg-8 font-weight-bold">@{{ profile.email }}</span>
+                    <span v-else class="col-lg-8 font-weight-bold">登録なし</span>
+                </div>
+                <div class="row p-3 border-bottom">
+                    <span class="col-lg-4 text-lg-right profile-label">連携アカウント</span>
+                    <span v-if="profile.google_user" class="col-lg-8 font-weight-bold">
+                        <img src="{{ asset('img/google_icon.png') }}">
+                    </span>
                 </div>
                 <div class="row p-3 border-bottom">
                     <span class="col-lg-4 text-lg-right profile-label">パスワードを変更</span>

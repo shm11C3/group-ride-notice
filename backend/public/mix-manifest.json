@@ -18,5 +18,6 @@
     "/js/meetingPlaceRegister.js": "/js/meetingPlaceRegister.js",
     "/js/registerRideRoute.js": "/js/registerRideRoute.js",
     "/js/userProfile.js": "/js/userProfile.js",
+    "/js/registerOAuthForm.js": "/js/registerOAuthForm.js",
     "/css/app.css": "/css/app.css"
 }

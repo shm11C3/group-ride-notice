@@ -12,7 +12,7 @@ class UserProfileController extends Controller
 {
     /**
      * ユーザープロフィールを更新
-     * 
+     *
      * @param App\Http\Requests\UpdateUserProfileRequest
      * @return response
      */
@@ -30,7 +30,7 @@ class UserProfileController extends Controller
                 'ig_username' => $request['ig_username'],
                 'updated_at' => now(),
             ]);
-        
+
         DB::table('users')
             ->where('uuid', $user_uuid)
             ->update([
@@ -40,19 +40,19 @@ class UserProfileController extends Controller
             ]);
 
         $data = ['status' => true];
-        
+
         return response()->json($data);
     }
 
     /**
      * users.uuidから機密でないユーザーの情報を返す
-     * 
+     *
      * @param string $user_uuid
      * @return response $user
      */
     public function getUserProfile(string $user_uuid)
     {
-        
+
         $user = DB::table('users')
         ->where('users.uuid', $user_uuid)
         ->join('user_profiles', 'user_uuid', 'users.uuid')
@@ -72,18 +72,20 @@ class UserProfileController extends Controller
 
     /**
      * 認証ユーザー自身の情報を返す
-     * 
+     *
      * @param string $user_uuid
      * @return response $user
      */
     public function getAuthUserProfile()
     {
         $user_uuid = Auth::user()->uuid;
-        
+
         $user = DB::table('users')
         ->where('users.uuid', $user_uuid)
         ->join('user_profiles', 'user_uuid', 'users.uuid')
+        ->leftJoin('google_users', 'google_users.user_uuid', 'users.uuid')
         ->get([
+            'google_users.user_uuid as google_user',
             'name',
             'prefecture_code',
             'email',

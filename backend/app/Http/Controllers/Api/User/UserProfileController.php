@@ -7,9 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserProfileRequest;
+use App\Models\UserProfile;
 
 class UserProfileController extends Controller
 {
+    public function __construct(UserProfile $userProfile)
+    {
+        $this->userProfile = $userProfile;
+    }
+
     /**
      * ユーザープロフィールを更新
      *
@@ -99,5 +105,25 @@ class UserProfileController extends Controller
         ]);
 
         return response()->json($user);
+    }
+
+    /**
+     * ユーザが投稿したプロフィール画像ファイルをS3へアップロード
+     *
+     * @param App\Http\Requests\Request
+     * @return object $status
+     */
+    public function uploadUserProfileImg(Request $request)
+    {
+        $user_uuid = Auth::user()->uuid;
+        $img_url = $this->userProfile->putUserImage($request->file('image'));
+
+        DB::table('user_profiles')
+        ->where('user_uuid', $user_uuid)
+        ->update([
+            'user_profile_img_path' => $img_url
+        ]);
+
+        return response()->json(['img_url' => $img_url]);
     }
 }

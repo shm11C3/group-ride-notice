@@ -13,15 +13,12 @@ class UserProfile extends Model
     /**
      * ユーザプロフィール画像をS3へアップロード
      *
-     * @todo 画像のバリデーション、圧縮処理を実装
-     *
      * @param object $img
      * @return string img_url
      */
     public function putUserImage(object $img)
     {
-        $path = Storage::disk('s3')->putFile('/img/user-profile', $img);
-        Storage::disk('s3')->setVisibility($path, 'public');
+        $path = Storage::disk('s3')->putFile('/img/user_profiles', $img, 'public');
         return Storage::disk('s3')->url($path);
     }
 }

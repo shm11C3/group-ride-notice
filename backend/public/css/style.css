@@ -115,4 +115,16 @@
 .user-tab-active{
     color: #fff!important;
     background-color: #2C3E50!important;
-  }
+}
+
+.user_profile_img_m {
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+}
+
+.user_profile_img_s {
+    width: 75px;
+    height: 75px;
+    border-radius: 5px;
+}

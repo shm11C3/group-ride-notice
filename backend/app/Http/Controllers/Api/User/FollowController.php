@@ -112,6 +112,10 @@ class FollowController extends Controller
             }else{
                 $follow->userFollowed = false;
             }
+
+            if(!$follow->user_profile_img_path){
+                $follow->user_profile_img_path = asset($this->user->userDefaultImgPath[75]);
+            }
         }
 
         return response()->json($follows);
@@ -161,6 +165,10 @@ class FollowController extends Controller
 
             }else{
                 $follow->userFollowed = false;
+            }
+
+            if(!$follow->user_profile_img_path){
+                $follow->user_profile_img_path = asset($this->user->userDefaultImgPath[75]);
             }
         }
 

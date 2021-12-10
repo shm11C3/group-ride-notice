@@ -307,7 +307,7 @@
             <!---->
             <div v-for="(ride, index) in rides" class="media ride shadow mt-4">
                 <a v-bind:href="'/user/'+ride.host_user_uuid">
-                    <svg class="bd-placeholder-img align-self-start profile-img" width="64" height="64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 64x64"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" ></text></svg>
+                    <img class="bd-placeholder-img user_profile_img_s" v-bind:src="ride.user_profile_img_path">
                 </a>
                 <div class="media-body">
                     <div class="p-2">

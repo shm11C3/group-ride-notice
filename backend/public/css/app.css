@@ -61,7 +61,6 @@
 .dropdown-menu.show {
   background-color: #45617e;
 }
-
 .dropdown-menu :hover {
   background-color: #6286ad !important;
 }
@@ -78,6 +77,11 @@
 .username {
   color: #768f89;
   font-size: 12px;
+}
+
+.ride-detail-username {
+  color: #768f89;
+  font-size: 18px;
 }
 
 .course-profile {
@@ -164,15 +168,22 @@
   background-color: #2C3E50 !important;
 }
 
-.user_profile_img_m {
-  width: 100px;
-  height: 100px;
+.user_profile_img_xs {
+  width: 48px;
+  height: 48px;
   border-radius: 5px;
+  border: 2px solid #c0c0c0;
 }
 
 .user_profile_img_s {
   width: 75px;
   height: 75px;
+  border-radius: 5px;
+}
+
+.user_profile_img_m {
+  width: 100px;
+  height: 100px;
   border-radius: 5px;
 }
 

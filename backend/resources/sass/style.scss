@@ -1,3 +1,5 @@
+$theme-color:#18BC9C;
+
 .intensity-range {
     -webkit-appearance: none; // これ無しだとスタイルがほぼ全く反映されないので注意
     appearance: none;
@@ -14,7 +16,7 @@
     // -webkit-向けのつまみ
     &::-webkit-slider-thumb {
       -webkit-appearance: none; // デフォルトのつまみのスタイルを解除
-      background:  #18BC9C; // 背景色
+      background:  $theme-color; // 背景色
       width: 24px; // 幅
       height: 24px; // 高さ
       border-radius: 50%; // 円形に
@@ -22,7 +24,7 @@
     }
     // -moz-向けのつまみ
     &::-moz-range-thumb {
-      background: #18BC9C; // 背景色
+      background: $theme-color; // 背景色
       width: 24px; // 幅
       height: 24px; // 高さ
       border-radius: 50%; // 円形に
@@ -49,7 +51,7 @@
 
   .text-accent {
     color: #2C3E50;
-    background-color: #18BC9C;
+    background-color: $theme-color;
     border-radius: 20px;
     padding-right: 3px;
     padding-left: 4px;
@@ -82,6 +84,11 @@
   .username {
     color: #768f89;
     font-size: 12px;
+  }
+
+  .ride-detail-username {
+    color: #768f89;
+    font-size: 18px;
   }
 
   .course-profile {
@@ -169,14 +176,21 @@
     background-color: #2C3E50 !important;
   }
 
-  .user_profile_img_m {
-    width: 100px;
-    height: 100px;
+  .user_profile_img_xs {
+    width: 48px;
+    height: 48px;
     border-radius: 5px;
+    border: 2px solid #c0c0c0
   }
 
   .user_profile_img_s {
     width: 75px;
     height: 75px;
+    border-radius: 5px;
+  }
+
+  .user_profile_img_m {
+    width: 100px;
+    height: 100px;
     border-radius: 5px;
   }

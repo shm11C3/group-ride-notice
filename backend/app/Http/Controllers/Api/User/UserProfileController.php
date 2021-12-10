@@ -74,6 +74,10 @@ class UserProfileController extends Controller
             'ig_username'
         ]);
 
+        if(!$user[0]->user_profile_img_path){
+            $user[0]->user_profile_img_path = asset($this->user->userDefaultImgPath[100]);
+        }
+
         return response()->json($user);
     }
 
@@ -104,6 +108,10 @@ class UserProfileController extends Controller
             'tw_username',
             'ig_username',
         ]);
+
+        if(!$user[0]->user_profile_img_path){
+            $user[0]->user_profile_img_path = asset($this->user->userDefaultImgPath[100]);
+        }
 
         return response()->json($user);
     }

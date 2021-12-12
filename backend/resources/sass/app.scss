@@ -1,14 +1,18 @@
 @charset "UTF-8";
 
+$primary:                       #2C3E50;
+$success:                       #18BC9C;
+$secondary:                     #95a5a6;
+
+$navbar-dark-active-color:      #18BC9C;
+$navbar-light-active-colo:      #18BC9C;
+$theme-color:                   #18BC9C;
+
+$user_profile-img-border-color: #c0c0c0;
+
 @import 'style.scss';
-
-$primary:                  #2C3E50;
-$success:                  #18BC9C;
-$secondary:                #95a5a6;
-
-$navbar-dark-active-color: #18BC9C;
-$navbar-light-active-colo: #18BC9C;
-
+@import 'profile-img-setting.scss';
 
 // Bootstrap
 @import '~bootstrap-honoka/scss/bootstrap';
+@import './cropper.scss';

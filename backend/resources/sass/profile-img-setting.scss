@@ -1,0 +1,55 @@
+/*****************************************
+ユーザプロフィール設定ボタン
+******************************************/
+
+/*
+ * 親クラス
+ */
+.img-setting-btn-group {
+    position:relative;
+}
+
+/*
+ * 画像の表示部分
+ */
+.profile-img-setting {
+    border:2px solid $user_profile-img-border-color;
+}
+
+/*
+ * 画像設定アイコン fas fa-camera fa-lg
+ */
+.profile-img-setting-icon {
+    position: absolute;
+    top:  0;
+    left: 0;
+
+    padding: 9px 6.8px 10px 6.8px;
+    color: $user_profile-img-border-color;
+}
+
+.profile-img-setting-icon:hover {
+    color: $theme-color;
+    transition: 0.2s;
+}
+
+/*
+ * 画像設定ボタン
+ */
+.profile-img-setting-btn {
+    position: absolute;
+    top:  0%;
+    left: 0%;
+
+    margin-top:  90px;
+    margin-left: 90px;
+
+    height: 35px;
+    width:  35px;
+
+    border-radius: 50%;
+    border: none;
+    background-color: #fff;
+
+    box-shadow: 2px 4px 5px -2px;
+}

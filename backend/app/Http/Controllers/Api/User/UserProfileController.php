@@ -8,13 +8,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserProfileRequest;
 use App\Http\Requests\UploadUserProfileImageRequest;
+use App\Models\User;
 use App\Models\UserProfile;
 
 class UserProfileController extends Controller
 {
-    public function __construct(UserProfile $userProfile)
+    public function __construct(UserProfile $userProfile, User $user)
     {
         $this->userProfile = $userProfile;
+        $this->user = $user;
     }
 
     /**

@@ -2,9 +2,9 @@ import Vue from 'vue';
 import axios from 'axios';
 import {prefecture} from './constants/constant';
 import WindowHelper from './methods/method';
+import CropImage from './methods/cropImage';
 
 window.axios = require('axios');
-const windowHelper = new WindowHelper();
 
 new Vue({
     el: '#app',
@@ -39,9 +39,19 @@ new Vue({
 
         isPush: false,
         update: false,
+
+        image_data: {
+            image: '',
+            name: '',
+            file: '',
+            type: '',
+        },
     },
 
     mounted(){
+        this.windowHelper = new WindowHelper();
+        this.cropImage = new CropImage();
+
         this.fetchUserProfile();
     },
 
@@ -73,9 +83,9 @@ new Vue({
 
             }).then(res=>{
                 this.profile = res.data[0];
-                this.created_at = windowHelper.replaceDate(this.profile.created_at);
+                this.created_at = this.windowHelper.replaceDate(this.profile.created_at);
 
-                this.replacedUser_introArr = windowHelper.splitByLineFeed(this.profile.user_intro);
+                this.replacedUser_introArr = this.windowHelper.splitByLineFeed(this.profile.user_intro);
 
                 this.profile_isLoad = false;
 
@@ -164,7 +174,89 @@ new Vue({
             = this.fb_username_formStatus = this.tw_username_formStatus
             = this.ig_username_formStatus = this.user_intro_formStatus = false;
 
-            this.replacedUser_introArr = windowHelper.splitByLineFeed(this.profile.user_intro);
+            this.replacedUser_introArr = this.windowHelper.splitByLineFeed(this.profile.user_intro);
+        },
+
+        /******************************************
+
+        プロフィール画像処理
+
+        ******************************************/
+
+        /**
+         * トリミング画面を表示
+         *
+         * @param {} file
+         */
+        openProfileImgCropper: function(file){
+            this.cropImage.cropper(file);
+        },
+
+        /**
+         * 画面をもとに戻し画像データをリセット
+         */
+        closeProfileImgForm: function(){
+            this.changePage(0);
+
+            this.image_data =  {
+                image: '',
+                name: '',
+                file: '',
+                type: '',
+            }
+        },
+
+        /**
+         * 画像ファイルのプレビューをビューに表示
+         *
+         * @param {*} e
+         */
+        setImage: function(e){
+            const file = (e.target.files || e.dataTransfer)[0];
+
+            if (file.type.startsWith("image/")) {
+                this.image_data.file = file;
+                this.image_data.image = window.URL.createObjectURL(file);
+                this.image_data.name = file.name;
+                this.image_data.type = file.type;
+                this.openProfileImgCropper(file);
+            }
+        },
+
+        /**
+         * 画像のアップロード処理
+         */
+        uploadProfileImg: function(){
+            const url = '../api/post/upload/userProfileImg';
+            const form = new FormData()
+            form.append('user_profile_img', this.image_data.file)
+
+            const axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'content-type': 'multipart/form-data',
+                withCredentials: true,
+            });
+
+            axiosPost.post(url, form)
+            .catch(({response}) => {
+                const errors = response.data.errors;
+                let errorArr = [];
+
+                Object.keys(errors).forEach(function(key) {
+                    errorArr.push(errors[key][0]);
+                });
+
+                this.httpErrors = errorArr;
+
+                this.isPush = false;
+                this.update = false;
+
+            }).then(res => {
+                this.isPush = false;
+                if(res){
+                    this.update = true;
+                }
+            });
         },
     }
 });

@@ -199,17 +199,18 @@
         <div v-else>
             <div class="m-2">
                 <input type="file" v-on:change="setImage($event)"/>
-                <canvas id="sourceCanvas" width="1" height="1"></canvas>
-                <button type="submit" class="btn btn-success" v-on:click="uploadProfileImg">保存する</button>
-                <button v-on:click="closeProfileImgForm" class="btn btn-secondary">キャンセル</button>
             </div>
             <div class="m-2">
                 <div v-if="image_data.image">
-                    <img class="" :src="image_data.image" >
+                    <img id="cropping-image" class="crop-canvas" :src="image_data.image" >
                 </div>
                 <div v-else>
                     <img v-bind:src="profile.user_profile_img_path" class="user_profile_img_m">
                 </div>
+            </div>
+            <div class="m-2">
+                <button type="submit" class="btn btn-success" v-on:click="uploadProfileImg">保存する</button>
+                <button v-on:click="closeProfileImgForm" class="btn btn-secondary">キャンセル</button>
             </div>
         </div>
     </div>

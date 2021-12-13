@@ -17,35 +17,44 @@ new Vue({
 
         //画面偏移
         pageStatus: 0,
-        listBtnStatus: ['active', '', '', ''],
+        listBtnStatus: [
+            'active',
+            '',
+            '',
+            ''
+        ],
+
         profile_isLoad: true,
 
         //HTTP Error
         httpErrors: [],
 
         //データ
-        profile: '',
+        profile:    '',
         created_at: '',
 
         replacedUser_introArr: '',
 
-        name_formStatus: false,
-        prefecture_formStatus: false,
-        url_formStatus: false,
+        name_formStatus:        false,
+        prefecture_formStatus:  false,
+        url_formStatus:         false,
         fb_username_formStatus: false,
         tw_username_formStatus: false,
         ig_username_formStatus: false,
-        user_intro_formStatus: false,
+        user_intro_formStatus:  false,
 
         isPush: false,
         update: false,
 
         image_data: {
             image: '',
-            name: '',
-            file: '',
-            type: '',
+            name:  '',
+            file:  '',
+            type:  '',
         },
+
+        cropper: '',
+        cropping_image_id: 'cropping-image',
     },
 
     mounted(){
@@ -53,6 +62,12 @@ new Vue({
         this.cropImage = new CropImage();
 
         this.fetchUserProfile();
+    },
+
+    updated(){
+        if(this.image_data.image){
+            this.cropImage.loadCropper(this.cropping_image_id);
+        }
     },
 
     methods:{
@@ -184,25 +199,24 @@ new Vue({
         ******************************************/
 
         /**
-         * トリミング画面を表示
-         *
-         * @param {} file
-         */
-        openProfileImgCropper: function(file){
-            this.cropImage.cropper(file);
-        },
-
-        /**
          * 画面をもとに戻し画像データをリセット
          */
         closeProfileImgForm: function(){
             this.changePage(0);
+            this.clearImageFileData();
+        },
 
+        clearImageFileData: function(){
             this.image_data =  {
                 image: '',
                 name: '',
                 file: '',
                 type: '',
+            }
+
+            if(this.cropper){
+                // すでにcropperが呼び出されている場合にリセットする
+                this.cropper.destroy();
             }
         },
 
@@ -214,12 +228,12 @@ new Vue({
         setImage: function(e){
             const file = (e.target.files || e.dataTransfer)[0];
 
-            if (file.type.startsWith("image/")) {
+            if(file && file.type.startsWith("image/")){
                 this.image_data.file = file;
                 this.image_data.image = window.URL.createObjectURL(file);
                 this.image_data.name = file.name;
                 this.image_data.type = file.type;
-                this.openProfileImgCropper(file);
+
             }
         },
 

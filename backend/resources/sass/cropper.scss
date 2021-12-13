@@ -3,9 +3,11 @@
 .cropper-view-box,
 .cropper-face {
   border-radius: 5px;
-  cursor: grab;
   outline: initial;
 }
-.cropper-face:active {
+.cropper-move {
+  cursor: grab;
+}
+.cropper-move:active {
   cursor: grabbing;
 }

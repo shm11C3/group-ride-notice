@@ -53,6 +53,8 @@ new Vue({
             type:  '',
         },
 
+        croppedImage: '',
+
         cropper: '',
         cropping_image_id: 'cropping-image',
     },
@@ -206,6 +208,9 @@ new Vue({
             this.clearImageFileData();
         },
 
+        /**
+         * ブラウザに一時保存した画像ファイルをリセット
+         */
         clearImageFileData: function(){
             this.image_data =  {
                 image: '',
@@ -215,7 +220,7 @@ new Vue({
             }
 
             if(this.cropper){
-                // すでにcropperが呼び出されている場合にリセットする
+                // すでにcropperが呼び出されている場合にキャンバスをリセットする
                 this.cropper.destroy();
             }
         },
@@ -234,6 +239,7 @@ new Vue({
                 this.image_data.name = file.name;
                 this.image_data.type = file.type;
 
+                console.log(this.image_data.file);
             }
         },
 
@@ -241,9 +247,17 @@ new Vue({
          * 画像のアップロード処理
          */
         uploadProfileImg: function(){
+            this.croppedImage = this.cropImage.dataUriToFile(this.cropImage.getCroppedImage());
+
+            console.log(this.croppedImage);
+
+            //return
+
             const url = '../api/post/upload/userProfileImg';
             const form = new FormData()
-            form.append('user_profile_img', this.image_data.file)
+            form.append('user_profile_img', this.croppedImage, 'image.jpeg', )
+
+            console.log(form)
 
             const axiosPost = axios.create({
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),

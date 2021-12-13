@@ -24,7 +24,9 @@ class UploadUserProfileImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_profile_img' => 'required|image|mimes:jpg,jpeg,png|dimensions:max_width=400,max_height=400,min_width=400,min_height=400|max:1024',
+            'user_profile_img' => 'required',
+
+            //|mimes:jpeg|dimensions:max_width=400,max_height=400,min_width=400,min_height=400|max:1024
         ];
     }
 }

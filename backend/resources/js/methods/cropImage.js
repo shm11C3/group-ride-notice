@@ -44,30 +44,22 @@ export default class CropImage{
         return this.cropper.getCroppedCanvas({
             width:  400,
             height: 400,
-        }).toDataURL('image/jpeg');
+        }).toDataURL();
     }
 
     /**
-     * 文字列のdata URIをfileに変換
+     * base64形式の文字列をpng形式のファイルに変換
      *
      * @param {string} cropped_image_uri
      * @return {file} file
      */
-    dataUriToFile(cropped_image_uri){
-        const byteString = atob(cropped_image_uri.split( "," )[1] ) ;
-        const mimeType = cropped_image_uri.match( /(:)([a-z\/]+)(;)/ )[2] ;
+    base64ToFile(cropped_image_base64){
+        const bin = atob(cropped_image_base64.replace(/^.*,/, ''));
 
-        let content= '';
-        for(let i=0, l=byteString.length, content=new Uint8Array( l ); l>i; i++) {
-            content[i] = byteString.charCodeAt(i);
+        let buffer = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) {
+            buffer[i] = bin.charCodeAt(i);
         }
-
-        const blob = new Blob( [ content ], {
-            type: mimeType ,
-        });
-
-	    const file = new File([blob], "cropped_file.jpeg", { type: "image/jpeg" });
-
-        return blob;
+        return new File([buffer.buffer], 'cropped.png', {type: "image/png"});
     }
 }

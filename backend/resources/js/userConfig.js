@@ -238,8 +238,6 @@ new Vue({
                 this.image_data.image = window.URL.createObjectURL(file);
                 this.image_data.name = file.name;
                 this.image_data.type = file.type;
-
-                console.log(this.image_data.file);
             }
         },
 
@@ -247,17 +245,12 @@ new Vue({
          * 画像のアップロード処理
          */
         uploadProfileImg: function(){
-            this.croppedImage = this.cropImage.dataUriToFile(this.cropImage.getCroppedImage());
-
-            console.log(this.croppedImage);
-
-            //return
+            const cropped_image_base64 = this.cropImage.getCroppedImage();
+            this.croppedImage = this.cropImage.base64ToFile(cropped_image_base64);
 
             const url = '../api/post/upload/userProfileImg';
             const form = new FormData()
-            form.append('user_profile_img', this.croppedImage, 'image.jpeg', )
-
-            console.log(form)
+            form.append('user_profile_img', this.croppedImage)
 
             const axiosPost = axios.create({
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -283,8 +276,11 @@ new Vue({
                 this.isPush = false;
                 if(res){
                     this.update = true;
+                    this.profile.user_profile_img_path = cropped_image_base64; // ページ内の画像URIをbase64文字列に変更する
                 }
             });
+
+            this.closeProfileImgForm();
         },
     }
 });

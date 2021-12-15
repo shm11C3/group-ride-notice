@@ -1,5 +1,4 @@
 FROM php:8.0-fpm-buster
-LABEL maintainer="ucan-lab <yes@u-can.pro>"
 SHELL ["/bin/bash", "-oeux", "pipefail", "-c"]
 
 # timezone environment
@@ -18,8 +17,10 @@ COPY --from=node:14.17.6 /usr/local/bin /usr/local/bin
 COPY --from=node:14.17.6 /usr/local/lib /usr/local/lib
 
 RUN apt-get update && \
-  apt-get -y install git libicu-dev libonig-dev libzip-dev unzip locales && \
+  apt-get -y install git libicu-dev libonig-dev libzip-dev unzip locales \
+  zlib1g-dev zlib1g-dev libzip-dev libjpeg-dev libpng-dev libfreetype6-dev libjpeg62-turbo-dev && \
   apt-get clean && \
+  docker-php-ext-install -j$(nproc) gd && \
   rm -rf /var/lib/apt/lists/* && \
   locale-gen en_US.UTF-8 && \
   localedef -f UTF-8 -i en_US en_US.UTF-8 && \

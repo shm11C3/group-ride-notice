@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateUserProfileRequest;
 use App\Http\Requests\UploadUserProfileImageRequest;
 use App\Models\User;
 use App\Models\UserProfile;
+use Illuminate\Support\Facades\Storage;
 
 class UserProfileController extends Controller
 {
@@ -119,23 +120,39 @@ class UserProfileController extends Controller
     }
 
     /**
-     * ユーザが投稿したプロフィール画像ファイルをS3へアップロード
+     * ユーザプロフィール画像ファイルをS3へアップロード
      *
      * @param App\Http\Requests\UploadUserProfileImageRequest
      * @return object $status
      */
     public function uploadUserProfileImg(UploadUserProfileImageRequest $request)
     {
-        $user_uuid = Auth::user()->uuid;
+        $auth_user = Auth::user()->userProfile;
 
-        $img_url = $this->userProfile->putUserImage($request->file('user_profile_img'), 'public');
+        $user_image = $request->file('user_profile_img');
+
+        if(!$this->userProfile->isRegularFilename($user_image->getClientOriginalName())) {
+            return response()->json(['error' => 'Invalid']);
+        }
+
+        $user_image_path_laravel = $this->userProfile->encodeImage($user_image);  // 画像をサーバ側でエンコード
+        $img_url_s3 = $this->userProfile->putUserImage($user_image_path_laravel); // エンコードした画像をS3に送信
+
+        unlink('../public/'.$user_image_path_laravel); // サーバー側の一時画像ファイルを削除
+
+        if(!$img_url_s3){
+            return response()->json(['error' => 's3_putError']);
+        }
+
+        // アップロード成功時
+        Storage::disk('s3')->delete('/img/user_profiles/'.substr($auth_user->user_profile_img_path, strrpos($auth_user->user_profile_img_path, '/') + 1));
 
         DB::table('user_profiles')
-        ->where('user_uuid', $user_uuid)
+        ->where('user_uuid', $auth_user->user_uuid)
         ->update([
-            'user_profile_img_path' => $img_url
+            'user_profile_img_path' => $img_url_s3
         ]);
 
-        return response()->json(['img_url' => $img_url]);
+        return response()->json(['img_url' => $img_url_s3]);
     }
 }

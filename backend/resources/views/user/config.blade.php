@@ -198,7 +198,7 @@
         </div>
         <div v-else>
             <div class="m-2">
-                <input type="file" v-on:change="setImage($event)" accept=".jpg, jpeg, png"/>
+                <input type="file" v-on:change="setImage($event)" accept=".jpg, .jpeg, .png"/>
             </div>
             <div class="m-2">
                 <div v-if="image_data.image">

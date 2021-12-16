@@ -127,8 +127,17 @@ class UserProfileController extends Controller
     public function uploadUserProfileImg(UploadUserProfileImageRequest $request)
     {
         $user_uuid = Auth::user()->uuid;
+        $user_image = $request->file('user_profile_img');
 
-        $img_url = $this->userProfile->putUserImage($request->file('user_profile_img'), 'public');
+        if(!$this->userProfile->isRegularFilename($user_image->getClientOriginalName())) {
+            return response()->json(['invalid' => 'filename']);
+        }
+
+        $user_image_path = $this->userProfile->encodeImage($user_image);
+
+        $img_url = $this->userProfile->putUserImage($user_image_path);
+
+//        dd($img_url);
 
         DB::table('user_profiles')
         ->where('user_uuid', $user_uuid)

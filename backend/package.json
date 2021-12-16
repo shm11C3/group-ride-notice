@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "bootstrap-honoka": "^4.4.0",
+        "cropperjs": "^1.5.12",
         "jquery": "^3.6.0",
         "popper.js": "^1.16.1",
         "vue-axios": "^3.3.7"

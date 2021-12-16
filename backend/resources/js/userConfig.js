@@ -1,10 +1,9 @@
 import Vue from 'vue';
-import jQuery, { data } from 'jquery'
 import axios from 'axios';
-import {prefecture} from './constants/constant'
-global.jquery = jQuery
-global.$ = jQuery
-window.$ = window.jQuery = require('jquery')
+import {prefecture} from './constants/constant';
+import WindowHelper from './methods/method';
+import CropImage from './methods/cropImage';
+
 window.axios = require('axios');
 
 new Vue({
@@ -18,37 +17,66 @@ new Vue({
 
         //画面偏移
         pageStatus: 0,
-        listBtnStatus: ['active', '', '', ''],
+        listBtnStatus: [
+            'active',
+            '',
+            '',
+            ''
+        ],
+
         profile_isLoad: true,
 
         //HTTP Error
         httpErrors: [],
 
         //データ
-        profile: '',
+        profile:    '',
         created_at: '',
 
         replacedUser_introArr: '',
 
-        name_formStatus: false,
-        prefecture_formStatus: false,
-        url_formStatus: false,
+        name_formStatus:        false,
+        prefecture_formStatus:  false,
+        url_formStatus:         false,
         fb_username_formStatus: false,
         tw_username_formStatus: false,
         ig_username_formStatus: false,
-        user_intro_formStatus: false,
+        user_intro_formStatus:  false,
 
         isPush: false,
         update: false,
+
+        image_data: {
+            image: '',
+            name:  '',
+            file:  '',
+            type:  '',
+        },
+
+        croppedImage: '',
+
+        cropper: '',
+        cropping_image_id: 'cropping-image',
     },
 
     mounted(){
-        this.getUserProfile();
+        this.windowHelper = new WindowHelper();
+        this.cropImage = new CropImage();
+
+        this.fetchUserProfile();
+    },
+
+    updated(){
+        if(this.image_data.image){
+            this.cropImage.loadCropper(this.cropping_image_id);
+        }
     },
 
     methods:{
         /**
-         * pageStatus変更
+         * 表示する画面を変更させる
+         *
+         * @param {int} page
          */
         changePage: function(page){
             this.pageStatus = page;
@@ -56,7 +84,10 @@ new Vue({
             this.listBtnStatus[page] = 'active';
         },
 
-        getUserProfile: function(){
+        /**
+         * ユーザのプロフィールをAPIから取得
+         */
+        fetchUserProfile: function(){
             this.profile_isLoad = true;
 
             const url = '../api/get/my-profile';
@@ -69,22 +100,23 @@ new Vue({
 
             }).then(res=>{
                 this.profile = res.data[0];
-                this.created_at = this.replaceDate(this.profile.created_at);
+                this.created_at = this.windowHelper.replaceDate(this.profile.created_at);
 
-                if(this.profile.user_intro){
-                    this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
-                }
+                this.replacedUser_introArr = this.windowHelper.splitByLineFeed(this.profile.user_intro);
 
                 this.profile_isLoad = false;
 
             });
         },
 
+        /**
+         * フォームのデータをオブジェクトにまとめ、アップデートAPIにデータを送信
+         */
         profile_update: function(){
             this.httpErrors = '';
             this.update = false;
             this.isPush = true;
-            this.closeAllForm();
+            this.closeAllEditForm();
 
             const url = '../api/post/profile/update';
 
@@ -104,7 +136,6 @@ new Vue({
             });
 
             axiosPost.post(url, data)
-
             .catch(({response}) => {
                 const errors = response.data.errors;
                 let errorArr = [];
@@ -126,6 +157,10 @@ new Vue({
               });
         },
 
+        /**
+         * Editボタンを押下した時にそれぞれの項目の編集フォームを表示を変える
+         * trueの場合フォームを表示、falseでプレビュー画面を表示
+         */
         name_openUpdate: function(){
             this.name_formStatus = !this.name_formStatus;
         },
@@ -148,22 +183,104 @@ new Vue({
             this.user_intro_formStatus = !this.user_intro_formStatus;
         },
 
-        closeAllForm: function(){
+        /**
+         * フォームの編集フォームをすべて閉じる
+         */
+        closeAllEditForm: function(){
             this.name_formStatus = this.prefecture_formStatus = this.url_formStatus
             = this.fb_username_formStatus = this.tw_username_formStatus
             = this.ig_username_formStatus = this.user_intro_formStatus = false;
 
-            if(this.profile.user_intro){
-                this.replacedUser_introArr = this.profile.user_intro.split(/\r\n|\n/);
+            this.replacedUser_introArr = this.windowHelper.splitByLineFeed(this.profile.user_intro);
+        },
+
+        /******************************************
+
+        プロフィール画像処理
+
+        ******************************************/
+
+        /**
+         * 画面をもとに戻し画像データをリセット
+         */
+        closeProfileImgForm: function(){
+            this.changePage(0);
+            this.clearImageFileData();
+        },
+
+        /**
+         * ブラウザに一時保存した画像ファイルをリセット
+         */
+        clearImageFileData: function(){
+            this.image_data =  {
+                image: '',
+                name: '',
+                file: '',
+                type: '',
+            }
+
+            if(this.cropper){
+                // すでにcropperが呼び出されている場合にキャンバスをリセットする
+                this.cropper.destroy();
             }
         },
 
-        replaceDate: function(dateParam){
-            let year = dateParam.substring(0,4)+'年';
-            let date = dateParam.substring(5,7)+'月'+dateParam.substring(8,10)+'日';
-            let time = dateParam.substring(10,16);
+        /**
+         * 画像ファイルのプレビューをビューに表示
+         *
+         * @param {*} e
+         */
+        setImage: function(e){
+            const file = (e.target.files || e.dataTransfer)[0];
 
-            return [year, date, time];
-        }
+            if(file && file.type.startsWith("image/")){
+                this.image_data.file = file;
+                this.image_data.image = window.URL.createObjectURL(file);
+                this.image_data.name = file.name;
+                this.image_data.type = file.type;
+            }
+        },
+
+        /**
+         * 画像のアップロード処理
+         */
+        uploadProfileImg: function(){
+            const cropped_image_base64 = this.cropImage.getCroppedImage();
+            this.croppedImage = this.cropImage.base64ToFile(cropped_image_base64);
+
+            const url = '../api/post/upload/userProfileImg';
+            const form = new FormData()
+            form.append('user_profile_img', this.croppedImage)
+
+            const axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'content-type': 'multipart/form-data',
+                withCredentials: true,
+            });
+
+            axiosPost.post(url, form)
+            .catch(({response}) => {
+                const errors = response.data.errors;
+                let errorArr = [];
+
+                Object.keys(errors).forEach(function(key) {
+                    errorArr.push(errors[key][0]);
+                });
+
+                this.httpErrors = errorArr;
+
+                this.isPush = false;
+                this.update = false;
+
+            }).then(res => {
+                this.isPush = false;
+                if(res){
+                    this.update = true;
+                    this.profile.user_profile_img_path = cropped_image_base64; // ページ内の画像URIをbase64文字列に変更する
+                }
+            });
+
+            this.closeProfileImgForm();
+        },
     }
 });

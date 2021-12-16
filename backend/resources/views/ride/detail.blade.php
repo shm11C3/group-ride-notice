@@ -31,8 +31,11 @@
                 </button>
             </h4>
             <div class="course-profile mt-4">
+                <a class=text-decoration-none v-bind:href="'user/'+ride.host_user_uuid">
+                    <img class="bd-placeholder-img user_profile_img_xs" v-bind:src="ride.ride_participants[0].user.user_profile.user_profile_img_path">
+                    <span class="ride-detail-username">@{{ ride.ride_participants[0].user.name }}</span>
+                </a>
                 <div v-if="ride.num_of_laps > 0">
-                    <p class="mb-0 username">@@{{ ride.ride_participants[0].user.name }}</p>
                     <p>
                         <span class="text-muted additional-txt">ライド名</span><br>
                         @{{ ride.ride_name }}
@@ -59,7 +62,6 @@
                     </div>
                 </div>
                 <div v-else>
-                    <p class="mb-0 username">@@{{ ride.ride_participants[0].user.name }}</p>
                     <p>
                         <span class="text-muted additional-txt">ライド名</span><br>
                         @{{ ride.ride_name }}
@@ -201,6 +203,7 @@
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
+                        <th scope="col">参加者</th>
                         <th scope="col">名前</th>
                         <th scope="col">コメント</th>
                       </tr>
@@ -208,6 +211,11 @@
                     <tbody>
                       <tr v-for="(ride_participant, index) in ride.ride_participants">
                         <th scope="row">@{{ index+1 }}</th>
+                        <td>
+                            <a class=text-decoration-none v-bind:href="'user/'+ride_participant.user_uuid">
+                                <img class="bd-placeholder-img user_profile_img_xs" v-bind:src="ride_participant.user.user_profile.user_profile_img_path">
+                            </a>
+                        </td>
                         <td>@{{ ride_participant.user.name }}</td>
                         <td>@{{ ride_participant.comment }}</td>
                       </tr>
@@ -309,7 +317,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 
 <script src="{{ mix('js/rideDetail.js') }}"></script>

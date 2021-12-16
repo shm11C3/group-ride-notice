@@ -1,0 +1,13 @@
+@import "cropperjs/dist/cropper.min.css";
+
+.cropper-view-box,
+.cropper-face {
+  border-radius: 5px;
+  outline: initial;
+}
+.cropper-move {
+  cursor: grab;
+}
+.cropper-move:active {
+  cursor: grabbing;
+}

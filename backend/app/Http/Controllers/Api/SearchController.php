@@ -34,7 +34,8 @@ class SearchController extends Controller
         $query_rides = Ride::with('rideParticipants.user')
             ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
             ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
-            ->join('users', 'host_user_uuid', 'users.uuid');
+            ->join('users', 'host_user_uuid', 'users.uuid')
+            ->join('user_profiles', 'user_profiles.user_uuid', 'users.uuid');
 
         if($auth_user_uuid){
             $followers = $this->follow->followers_to_arr($this->follow->getFollowersBy_user_uuid($auth_user_uuid));
@@ -89,9 +90,16 @@ class SearchController extends Controller
             'elevation',
             'distance',
             'ride_routes.comment as rr_comment',
-            'users.name as user_name'
+            'users.name as user_name',
+            'user_profile_img_path' ?? asset($this->user->userDefaultImgPath[75]),
         ])
         ->simplePaginate($per_page_rides);
+
+        foreach($rides as $ride){
+            if(!$ride->user_profile_img_path){
+                $ride->user_profile_img_path = asset($this->user->userDefaultImgPath[75]);
+            }
+        }
 
         return $rides;
     }
@@ -144,6 +152,10 @@ class SearchController extends Controller
             if(!empty($user->followers[0])) {
                 // フォロワーが存在する場合確認を行い値を代入
                 $user->userFollowed = $this->user->getUserFollowed($user->followers, Auth::user()->uuid);
+            }
+
+            if(!$user->user_profile_img_path){
+                $user->user_profile_img_path = asset($this->user->userDefaultImgPath[75]);
             }
         }
 

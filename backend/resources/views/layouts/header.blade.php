@@ -38,7 +38,9 @@
         </ul>
         <form class="form-inline my-2 my-lg-0">
           @auth
-          <a class="btn btn-secondary my-2 my-sm-0" href="{{ route('showDashboard') }}">{{ Auth::user()->name }}</a>
+          <a href="{{ route('showDashboard') }}">
+            <img class="bd-placeholder-img user_profile_img_xs" src="{{ Auth::user()->userProfile->user_profile_img_path ?? asset('img/user_profiles/default_profile_75.png') }}">
+          </a>
           @endauth
           @guest
           <a class="btn btn-success my-2 my-sm-0" href="{{ route('showLogin') }}">ログイン</a>

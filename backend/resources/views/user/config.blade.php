@@ -209,7 +209,7 @@
                 </div>
             </div>
             <div class="m-2">
-                <button type="submit" class="btn btn-success" v-on:click="uploadProfileImg">保存する</button>
+                <button type="submit" class="btn btn-success" v-bind:disabled="!image_data.image" v-on:click="uploadProfileImg">保存する</button>
                 <button v-on:click="closeProfileImgForm" class="btn btn-secondary">キャンセル</button>
             </div>
         </div>

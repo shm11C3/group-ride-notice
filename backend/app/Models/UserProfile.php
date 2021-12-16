@@ -14,25 +14,20 @@ class UserProfile extends Model
 
     private $initial_image_name = 'cropped.png';
 
-//    private $user_img_size_min_bite = 25600;
-//    private $user_img_size_max_bite = 35840;
-
     /**
      * ユーザプロフィール画像をS3へアップロード
      *
-     * @param object $img
+     * @param object  $img
      * @return string img_url
      */
     public function putUserImage(string $path)
     {
-        dd(Image::make($path)->filesize());
-
-        $path = Storage::disk('s3')->putFile('/img/user_profiles', $path, 'public');
+        $path = Storage::disk('s3')->putFile('img/user_profiles', $path, 'public');
         return Storage::disk('s3')->url($path);
     }
 
     /**
-     * ファイル名がフロント側で生成したものかチェック
+     * ファイル名がフロント側で生成した初期値かチェック
      *
      * @param string $filename
      * @return bool
@@ -43,58 +38,43 @@ class UserProfile extends Model
     }
 
     /**
-     * @param object $image
+     * 画像を最適化して書き出す
+     *
+     * @param object  $param_img
+     * @return string $path
      */
-    public function encodeImage(object $param_img)
+    public function encodeImage(object $original_img)
     {
-        dump($param_img->getSize());
         $uuid = (string)Str::uuid();
-        $path = "img/tmp/{$uuid}.jpg";         // 書き出した画像の一時パス
+        $path = "img/tmp/{$uuid}.jpg"; // 書き出し後の画像の一時パス
 
-        $img = Image::make($param_img)
+        $img = Image::make($original_img)
             ->encode('jpg');
 
         $quality = $this->getQuality($img->filesize());
 
         $img->save($path, $quality);
-        //$this->saveImg($img, $path, $initialQuality);
+        $img->destroy();
 
         return $path;
     }
 
+    /**
+     * 適切な画像品質を取得
+     *
+     * @param int  $img_size_bite 許容される最大値:1024KB
+     * @return int $quality       0 ~ 87
+     */
     private function getQuality(int $img_size_bite)
     {
-        $initialQuality = 25720000 / $img_size_bite; //20000000
+        $quality = 25000000 / $img_size_bite; // 20KB ~ 60KBに収束するように調整
 
-        dump($initialQuality);
-
-        if($initialQuality >= 90){
-            return 90;
-        }else if($initialQuality <= 0){
+        if($quality >= 87){
+            return 87;
+        }else if($quality <= 0){
             return 0;
         }
 
-        return (int)$initialQuality;
+        return (int) $quality;
     }
-
-//    private function saveImg(object $img, string $path, int $quality)
-//    {
-//        dump($img->filesize());
-//        $img->save($path, $quality);
-//        $image = Image::make($path);
-//
-//        dump($image->filesize());
-//        if($image->filesize() > $this->user_img_size_max_bite){
-//            $quality -= 5;
-//            dump($quality);
-//
-//            return $this->saveImg($img, $path, $quality);
-//
-//        }else if($image->filesize() < $this->user_img_size_min_bite){
-//            $quality += 5;
-//            dump($quality);
-//
-//            return $this->saveImg($img, $path, $quality);
-//        }
-//    }
 }

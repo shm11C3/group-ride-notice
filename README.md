@@ -36,4 +36,3 @@ https://user-images.githubusercontent.com/78523393/145537613-6b27224b-b65b-48d2-
   - エディタ:   Visual Studio Code
   - draw.io
   - Postman
-  - 画像加工等: Adobe Illustrator / Photoshop, RCKP, 縮小革命

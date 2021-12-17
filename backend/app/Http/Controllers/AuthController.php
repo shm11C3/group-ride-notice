@@ -65,14 +65,16 @@ class AuthController extends Controller
     public function showDashboard()
     {
         $user = DB::table('users')
-            ->leftJoin('google_users', 'user_uuid', 'users.uuid')
+            ->join('user_profiles', 'user_profiles.user_uuid', 'users.uuid')
+            ->leftJoin('google_users', 'google_users.user_uuid', 'users.uuid')
             ->where('users.id', Auth::id())
             ->get([
-                'user_uuid as google_user',
+                'google_users.user_uuid as google_user',
                 'name',
                 'email',
                 'prefecture_code',
                 'users.created_at',
+                'user_profile_img_path'
             ]);
 
         $prefecture =  $this->user->prefecture_arr[$user[0]->prefecture_code];

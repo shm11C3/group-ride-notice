@@ -92,7 +92,13 @@ new Vue({
 
                 const rides_data = res.data.rides;
                 if(rides_data.data){
-                    rides_data.data.forEach(ride => this.rides.push(ride));
+                    rides_data.data.forEach(ride => {
+                        if(!ride.user_profile_img_path){
+                            // プロフィール画像が設定されていない場合にデフォルトのパスを代入
+                            ride.user_profile_img_path = '../img/user_profiles/default_profile_75.png';
+                        }
+                        this.rides.push(ride)
+                    });
                 }
 
                 this.resIsExist = Boolean(rides_data.next_page_url);

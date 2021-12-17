@@ -19,7 +19,7 @@
     @csrf
     <div class="form-group mt-4">
       <p class="mb-2">プロフィール写真</p>
-      <img class="rounded" alt="userProfileImg" v-bind:src="user_profile_img_path">
+      <img class="rounded" name="user_profile_img_path" alt="userProfileImg" v-bind:src="user_profile_img_path">
     </div>
     <div class="form-group">
       <label for="inputName">名前</label>

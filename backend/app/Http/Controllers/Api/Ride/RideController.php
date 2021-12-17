@@ -12,13 +12,15 @@ use App\Http\Requests\UpdateRideRequest;
 use App\Http\Requests\UpdatePublishStatusRequest;
 use App\Models\Follow;
 use App\Models\Ride;
+use App\Models\User;
 
 class RideController extends Controller
 {
-    public function __construct(Ride $ride, Follow $follow)
+    public function __construct(Ride $ride, Follow $follow, User $user)
     {
         $this->ride = $ride;
         $this->follow = $follow;
+        $this->user = $user;
     }
 
     /**
@@ -208,6 +210,7 @@ class RideController extends Controller
         $rides = $query_rides->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
         ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
         ->join('users', 'host_user_uuid', 'users.uuid')
+        ->join('user_profiles', 'user_profiles.user_uuid', 'users.uuid')
         ->orderBy('rides.created_at' ,'desc')
         ->select([
             'rides.uuid',
@@ -229,7 +232,8 @@ class RideController extends Controller
             'elevation',
             'distance',
             'ride_routes.comment as rr_comment',
-            'users.name as user_name'
+            'users.name as user_name',
+            'user_profile_img_path',
         ])
         ->simplePaginate(100);
 
@@ -291,12 +295,12 @@ class RideController extends Controller
      */
     public function getRideBy_rides_uuid(string $uuid)
     {
-        $user_uuid = Auth::user()->uuid ?? 0;
+        $auth_uuid = Auth::user()->uuid ?? 0;
 
-        $ride = Ride::with('rideParticipants.user')
+        $ride = Ride::with('rideParticipants.user.userProfile')
         ->where('rides.uuid', $uuid)
         ->where('rides.publish_status', '<', 2)
-        ->orWhere('host_user_uuid', $user_uuid)
+        ->orWhere('host_user_uuid', $auth_uuid)
         ->where('rides.uuid', $uuid)
         ->join('meeting_places', 'meeting_places.uuid', 'meeting_places_uuid')
         ->join('ride_routes', 'ride_routes.uuid', 'ride_routes_uuid')
@@ -321,6 +325,12 @@ class RideController extends Controller
             'distance',
             'ride_routes.comment as rr_comment',
         ]);
+
+        foreach($ride[0]->rideParticipants as $rideParticipant){
+            if(!$rideParticipant->user->userProfile->user_profile_img_path){
+                $rideParticipant->user->userProfile->user_profile_img_path = asset($this->user->userDefaultImgPath[75]);
+            }
+        }
 
         return response()->json($ride);
     }

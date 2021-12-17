@@ -157,6 +157,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/post/registerRideRoute', [RideRouteController::class, 'registerMeetingPlace'])->name('registerRideRoute');
 
     Route::post('api/post/follow', [FollowController::class, 'follow'])->name('follow');
+
+    Route::post('api/post/upload/userProfileImg', [UserProfileController::class, 'uploadUserProfileImg'])->name('uploadUserProfileImg');
+
+    Route::post('api/post/delete/userProfileImg', [UserProfileController::class, 'deleteUserProfileImg'])->name('deleteUserProfileImg');
 });
 
 

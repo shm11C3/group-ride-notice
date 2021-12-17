@@ -3,6 +3,7 @@
 @section('content')
 <h3>登録情報</h3>
 <div class="profile mt-5">
+    <img class="user_profile_img_m" @if($user[0]->user_profile_img_path) src="{{ $user[0]->user_profile_img_path }}" @else src="{{ asset('img/user_profiles/default_profile_100.png') }}" @endif>
     <div class="row">
         <div class="col-sm-8">
             <div class="row p-3 border-bottom">

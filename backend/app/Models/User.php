@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
+    public $userDefaultImgPath = [
+        75  => 'img/user_profiles/default_profile_75.png',
+        100 => 'img/user_profiles/default_profile_100.png',
+        200 => 'img/user_profiles/default_profile_200.png',
+        400 => 'img/user_profiles/default_profile_400.png'
+    ];
+
     use HasApiTokens, HasFactory, Notifiable;
 
     public function followers()
@@ -21,6 +28,11 @@ class User extends Authenticatable
     public function rides()
     {
         return $this->belongsToMany(Ride::class, 'ride_participants', 'user_uuid', 'uuid');
+    }
+
+    public function userProfile()
+    {
+        return $this->hasOne(UserProfile::class, 'user_uuid', 'uuid');
     }
 
     /**

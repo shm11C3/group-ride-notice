@@ -41,7 +41,7 @@
                     <div class="row p-3 border-bottom img-setting-btn-group">
                         <img class="bd-placeholder-img user_profile_img_m profile-img-setting" v-bind:src="profile.user_profile_img_path">
                         <button v-on:click="changePage(2)" class="profile-img-setting-btn">
-                            <i class="fas fa-camera fa-lg profile-img-setting-icon"></i>
+                            <i class="fas fa-camera fa-lg profile-img-setting-icon profile-img-setting-icon-edit"></i>
                         </button>
                     </div>
                     <div class="row p-3 border-bottom">
@@ -198,14 +198,35 @@
         </div>
         <div v-else>
             <div class="m-2">
-                <input type="file" v-on:change="setImage($event)" accept=".jpg, .jpeg, .png"/>
+                <input type="file" v-on:change="setImage($event)" accept=".jpg, .jpeg, .png, .webp"/>
             </div>
             <div class="m-2">
                 <div v-if="image_data.image">
                     <img id="cropping-image" class="crop-canvas" :src="image_data.image" >
                 </div>
                 <div v-else>
-                    <img v-bind:src="profile.user_profile_img_path" class="user_profile_img_m">
+                    <div class="modal fade" id="userImgDeleteModal" tabindex="-1" role="dialog" aria-labelledby="userImgDeleteModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="userImgDeleteModal">画像を削除しますか？</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                                    <button type="button" v-on:click="confirmImgDelete" v-bind:disable="update" class="btn btn-primary">削除する</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row p-3 border-bottom img-setting-btn-group">
+                        <img class="bd-placeholder-img user_profile_img_m profile-img-setting" v-bind:src="profile.user_profile_img_path">
+                        <button class="profile-img-setting-btn" v-on:click="openUserImgDeleteModal">
+                            <i class="fas fa-trash fa-lg profile-img-setting-icon profile-img-setting-icon-delete"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="m-2">

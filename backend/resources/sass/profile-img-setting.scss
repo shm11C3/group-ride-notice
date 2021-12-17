@@ -24,8 +24,15 @@
     top:  0;
     left: 0;
 
-    padding: 9px 6.8px 10px 6.8px;
     color: $user_profile-img-border-color;
+}
+
+.profile-img-setting-icon-edit {
+    padding: 9px 6.8px 10px 6.8px;
+}
+
+.profile-img-setting-icon-delete {
+    padding: 9px 8px 10px 8px;
 }
 
 .profile-img-setting-icon:hover {
@@ -59,4 +66,26 @@
     height: auto;
     max-width:  100%;
     max-height: 56vh;
+}
+
+//fade out のスピード
+.modal.fade {
+    transition-duration: 0.1s;
+}
+
+//fade in のスピード
+.modal.in {
+    transition-duration: 0.1s;
+}
+
+//slide out のスピード
+.modal.fade .modal-dialog{
+   transition-duration: 0.1s;         //slide out のスピード
+   transform: translate3d(0, -5%, 0); //slide開始位置(x,y,z)
+}
+
+//slide in のスピード
+.modal.in .modal-dialog{
+   transition-duration: 0.1s;       //slide in のスピード
+   transform: translate3d(0, 0, 0); //slide終了位置(x,y,z)
 }

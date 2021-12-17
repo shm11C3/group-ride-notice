@@ -155,4 +155,29 @@ class UserProfileController extends Controller
 
         return response()->json(['img_url' => $img_url_s3]);
     }
+
+    /**
+     * @param Request $request
+     * @return response $status
+     */
+    public function deleteUserProfileImg(Request $request){
+        $auth_user = Auth::user()->userProfile;
+
+        // 画像がBipokeleのS3に保存されている場合ストレージ内のファイルを削除
+        if($this->userProfile->isBipokeleStorageUri($auth_user->user_profile_img_path)){
+            $delete = Storage::disk('s3')->delete('/img/user_profiles/'.substr($auth_user->user_profile_img_path, strrpos($auth_user->user_profile_img_path, '/') + 1));
+
+            if(!$delete){
+                return response()->json(['status' => false]);
+            }
+        }
+
+        DB::table('user_profiles')
+            ->where('user_uuid', $auth_user->user_uuid)
+            ->update([
+                'user_profile_img_path' => NULL
+            ]);
+
+        return response()->json(['status' => true]);
+    }
 }

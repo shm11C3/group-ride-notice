@@ -2,9 +2,6 @@
 @section('title','ログイン')
 @section('content')
 <h2>ログイン</h2>
-<a class=”btn btn-block btn-social btn-google” href="{{ route('googleAuth') }}">
-  <img src="{{ asset('img/buttons/google/btn_google_signin_light_normal_web.png') }}" alt="google_login">
-</a>
 @if ($errors->any())
   @foreach ($errors->all() as $error)
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -48,6 +45,12 @@
       <div class="text-right">
         <a class="btn btn-secondary" href="{{ route('showRegister') }}">新規登録はこちら</a>
           <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-success">送信</button>
+      </div>
+      <div class="oauth-btn-group">
+        <p>連携アカウントでログイン</p>
+        <a class=”btn btn-block btn-social btn-google” href="{{ route('googleAuth') }}">
+          <img src="{{ asset('img/buttons/google/btn_google_signin_light_normal_web.png') }}" alt="google_login">
+        </a>
       </div>
   </form>
 </div>

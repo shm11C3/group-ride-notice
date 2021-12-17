@@ -77,4 +77,15 @@ class UserProfile extends Model
 
         return (int) $quality;
     }
+
+    /**
+     * URIがBipokeleのS3バケットのものであるかの真偽値を返す
+     *
+     * @param string $uri
+     * @return bool
+     */
+    public function isBipokeleStorageUri($uri)
+    {
+        return (explode('/', $uri)[3]??'' === 'bipokele-app');
+    }
 }

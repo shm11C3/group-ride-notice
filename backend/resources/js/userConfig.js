@@ -1,8 +1,13 @@
 import Vue from 'vue';
 import axios from 'axios';
+import jQuery, { data } from 'jquery'
 import {prefecture} from './constants/constant';
 import WindowHelper from './methods/method';
 import CropImage from './methods/cropImage';
+
+global.jquery = jQuery
+global.$ = jQuery
+window.$ = window.jQuery = require('jquery')
 
 window.axios = require('axios');
 
@@ -245,6 +250,7 @@ new Vue({
          * 画像のアップロード処理
          */
         uploadProfileImg: function(){
+            this.isPush = true;
             const cropped_image_base64 = this.cropImage.getCroppedImage();
             this.croppedImage = this.cropImage.base64ToFile(cropped_image_base64);
 
@@ -281,6 +287,45 @@ new Vue({
             });
 
             this.closeProfileImgForm();
+        },
+
+        /**
+         * プロフィール画像削除確認モーダルの表示
+         */
+        openUserImgDeleteModal: function(){
+            const options = {};
+            $('#userImgDeleteModal').modal(options);
+        },
+
+        /**
+         * プロフィール画像削除リクエストを送信
+         */
+        confirmImgDelete: function(){
+            $('#userImgDeleteModal').modal('hide');
+
+            const axiosPost = axios.create({
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                withCredentials: true,
+            });
+
+            axiosPost.post('../api/post/delete/userProfileImg')
+            .catch(({response}) => {
+                const errors = response.data.errors;
+                let errorArr = [];
+
+                Object.keys(errors).forEach(function(key) {
+                    errorArr.push(errors[key][0]);
+                });
+
+                this.httpErrors = errorArr;
+                this.update = false;
+
+            }).then(res => {
+                if(res){
+                    this.update = true;
+                    this.profile.user_profile_img_path = '../img/user_profiles/default_profile_75.png';
+                }
+            });
         },
     }
 });

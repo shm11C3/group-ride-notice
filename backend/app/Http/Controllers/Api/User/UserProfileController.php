@@ -141,17 +141,19 @@ class UserProfileController extends Controller
         unlink('../public/'.$user_image_path_laravel); // サーバー側の一時画像ファイルを削除
 
         if(!$img_url_s3){
+            // アップロード失敗時
             return response()->json(['error' => 's3_putError']);
         }
 
-        // アップロード成功時
-        Storage::disk('s3')->delete('/img/user_profiles/'.substr($auth_user->user_profile_img_path, strrpos($auth_user->user_profile_img_path, '/') + 1));
+        if($this->userProfile->isBipokeleStorageUri($auth_user->user_profile_img_path)){
+            Storage::disk('s3')->delete('/img/user_profiles/'.substr($auth_user->user_profile_img_path, strrpos($auth_user->user_profile_img_path, '/') + 1));
+        }
 
         DB::table('user_profiles')
-        ->where('user_uuid', $auth_user->user_uuid)
-        ->update([
-            'user_profile_img_path' => $img_url_s3
-        ]);
+            ->where('user_uuid', $auth_user->user_uuid)
+            ->update([
+                'user_profile_img_path' => $img_url_s3
+            ]);
 
         return response()->json(['img_url' => $img_url_s3]);
     }

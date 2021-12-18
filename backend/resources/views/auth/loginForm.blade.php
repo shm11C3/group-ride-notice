@@ -48,7 +48,7 @@
       </div>
       <div class="oauth-btn-group">
         <p>連携アカウントでログイン</p>
-        <a class=”btn btn-block btn-social btn-google” href="{{ route('googleAuth') }}">
+        <a class="btn-block btn-social btn-google" href="{{ route('googleAuth') }}">
           <img src="{{ asset('img/buttons/google/btn_google_signin_light_normal_web.png') }}" alt="google_login">
         </a>
       </div>

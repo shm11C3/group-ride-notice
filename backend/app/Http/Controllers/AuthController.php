@@ -175,7 +175,7 @@ class AuthController extends Controller
             $this->user->recordIp($user->uuid, $ip, true);
             $request->session()->regenerate();
 
-            return redirect()->intended('showDashboard');
+            return redirect()->route('showDashboard');
         }
 
         //ログイン失敗時 [todo]ログイン試行クライアントIPとロックユーザからログインを制限する

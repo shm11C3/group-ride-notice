@@ -19,21 +19,16 @@
 <x-alert type="danger" :session="session('logout_success')"/>
 @endif
 <div id="app" v-cloak>
-    <form class="update-password-form mt-5" method="POST" action="{{ route('deleteUser') }}">
+    <form class="update-password-form mt-5" method="POST" action="{{ route('deleteOAuthUser') }}">
         @csrf
-        <div class="form-group">
-            <label for="inputEmail1">パスワード</label>
-            <input type="password" name="password" autocomplete="current-password" style="display:none;">
-            <input v-model="password" type="password" name="current_password" class="form-control" placeholder="パスワード" autocomplete="off">
-          </div>
-          <div class="form-group mt-2">
+        <div class="form-group mt-2">
             <label for="inputEmail1">"完全に削除" と入力してください</label>
             <input v-model="inputDelete" type="text" class="form-control" aria-describedby="delete_me" placeholder="完全に削除">
-          </div>
-          <div class="text-right">
+        </div>
+        <div class="text-right">
             <button type="submit" class="btn btn-danger" v-bind:disabled="disableSubmitBtn">アカウントを削除する</button>
-          </div>
+        </div>
     </form>
 </div>
-<script src="{{ mix('js/deleteUser.js') }}"></script>
+<script src="{{ mix('js/deleteOAuthUser.js') }}"></script>
 @endsection

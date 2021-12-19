@@ -53,7 +53,10 @@ class AuthController extends Controller
      */
     public function showDeleteUser()
     {
-        return view('auth.deleteUser');
+        if(Auth::user()->email){
+            return view('auth.deleteUser');
+        }
+        return view('auth.deleteOAuthUser');
     }
 
     /**
@@ -101,8 +104,6 @@ class AuthController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        //[todo] 同じIPで大量のアカウントを作成できないように制限をかける
-
         DB::beginTransaction();
         try{
 
@@ -175,7 +176,7 @@ class AuthController extends Controller
             $this->user->recordIp($user->uuid, $ip, true);
             $request->session()->regenerate();
 
-            return redirect()->intended('showDashboard');
+            return redirect()->route('showDashboard');
         }
 
         //ログイン失敗時 [todo]ログイン試行クライアントIPとロックユーザからログインを制限する
@@ -271,12 +272,44 @@ class AuthController extends Controller
      */
     public function deleteUser(DeleteUserRequest $request)
     {
-        $user = Auth::user();
-
-        User::where('uuid', $user->uuid)
-            ->delete();
+        $this->delete(Auth::user()->uuid);
 
         return redirect()->route('showLogin');
+    }
+
+    /**
+     * OAuthアカウントを削除
+     *
+     * @param Requests $request
+     * @return redirect
+     */
+    public function deleteOAuthUser(Request $request)
+    {
+        $user = Auth::user();
+
+        if($user->email){
+            return redirect()->route('showDashboard');
+        }
+
+        $this->delete($user->uuid);
+
+        return redirect()->route('showLogin');
+    }
+
+    /**
+     * ユーザ削除処理
+     *
+     * @param  string $user_uuid
+     * @return void
+     */
+    private function delete(string $user_uuid)
+    {
+        User::where('uuid', $user_uuid)
+        ->delete();
+
+        DB::table('google_users')
+        ->where('user_uuid', $user_uuid)
+        ->delete();
     }
 
     /**

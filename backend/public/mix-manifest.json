@@ -19,5 +19,6 @@
     "/js/registerRideRoute.js": "/js/registerRideRoute.js",
     "/js/userProfile.js": "/js/userProfile.js",
     "/js/registerOAuthForm.js": "/js/registerOAuthForm.js",
+    "/js/deleteOAuthUser.js": "/js/deleteOAuthUser.js",
     "/css/app.css": "/css/app.css"
 }

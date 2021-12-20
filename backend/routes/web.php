@@ -121,6 +121,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('deleteUser', [AuthController::class, 'deleteUser'])->name('deleteUser');
 
+    Route::post('deleteOAuthUser', [AuthController::class, 'deleteOAuthUser'])->name('deleteOAuthUser');
+
     Route::post('/auth/oAuthUser/post/register', [AuthController::class, 'registerOAuthUser'])->name('registerOAuthUser');
 
     //GET API

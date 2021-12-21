@@ -51,6 +51,9 @@
         <a class="btn-block btn-social btn-google" href="{{ route('googleAuth') }}">
           <img src="{{ asset('img/buttons/google/btn_google_signin_light_normal_web.png') }}" alt="google_login">
         </a>
+        <a class="btn-block btn-social" href="{{ route('stravaAuth') }}">
+          Strava Auth
+        </a>
       </div>
   </form>
 </div>

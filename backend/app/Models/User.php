@@ -48,6 +48,7 @@ class User extends Authenticatable
         'locked_flg',
         'locked_at',
         'error_count',
+        'user_strength',
     ];
 
     /**
@@ -63,6 +64,7 @@ class User extends Authenticatable
         'locked_flg',
         'locked_at',
         'error_count',
+        'user_strength',
     ];
 
     /**

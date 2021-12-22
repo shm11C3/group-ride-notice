@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\StravaUser;
-use CodeToad\Strava\Strava;
 use CodeToad\Strava\StravaFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +17,7 @@ class StravaAuthController extends Controller
     }
 
     /**
-     * STRAVA OAuthの認証画面にリダイレクト
+     * STRAVA OAuthの許可画面にリダイレクト
      *
      * @param void
      * @return redirect 'https://www.strava.com/oauth/authorize'
@@ -29,44 +28,55 @@ class StravaAuthController extends Controller
     }
 
     /**
-     * OAuth認可時に取得したコードから必要なデータを取得し、DBに格納
+     * 連携許可時の処理
+     * 取得したAuth認可コードを用いてbipokeleのアカウントと連携させる
+     *
      * @see https://developers.strava.com/docs/getting-started/
      *
-     * @param Request $request
-     * @return
+     * @param  Request $request
+     * @return Response
      */
     public function authStravaCallback(Request $request)
     {
-        $user = Auth::user();
+        $stravaUserToken = $this->getToken($request->code); //stravaのトークン・アスリートデータ
+        $user_id = $this->stravaUser->getUserIdByStravaId($stravaUserToken->athlete->id); // (int)strava_idと一致するbipokeleアカウント(int)idを取得
 
-        $token = $this->getToken($request->code);
+        if(!Auth::check()){
+            // ログインしていない場合はログインする
+            if(!$user_id){
+                // 連携しているbipokeleアカウントが存在しない場合は新規作成する
+                $user_id = $this->registerUser($stravaUserToken);
+            }
+            Auth::loginUsingId($user_id, $remember=true);
 
-        if(!$user){
-            // ログインしていない場合新規登録する
-            $user = $this->registerUser($token);
+        }else if($user_id){
+            // ログイン済みかつstravaアカウントとbipokeleアカウントがすでに紐付いていた場合エラー画面へリターン
+            return redirect()->route('showOAuthUserAlreadyRegistered');
         }
+
+        $user = Auth::user();
 
         DB::table('strava_users')
             ->updateOrInsert([
                 'user_uuid'     => $user->uuid,
-                'strava_id'     => $token->athlete->id,
-                'expires_at'    => $token->expires_at,
-                'refresh_token' => $token->refresh_token,
-                'access_token'  => $token->access_token,
+                'strava_id'     => $stravaUserToken->athlete->id,
+                'expires_at'    => $stravaUserToken->expires_at,
+                'refresh_token' => $stravaUserToken->refresh_token,
+                'access_token'  => $stravaUserToken->access_token,
             ]);
 
-        $athlete = StravaFacade::athlete($token->access_token);
+        $athlete = StravaFacade::athlete($stravaUserToken->access_token); // Stravaから連携したアスリートのデータを取得
 
-        $powerWeightRatio = $this->stravaUser->getPowerWeightRatio($athlete); //ユーザのPWRを取得
+        $userStrength = $this->stravaUser->getPowerWeightRatio($athlete); //ユーザのPWRを取得
 
-        //[todo] ユーザのパワーデータ(PWR, FTP)テーブルを作成しレベル分けできる処理を実装。データ非公開ユーザ、パワーメータ非所持者のパターンも考慮
+        $user_data = [
+            'uuid'                  => $user->uuid,
+            'name'                  => $user->name,
+            'user_profile_img_path' => $stravaUserToken->athlete->profile,
+            'user_strength'         => $userStrength,
+        ];
 
-        if($powerWeightRatio){
-            // データが存在する場合にはDBに非公開フラグと挿入
-
-        }
-
-        return redirect()->route('showRegisterOAuthUser');
+        return redirect()->route('showRegisterOAuthUser', $user_data);
     }
 
     /**
@@ -75,14 +85,14 @@ class StravaAuthController extends Controller
      *
      * @see https://developers.strava.com/docs/authentication/
      *
-     * @param string $code トークン生成に用いるコード
+     * @param string $code OAuth認可コード
      * @return object {
-     *                  "token_type"   : "Bearer",
-     *                  "expires_at"   : int,      提供されたアクセストークンが失効するUNIX時間
-     *                  "expires_in"   : int,      アクセストークンが失効するまでの秒数(6時間)
-     *                  "refresh_token": string,   access_token を更新するためのトークン
-     *                  "access_token" : string,   APIのアクセストークン
-     *                  "athlete"      : object,   ユーザのデータ
+     *     string "token_type"    : "Bearer",
+     *     int    "expires_at"    : 提供されたアクセストークンが失効するUNIX時間,
+     *     int    "expires_in"    : アクセストークンが失効するまでの秒数(6時間),
+     *     string "refresh_token" : access_token を更新するためのトークン,
+     *     string "access_token"  : APIのアクセストークン,
+     *     object "athlete"       : ユーザのデータ,
      *                }
      */
     private function getToken(string $code)
@@ -91,31 +101,32 @@ class StravaAuthController extends Controller
     }
 
     /**
+     * ユーザの新規登録
      *
-     * @return $user
+     * @param  object $stravaUserToken
+     * @return int    $user_id
      */
-    private function registerUser(object $token)
+    private function registerUser(object $stravaUserToken)
     {
         $auth_uuid = Str::uuid();
         DB::beginTransaction();
         try{
-
-                DB::table('user_profiles')
-                    ->insert([
-                        'user_uuid' => $auth_uuid,
-                        'user_intro' => $token->athlete->bio,
-                        'user_url' => '',
-                        'user_profile_img_path' => $token->athlete->profile,
-                    ]);
+            DB::table('user_profiles')
+                ->insert([
+                    'user_uuid'             => $auth_uuid,
+                    'user_intro'            => $stravaUserToken->athlete->bio,
+                    'user_url'              => '',
+                    'user_profile_img_path' => $stravaUserToken->athlete->profile,
+                ]);
 
                 $user_id = DB::table('users')
-                    ->insertGetId([
-                        'uuid' => $auth_uuid,
-                        'name' => $token->athlete->firstname+''+$token->athlete->lastname,
-                        'prefecture_code' => 0,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                ->insertGetId([
+                    'uuid'            => $auth_uuid,
+                    'name'            => $stravaUserToken->athlete->firstname.' '.$stravaUserToken->athlete->lastname,
+                    'prefecture_code' => 0,
+                    'created_at'      => now(),
+                    'updated_at'      => now(),
+                ]);
 
             DB::commit();
         }catch(\Throwable $e){
@@ -123,10 +134,6 @@ class StravaAuthController extends Controller
             abort(500);
         }
 
-        Auth::loginUsingId($user_id);
-
-        $user = Auth::user();
-
-        return $user;
+        return $user_id;
     }
 }

@@ -113,7 +113,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('auth/oauth/error/isExist', function(){
         return view('auth.errors/isExist');
-    })->name('showGoogleUserAlreadyRegistered');
+    })->name('showOAuthUserAlreadyRegistered');
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -177,4 +177,4 @@ Route::get('/login/callback', [GoogleLoginController::class, 'authGoogleCallback
 
 // Strava Auth
 Route::get('strava/oauth/redirect', [StravaAuthController::class, 'stravaAuth'])->name('stravaAuth');
-Route::get('strava/redirect', [StravaAuthController::class, 'authStravaCallback']);
+Route::get('strava/oauth/callback', [StravaAuthController::class, 'authStravaCallback']);

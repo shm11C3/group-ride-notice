@@ -131,7 +131,7 @@ class GoogleLoginController extends Controller
             // すでに連携済みのGoogleアカウントだった場合エラー画面にリターンする
             $google_user_result = DB::table('google_users')->where('google_id', $googleUser->id)->limit(1)->get('id');
             if(isset($google_user_result[0])){
-                return redirect()->route('showGoogleUserAlreadyRegistered');
+                return redirect()->route('showOAuthUserAlreadyRegistered');
             }
 
             $auth_user = [
@@ -163,7 +163,8 @@ class GoogleLoginController extends Controller
         $user_data = [
             'uuid' => (string) $auth_user['uuid'],
             'name' => $googleUser->nickname ?? $googleUser->name,
-            'user_profile_img_path' => $googleUser->avatar
+            'user_profile_img_path' => $googleUser->avatar,
+            'user_strength' => NULL,
         ];
 
         return redirect()->route('showRegisterOAuthUser', $user_data); //新規登録の場合

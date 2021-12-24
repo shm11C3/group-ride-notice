@@ -59,21 +59,19 @@ class StravaAuthController extends Controller
         DB::table('strava_users')
             ->updateOrInsert([
                 'user_uuid'     => $user->uuid,
-                'strava_id'     => $stravaUserToken->athlete->id,
+                'strava_id'     => $stravaUserToken->athlete->id
+            ], [
                 'expires_at'    => $stravaUserToken->expires_at,
                 'refresh_token' => $stravaUserToken->refresh_token,
                 'access_token'  => $stravaUserToken->access_token,
             ]);
 
-        $athlete = StravaFacade::athlete($stravaUserToken->access_token); // Stravaから連携したアスリートのデータを取得
 
-        $userStrength = $this->stravaUser->getPowerWeightRatio($athlete); //ユーザのPWRを取得
 
         $user_data = [
             'uuid'                  => $user->uuid,
             'name'                  => $user->name,
             'user_profile_img_path' => $stravaUserToken->athlete->profile,
-            'user_strength'         => $userStrength,
         ];
 
         return redirect()->route('showRegisterOAuthUser', $user_data);

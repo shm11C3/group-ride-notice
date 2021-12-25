@@ -164,6 +164,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/post/upload/userProfileImg', [UserProfileController::class, 'uploadUserProfileImg'])->name('uploadUserProfileImg');
 
     Route::post('api/post/delete/userProfileImg', [UserProfileController::class, 'deleteUserProfileImg'])->name('deleteUserProfileImg');
+
+    Route::get('api/get/strength', [StravaAuthController::class, 'getUserStrength'])->name('getUserStrength');
 });
 
 

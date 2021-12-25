@@ -35,6 +35,11 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class, 'user_uuid', 'uuid');
     }
 
+    public function stravaUser()
+    {
+        return $this->hasOne(StravaUser::class, 'user_uuid', 'uuid');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -261,5 +266,16 @@ class User extends Authenticatable
             'user_ip' => $ip,
             'request_status' => $status
         ]);
+    }
+
+    /**
+     *
+     *
+     * @param  float $ftp FTP (PWR)
+     * @return
+     */
+    public function getStrengthByFTP(float $ftp)
+    {
+
     }
 }

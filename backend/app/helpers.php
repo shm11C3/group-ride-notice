@@ -4,6 +4,8 @@ use Illuminate\Support\HtmlString;
 
 if (! function_exists('html')) {
     /**
+     * \nの改行タグをHTMLの<br>タグに変換
+     *
      * @param string $value
      * @return HtmlString
      */

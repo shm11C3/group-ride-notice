@@ -26,7 +26,7 @@ class StravaUser extends Model
     {
         if(property_exists($athlete, 'ftp') && property_exists($athlete, 'weight')){
             // weightの単位はkgだが今後のAPI仕様次第でヤードポンド法にも対応させる必要あり
-            return $this->floor_plus($athlete->ftp / $athlete->weight);
+            return floor_plus($athlete->ftp / $athlete->weight);
         }
     }
 
@@ -74,24 +74,5 @@ class StravaUser extends Model
             ]);
 
         return Auth::user()->stravaUser;
-    }
-
-    /**
-     * 桁数を指定して切り捨て
-     *
-     * @param float $value     切り捨てる値
-     * @param int   $precision 切り捨てる桁数
-     */
-    function floor_plus(float $value, ?int $precision = null): float
-    {
-      if (null === $precision) {
-        return (float)floor($value);
-      }
-      if ($precision < 0) {
-        throw new \RuntimeException('Invalid precision');
-      }
-
-      $reg = $value - 0.5 / (10 ** $precision);
-      return round($reg, $precision, $reg > 0 ? PHP_ROUND_HALF_UP : PHP_ROUND_HALF_DOWN);
     }
 }

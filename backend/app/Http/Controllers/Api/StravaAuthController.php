@@ -38,6 +38,10 @@ class StravaAuthController extends Controller
      */
     public function authStravaCallback(Request $request)
     {
+        if(!$request->code){
+            // strava認証キャンセル時にリダイレクトさせる
+            return redirect()->route('showLogin');
+        }
         $stravaUserToken = $this->getToken($request->code); //stravaのトークン・アスリートデータ
         $user_id = $this->stravaUser->getUserIdByStravaId($stravaUserToken->athlete->id); // (int)strava_idと一致するbipokeleアカウント(int)idを取得
 

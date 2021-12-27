@@ -47,12 +47,14 @@
           <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-success">送信</button>
       </div>
       <div class="oauth-btn-group">
-        <p>連携アカウントでログイン</p>
-        <a class="btn-block btn-social btn-google" href="{{ route('googleAuth') }}">
-          <img src="{{ asset('img/buttons/google/btn_google_signin_light_normal_web.png') }}" alt="google_login">
+        <p class="m-3 font-weight-bold">連携アカウントでログイン</p>
+        <a class="mt-3 mb-3 pt-3 pb-3 btn-block btn-social btn btn-outline-google" href="{{ route('googleAuth') }}">
+          <img class="mr-2" src="{{ asset('img/google_icon.png') }}" alt="google_login">
+          <span class="btn-google-txt">Googleでログイン</span>
         </a>
-        <a class="btn-block btn-social" href="{{ route('stravaAuth') }}">
-          Strava Auth
+        <a class="mt-3 mb-3 pt-3 pb-3 btn-block btn btn-strava strava-auth-btn" href="{{ route('stravaAuth') }}">
+          <i class="fab fa-strava strava-icon mr-2"></i>
+          <span class="btn-strava-txt">STRAVAでログイン</span>
         </a>
       </div>
   </form>

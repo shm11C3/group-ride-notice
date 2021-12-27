@@ -1,0 +1,89 @@
+/***************************************
+
+ログインページのソーシャルボタンのデザイン
+
+****************************************/
+
+$strava-color: #fc5200;
+$strava-color-active: #ff6f27;
+$strava-color-active-border: #ffa172;
+
+$google-color-border: #262626;
+$google-color-active-border: #4d4d4d;
+
+$social-login-btn-shadow: 0 5px 5px 0 rgba(0, 0, 0, .5);
+
+
+/***************************************
+
+Google ログインボタン
+
+****************************************/
+.btn-outline-google {
+  color: #f8f9fa;
+  border-color: $google-color-border;
+  box-shadow: $social-login-btn-shadow;
+}
+.btn-outline-google:hover {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: $google-color-active-border;
+}
+.btn-outline-google:focus, .btn-outline-google.focus {
+  box-shadow: 0 0 0 0.2rem rgba(248, 249, 250, 0.5);
+}
+.btn-outline-google.disabled, .btn-outline-google:disabled {
+  color: #f8f9fa;
+  background-color: transparent;
+}
+.btn-outline-google:not(:disabled):not(.disabled):active, .btn-outline-google:not(:disabled):not(.disabled).active, .show > .btn-outline-google.dropdown-toggle {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: $google-color-active-border;
+}
+.btn-outline-google:not(:disabled):not(.disabled):active:focus, .btn-outline-google:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-google.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(248, 249, 250, 0.5);
+}
+.btn-google-txt {
+    color: #000000;
+}
+
+
+/***************************************
+
+STRAVA ログインボタン
+
+****************************************/
+.btn-strava {
+  color: #212529;
+  background-color: $strava-color;
+  border-color: $strava-color;
+  box-shadow: $social-login-btn-shadow;
+}
+.btn-strava:hover {
+  color: #212529;
+  background-color: $strava-color-active;
+  border-color: $strava-color-active-border;
+}
+.btn-strava:focus, .btn-strava.focus {
+  color: #212529;
+  background-color: $strava-color-active;
+  border-color: $strava-color-active-border;
+  box-shadow: 0 0 0 0.2rem rgba(216, 217, 219, 0.5);
+}
+.btn-strava.disabled, .btn-strava:disabled {
+  color: #212529;
+  background-color: $strava-color;
+  border-color: $strava-color;
+}
+.btn-strava:not(:disabled):not(.disabled):active, .btn-strava:not(:disabled):not(.disabled).active, .show > .btn-strava.dropdown-toggle {
+  color: #212529;
+  background-color: $strava-color-active;
+  border-color: $strava-color-active-border;
+}
+.btn-strava:not(:disabled):not(.disabled):active:focus, .btn-strava:not(:disabled):not(.disabled).active:focus, .show > .btn-strava.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(216, 217, 219, 0.5);
+}
+.btn-strava-txt, .strava-icon{
+  color: #fff;
+}

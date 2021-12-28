@@ -10285,6 +10285,10 @@ h3 {
 ログインページのソーシャルボタンのデザイン
 
 ****************************************/
+.social-dashboard {
+  width: 300px;
+}
+
 /***************************************
 
 Google ログインボタン
@@ -10366,6 +10370,10 @@ STRAVA ログインボタン
   box-shadow: 0 0 0 0.2rem rgba(216, 217, 219, 0.5);
 }
 
-.btn-strava-txt, .strava-icon {
+.btn-strava-txt, .strava-btn-icon {
   color: #fff;
+}
+
+.strava-icon {
+  color: #fc5200;
 }

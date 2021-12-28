@@ -53,7 +53,7 @@
           <span class="btn-google-txt">Googleでログイン</span>
         </a>
         <a class="mt-3 mb-3 pt-3 pb-3 btn-block btn btn-strava strava-auth-btn" href="{{ route('stravaAuth') }}">
-          <i class="fab fa-strava strava-icon mr-2"></i>
+          <i class="fab fa-strava strava-btn-icon mr-2"></i>
           <span class="btn-strava-txt">STRAVAでログイン</span>
         </a>
       </div>

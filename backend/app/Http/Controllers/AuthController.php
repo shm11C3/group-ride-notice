@@ -70,9 +70,11 @@ class AuthController extends Controller
         $user = DB::table('users')
             ->join('user_profiles', 'user_profiles.user_uuid', 'users.uuid')
             ->leftJoin('google_users', 'google_users.user_uuid', 'users.uuid')
+            ->leftJoin('strava_users', 'strava_users.user_uuid', 'users.uuid')
             ->where('users.id', Auth::id())
             ->get([
                 'google_users.user_uuid as google_user',
+                'strava_users.user_uuid as strava_user',
                 'name',
                 'email',
                 'prefecture_code',

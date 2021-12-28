@@ -104,12 +104,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input v-model="privacy" class="form-check-input" type="checkbox" value="1">
-            同意する
-          </label>
-        </div>
       </div>
     </div>
   </div>
@@ -188,16 +182,22 @@
         </select>
       </div>
       <fieldset class="form-group">
-        <div class="form-check">
+        <div class="form-check pl-0">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#privacyModal">
+            プライバシーポリシー・利用規約
+          </button>
+          <label class="form-check-label form-check-inline ml-2">
+            <input v-model="privacy" class="form-check-input" type="checkbox" value="1">
+            同意する
+          </label>
+        </div>
+        <div class="form-check mt-2">
           <label class="form-check-label">
             <input name="remember" class="form-check-input" type="checkbox" value="1" checked="">
             アカウントを記憶
           </label>
         </div>
       </fieldset>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#privacyModal">
-        プライバシーポリシーに同意
-      </button>
       <div class="text-right">
         <a class="btn btn-secondary" href="{{ route('showLogin') }}">登録済みの方はこちら</a>
         <button v-bind:disabled="!submitStatus" type="submit" class="btn btn-success">送信</button>

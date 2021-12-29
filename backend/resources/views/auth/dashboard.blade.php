@@ -23,6 +23,7 @@
                 </span>
                 <span class="col-lg-9 font-weight-bold">
                     @if($user[0]->google_user)<img src="{{ asset('img/google_icon.png') }}">@endif
+                    @if($user[0]->strava_user)<i class="fab fa-strava strava-icon ml-2"></i>@endif
                 </span>
             </div>
             <div class="row p-3 border-bottom">
@@ -39,8 +40,15 @@
                     <button class="btn btn-outline-primary m-2">ログアウト</button>
                 </form>
             </div>
-            <div class="dashboard-btn">
-                <a class="btn btn-outline-primary m-2" href="{{ route('googleAuth') }}">連携アカウントを追加</a>
+            <div class="dashboard-btn mt-3">
+                <a class="btn btn-outline-google social-dashboard" href="{{ route('googleAuth') }}">
+                    <img src="{{ asset('img/google_icon.png') }}">
+                    <span class="btn-google-txt">Googleアカウントを追加</span>
+                </a>
+                <a class="btn btn-strava social-dashboard" href="{{ route('stravaAuth') }}">
+                    <i class="fab fa-strava strava-btn-icon"></i>
+                    <span class="btn-strava-txt">STRAVAアカウントを追加</span>
+                </a>
             </div>
         </div>
     </div>

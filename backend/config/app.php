@@ -165,6 +165,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        CodeToad\Strava\StravaServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -234,6 +235,7 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Strava' => CodeToad\Strava\StravaFacade::class,
 
 
     ],

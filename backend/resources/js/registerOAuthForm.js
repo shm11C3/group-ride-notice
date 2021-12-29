@@ -74,8 +74,15 @@ new Vue({
 
             this.uuid = query[0].split("=").pop();
             this.name = query[1].split("=").pop();
-            const img_arr = query[2].split("=");
-            this.user_profile_img_path = `${img_arr[1]}=${img_arr[2]}`;
+            const img_arr = query[2].split("="); //[0]: "user_profile_img_path" [1]: URL [2]: Query
+
+            if(img_arr.length == 2){
+                // クエリ文字列が存在しない場合
+                this.user_profile_img_path = img_arr[1];
+            }else{
+                // imageのURLにクエリ文字列が存在する場合
+                this.user_profile_img_path = `${img_arr[1]}=${img_arr[2]}`;
+            }
         }
     }
 });

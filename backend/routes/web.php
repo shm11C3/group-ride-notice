@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\User\FollowController;
 use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\Api\ParticipationController;
+use App\Http\Controllers\Api\StravaAuthController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\SearchViewController;
 use App\Http\Controllers\UserViewController;
@@ -112,7 +113,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('auth/oauth/error/isExist', function(){
         return view('auth.errors/isExist');
-    })->name('showGoogleUserAlreadyRegistered');
+    })->name('showOAuthUserAlreadyRegistered');
 
     //POST
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -163,6 +164,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/post/upload/userProfileImg', [UserProfileController::class, 'uploadUserProfileImg'])->name('uploadUserProfileImg');
 
     Route::post('api/post/delete/userProfileImg', [UserProfileController::class, 'deleteUserProfileImg'])->name('deleteUserProfileImg');
+
+    Route::get('api/get/strength', [StravaAuthController::class, 'getUserStrength'])->name('getUserStrength');
 });
 
 
@@ -174,3 +177,6 @@ Route::get('/login/ctrl', [HttpErrorController::class, 'methodNotAllowed']);
 Route::get('/auth/redirect', [GoogleLoginController::class, 'getGoogleAuth'])->name('googleAuth');
 Route::get('/login/callback', [GoogleLoginController::class, 'authGoogleCallback']);
 
+// Strava Auth
+Route::get('strava/oauth/redirect', [StravaAuthController::class, 'stravaAuth'])->name('stravaAuth');
+Route::get('strava/oauth/callback', [StravaAuthController::class, 'authStravaCallback']);

@@ -34,7 +34,7 @@ class ConstantDatabaseValue extends Seeder
 
         UserProfile::create([
             'user_uuid' => $seeder->user_uuid,
-            'user_profile_img_path' => '',
+            'user_profile_img_path' => null,
             'user_intro' => 'Hello',
             'user_url' => 'https://bipokele.com',
             'fb_username' => 'facebook',

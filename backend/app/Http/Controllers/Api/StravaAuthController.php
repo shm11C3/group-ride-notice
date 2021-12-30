@@ -64,9 +64,9 @@ class StravaAuthController extends Controller
 
         DB::table('strava_users')
             ->updateOrInsert([
-                'user_uuid'     => $user->uuid,
                 'strava_id'     => $stravaUserToken->athlete->id
             ], [
+                'user_uuid'     => $user->uuid,
                 'expires_at'    => $stravaUserToken->expires_at,
                 'refresh_token' => $stravaUserToken->refresh_token,
                 'access_token'  => $stravaUserToken->access_token,

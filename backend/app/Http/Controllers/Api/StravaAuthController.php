@@ -44,12 +44,14 @@ class StravaAuthController extends Controller
         }
         $stravaUserToken = $this->getToken($request->code); //stravaのトークン・アスリートデータ
         $user_id = $this->stravaUser->getUserIdByStravaId($stravaUserToken->athlete->id); // (int)strava_idと一致するbipokeleアカウント(int)idを取得
+        $is_registered = true; // ユーザアカウントの有無
 
         if(!Auth::check()){
             // ログインしていない場合はログインする
             if(!$user_id){
                 // 連携しているbipokeleアカウントが存在しない場合は新規作成する
                 $user_id = $this->registerUser($stravaUserToken);
+                $is_registered = false;
             }
             Auth::loginUsingId($user_id, $remember=true);
 
@@ -70,8 +72,12 @@ class StravaAuthController extends Controller
                 'access_token'  => $stravaUserToken->access_token,
             ]);
 
+        if($is_registered){
+            // 新規登録以外の場合
+            return redirect()->route('showDashboard');
+        }
 
-
+        // 新規登録の場合（新規登録画面へリダイレクト）
         $user_data = [
             'uuid'                  => $user->uuid,
             'name'                  => $user->name,

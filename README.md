@@ -27,8 +27,9 @@ https://user-images.githubusercontent.com/78523393/145537613-6b27224b-b65b-48d2-
   - MySQL (ローカル：Docker 20.10 / Docker-Compose 2.2/本番：AWS RDS)
   - PHPMyAdmin(ローカル環境時)
   - AWS 以下インフラ構成図参照
-
-![bipokele drawio](https://user-images.githubusercontent.com/78523393/137576629-fca9fe70-3924-4df0-a96f-7e64d063bfe6.png)
+  
+  
+![bipokele](https://user-images.githubusercontent.com/78523393/147806476-f13c9b07-29d4-40c6-948f-9d27f0e5b80d.jpg)
 
 
 - 開発環境・その他使用ツール

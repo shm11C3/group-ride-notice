@@ -171,4 +171,23 @@ class StravaAuthController extends Controller
 
         return response()->json($data);
     }
+
+
+    /**
+     * @param  int         $page   ページ
+     * @return object json $result 取得したルート
+     *
+     * STRAVAで作成したルートを取得
+     */
+    public function getUserRoute(int $page)
+    {
+        $stravaUser = $this->stravaUser->getStravaUser();
+
+        if(!$stravaUser){
+            return response()->json(['result' => null]);
+        }
+        $result = StravaFacade::athleteRoutes($stravaUser->access_token, $stravaUser->strava_id, $page, $perPage=30);
+
+        return response()->json($result);
+    }
 }

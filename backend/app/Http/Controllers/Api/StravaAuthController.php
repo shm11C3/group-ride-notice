@@ -30,6 +30,7 @@ class StravaAuthController extends Controller
     /**
      * 連携許可時の処理
      * 取得したAuth認可コードを用いてbipokeleのアカウントと連携させる
+     * STRAVA認証は 1 Bipokele アカウントあたり 1 STRAVA アカウント
      *
      * @see https://developers.strava.com/docs/getting-started/
      *
@@ -60,17 +61,32 @@ class StravaAuthController extends Controller
             return redirect()->route('showOAuthUserAlreadyRegistered');
         }
 
-        $user = Auth::user();
+        $user = Auth::user()->stravaUser;
 
-        DB::table('strava_users')
-            ->updateOrInsert([
-                'strava_id'     => $stravaUserToken->athlete->id
-            ], [
-                'user_uuid'     => $user->uuid,
-                'expires_at'    => $stravaUserToken->expires_at,
-                'refresh_token' => $stravaUserToken->refresh_token,
-                'access_token'  => $stravaUserToken->access_token,
-            ]);
+        if((int)$user->strava_id !== $stravaUserToken->athlete->id){
+            // ユーザが別のSTRAVAアカウントで登録していた場合STRAVAアカウントを更新
+            DB::table('strava_users')
+                ->updateOrInsert([
+                    'user_uuid'     => $user->user_uuid,
+                ], [
+                    'strava_id'     => $stravaUserToken->athlete->id,
+                    'expires_at'    => $stravaUserToken->expires_at,
+                    'refresh_token' => $stravaUserToken->refresh_token,
+                    'access_token'  => $stravaUserToken->access_token,
+                ]);
+        }else{
+            DB::table('strava_users')
+                ->updateOrInsert([
+                    'strava_id'     => $stravaUserToken->athlete->id
+                ], [
+                    'user_uuid'     => $user->user_uuid,
+                    'expires_at'    => $stravaUserToken->expires_at,
+                    'refresh_token' => $stravaUserToken->refresh_token,
+                    'access_token'  => $stravaUserToken->access_token,
+                ]);
+        }
+
+
 
         if($is_registered){
             // 新規登録以外の場合

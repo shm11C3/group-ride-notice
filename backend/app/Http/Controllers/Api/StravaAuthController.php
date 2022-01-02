@@ -61,9 +61,9 @@ class StravaAuthController extends Controller
             return redirect()->route('showOAuthUserAlreadyRegistered');
         }
 
-        $user = Auth::user()->stravaUser;
+        $user = Auth::user()->stravaUser ?? Auth::user();
 
-        if((int)$user->strava_id !== $stravaUserToken->athlete->id){
+        if(property_exists($user, 'strava_id') && (int)$user->strava_id !== $stravaUserToken->athlete->id){
             // ユーザが別のSTRAVAアカウントで登録していた場合STRAVAアカウントを更新
             DB::table('strava_users')
                 ->updateOrInsert([
@@ -79,7 +79,7 @@ class StravaAuthController extends Controller
                 ->updateOrInsert([
                     'strava_id'     => $stravaUserToken->athlete->id
                 ], [
-                    'user_uuid'     => $user->user_uuid,
+                    'user_uuid'     => $user->user_uuid ?? $user->uuid,
                     'expires_at'    => $stravaUserToken->expires_at,
                     'refresh_token' => $stravaUserToken->refresh_token,
                     'access_token'  => $stravaUserToken->access_token,

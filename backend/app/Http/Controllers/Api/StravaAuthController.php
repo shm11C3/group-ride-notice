@@ -30,7 +30,7 @@ class StravaAuthController extends Controller
     /**
      * 連携許可時の処理
      * 取得したAuth認可コードを用いてbipokeleのアカウントと連携させる
-     * STRAVA認証は 1 Bipokele アカウントあたり 1 STRAVA アカウント
+     * STRAVAアカウントの登録は１Bipokeleアカウントあたり１STRAVAアカウント
      *
      * @see https://developers.strava.com/docs/getting-started/
      *
@@ -61,9 +61,9 @@ class StravaAuthController extends Controller
             return redirect()->route('showOAuthUserAlreadyRegistered');
         }
 
-        $user = Auth::user()->stravaUser;
+        $user = Auth::user()->stravaUser ?? Auth::user();
 
-        if((int)$user->strava_id !== $stravaUserToken->athlete->id){
+        if((int)$user->strava_id ?? null !== $stravaUserToken->athlete->id){
             // ユーザが別のSTRAVAアカウントで登録していた場合STRAVAアカウントを更新
             DB::table('strava_users')
                 ->updateOrInsert([
@@ -79,13 +79,12 @@ class StravaAuthController extends Controller
                 ->updateOrInsert([
                     'strava_id'     => $stravaUserToken->athlete->id
                 ], [
-                    'user_uuid'     => $user->user_uuid,
+                    'user_uuid'     => $user->user_uuid ?? $user->uuid,
                     'expires_at'    => $stravaUserToken->expires_at,
                     'refresh_token' => $stravaUserToken->refresh_token,
                     'access_token'  => $stravaUserToken->access_token,
                 ]);
         }
-
 
 
         if($is_registered){

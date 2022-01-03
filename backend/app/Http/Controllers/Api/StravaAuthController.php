@@ -63,29 +63,40 @@ class StravaAuthController extends Controller
 
         $user = Auth::user()->stravaUser ?? Auth::user();
 
-        if((int)$user->strava_id ?? null !== $stravaUserToken->athlete->id){
-            // ユーザが別のSTRAVAアカウントで登録していた場合STRAVAアカウントを更新
-            DB::table('strava_users')
-                ->updateOrInsert([
-                    'user_uuid'     => $user->user_uuid,
-                ], [
-                    'strava_id'     => $stravaUserToken->athlete->id,
-                    'expires_at'    => $stravaUserToken->expires_at,
-                    'refresh_token' => $stravaUserToken->refresh_token,
-                    'access_token'  => $stravaUserToken->access_token,
-                ]);
-        }else{
-            DB::table('strava_users')
-                ->updateOrInsert([
-                    'strava_id'     => $stravaUserToken->athlete->id
-                ], [
-                    'user_uuid'     => $user->user_uuid ?? $user->uuid,
-                    'expires_at'    => $stravaUserToken->expires_at,
-                    'refresh_token' => $stravaUserToken->refresh_token,
-                    'access_token'  => $stravaUserToken->access_token,
-                ]);
-        }
+        //$user->strava_id = 1;
 
+        $tokenData = [
+            'expires_at'    => $stravaUserToken->expires_at,
+            'refresh_token' => $stravaUserToken->refresh_token,
+            'access_token'  => $stravaUserToken->access_token,
+        ];
+
+        if(isset($user->strava_id) && (int)$user->strava_id === $stravaUserToken->athlete->id){
+            // `strava_users`に登録されている場合
+            DB::table('strava_users')
+                ->where('strava_id', $stravaUserToken->athlete->id)
+                ->update(array_merge(
+                    ['user_uuid' => $user->user_uuid],
+                    $tokenData,
+                ));
+
+        }else if(!isset($user->strava_id)){
+            // STRAVAアカウント新規登録時
+            DB::table('strava_users')
+                ->insert(array_merge(
+                    ['user_uuid' => $user->uuid,
+                     'strava_id' => $stravaUserToken->athlete->id],
+                    $tokenData,
+                ));
+        }else{
+            // 登録されている`strava_id`とレスポンスから取得したidが異なる場合
+            DB::table('strava_users')
+                ->where('user_uuid', $user->user_uuid)
+                ->update(array_merge(
+                    ['strava_id' => $stravaUserToken->athlete->id],
+                    $tokenData,
+                ));
+        }
 
         if($is_registered){
             // 新規登録以外の場合

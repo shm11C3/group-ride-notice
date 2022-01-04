@@ -45,13 +45,18 @@ class GoogleLoginController extends Controller
             $registered = false;
 
         }else{
+            // 登録済みのアカウントに紐付ける場合
             $auth_uuid = $googleUserData[0]->user_uuid;
 
             $auth_user = User::where('uuid', $googleUserData[0]->user_uuid)->get(['id', 'prefecture_code']); // Google登録テーブルのuuidからユーザを取得
 
-            $auth_id = $auth_user[0]->id ?? $this->createUser($googleUser, $auth_uuid); // 登録ユーザのidを取得、存在しない場合はユーザを登録
-
-            $registered = ($auth_user[0]->prefecture_code !== "0"); // ユーザが登録済みの場合true
+            // 登録ユーザのidを取得、存在しない場合はユーザを登録
+            if($auth_user[0]->id){
+                $auth_id = $auth_user[0]->id;
+            }else{
+                $auth_id = $this->createUser($googleUser, $auth_uuid);
+                $registered = false;
+            }
         }
 
         $auth_user_arr = [
@@ -118,11 +123,13 @@ class GoogleLoginController extends Controller
      */
     public function authGoogleCallback()
     {
-        $googleUser = Socialite::driver('google')->user();
+        $googleUser = Socialite::driver('google')->user(); // GoogleAPIからユーザを取得
 
         if(!$googleUser){
+            // APIからデータが取得できなかった場合
             return redirect()->route('showLogin')->withErrors($this->googleAuthError);
         }
+        $is_registered = true; //ユーザアカウントの有無
 
         // ログインしていない場合、ログインまたは登録を行いユーザのuuidを取得
         $user = Auth::user();
@@ -137,17 +144,16 @@ class GoogleLoginController extends Controller
             $auth_user = [
                 'id' => $user->id,
                 'uuid' => $user->uuid,
-                'registered' => true
             ];
 
             GoogleUser::create([
                 'google_id' => $googleUser->id,
                 'user_uuid' => $user->uuid
             ]);
-
         }else{
             // ログインしていない場合、ログイン・登録処理を行う
             $auth_user = $this->loginOrRegisterUser($googleUser);
+            $is_registered = $auth_user['registered'];
 
             GoogleUser::firstOrCreate([
                 'google_id' => $googleUser->id,
@@ -156,7 +162,8 @@ class GoogleLoginController extends Controller
             ]);
         }
 
-        if($auth_user['registered']){
+        if($is_registered){
+            // 新規登録でない場合はダッシュボードへリダイレクト
             return redirect()->route('showDashboard');
         }
 

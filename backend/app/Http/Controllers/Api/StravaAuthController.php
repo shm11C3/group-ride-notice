@@ -30,6 +30,7 @@ class StravaAuthController extends Controller
     /**
      * 連携許可時の処理
      * 取得したAuth認可コードを用いてbipokeleのアカウントと連携させる
+     * STRAVAアカウントの登録は１Bipokeleアカウントあたり１STRAVAアカウント
      *
      * @see https://developers.strava.com/docs/getting-started/
      *
@@ -44,12 +45,14 @@ class StravaAuthController extends Controller
         }
         $stravaUserToken = $this->getToken($request->code); //stravaのトークン・アスリートデータ
         $user_id = $this->stravaUser->getUserIdByStravaId($stravaUserToken->athlete->id); // (int)strava_idと一致するbipokeleアカウント(int)idを取得
+        $is_registered = true; // ユーザアカウントの有無
 
         if(!Auth::check()){
             // ログインしていない場合はログインする
             if(!$user_id){
                 // 連携しているbipokeleアカウントが存在しない場合は新規作成する
                 $user_id = $this->registerUser($stravaUserToken);
+                $is_registered = false;
             }
             Auth::loginUsingId($user_id, $remember=true);
 
@@ -58,20 +61,47 @@ class StravaAuthController extends Controller
             return redirect()->route('showOAuthUserAlreadyRegistered');
         }
 
-        $user = Auth::user();
+        $user = Auth::user()->stravaUser ?? Auth::user();
 
-        DB::table('strava_users')
-            ->updateOrInsert([
-                'user_uuid'     => $user->uuid,
-                'strava_id'     => $stravaUserToken->athlete->id
-            ], [
-                'expires_at'    => $stravaUserToken->expires_at,
-                'refresh_token' => $stravaUserToken->refresh_token,
-                'access_token'  => $stravaUserToken->access_token,
-            ]);
+        $tokenData = [
+            'expires_at'    => $stravaUserToken->expires_at,
+            'refresh_token' => $stravaUserToken->refresh_token,
+            'access_token'  => $stravaUserToken->access_token,
+        ];
 
+        if(isset($user->strava_id) && (int)$user->strava_id === $stravaUserToken->athlete->id){
+            // `strava_users`に登録されている場合
+            DB::table('strava_users')
+                ->where('strava_id', $stravaUserToken->athlete->id)
+                ->update(array_merge(
+                    ['user_uuid' => $user->user_uuid],
+                    $tokenData,
+                ));
 
+        }else if(!isset($user->strava_id)){
+            // STRAVAアカウント新規登録時
+            DB::table('strava_users')
+                ->insert(array_merge(
+                    ['user_uuid' => $user->uuid,
+                     'strava_id' => $stravaUserToken->athlete->id],
+                    $tokenData,
+                ));
+        }else{
+            // 登録されている`strava_id`とレスポンスから取得したidが異なる場合
+            DB::table('strava_users')
+                ->where('user_uuid', $user->user_uuid)
+                ->update(array_merge(
+                    ['strava_id' => $stravaUserToken->athlete->id],
+                    $tokenData,
+                ));
+        }
 
+        if($is_registered){
+            // 新規登録以外の場合
+            return redirect()->route('showDashboard');
+        }
+
+        // 新規登録の場合（新規登録画面へリダイレクト）
         $user_data = [
             'uuid'                  => $user->uuid,
             'name'                  => $user->name,

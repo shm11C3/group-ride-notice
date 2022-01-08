@@ -22,6 +22,10 @@ class StravaController extends Controller
      */
     public function getUserRoute(int $page)
     {
+        if($page < 1){
+            abort(404);
+        }
+
         $stravaUser = $this->stravaUser->getStravaUser();
 
         if(!$stravaUser){

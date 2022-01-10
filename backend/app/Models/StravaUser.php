@@ -73,6 +73,10 @@ class StravaUser extends Model
                 'expires_at' => $refresh->expires_at,
             ]);
 
-        return Auth::user()->stravaUser;
+        $stravaUser->access_token  = $refresh->access_token;
+        $stravaUser->refresh_token = $refresh->refresh_token;
+        $stravaUser->expires_at    = $refresh->expires_at;
+
+        return $stravaUser;
     }
 }

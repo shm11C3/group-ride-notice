@@ -63,8 +63,6 @@ class StravaAuthController extends Controller
 
         $user = Auth::user()->stravaUser ?? Auth::user();
 
-        //$user->strava_id = 1;
-
         $tokenData = [
             'expires_at'    => $stravaUserToken->expires_at,
             'refresh_token' => $stravaUserToken->refresh_token,
@@ -169,38 +167,5 @@ class StravaAuthController extends Controller
         }
 
         return $user_id;
-    }
-
-    /**
-     * Stravaのパワーデータを取得
-     *
-     * @var bool $byPower
-     * @var float $userStrength
-     *
-     * @return object $data
-     */
-    public function getUserStrength()
-    {
-        $stravaUser = $this->stravaUser->getStravaUser();
-
-        if($stravaUser->strava_id ?? false){
-            $athlete = StravaFacade::athlete($stravaUser->access_token); // Stravaから連携したアスリートのデータを取得
-            $userStrength = $this->stravaUser->getPowerWeightRatio($athlete); //ユーザのPWRを取得
-        }else{
-            $userStrength = 0.0;
-        }
-
-        if($userStrength){
-            $byPower = true;
-        }else{
-            $byPower = false;
-        }
-
-        $data = [
-            'strength' => $userStrength,
-            'byPower'  => $byPower
-        ];
-
-        return response()->json($data);
     }
 }

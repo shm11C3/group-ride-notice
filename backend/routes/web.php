@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\User\FollowController;
 use App\Http\Controllers\RideViewController;
 use App\Http\Controllers\Api\ParticipationController;
 use App\Http\Controllers\Api\StravaAuthController;
+use App\Http\Controllers\Api\StravaController;
 use App\Http\Controllers\Api\User\UserProfileController;
 use App\Http\Controllers\SearchViewController;
 use App\Http\Controllers\UserViewController;
@@ -165,7 +166,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('api/post/delete/userProfileImg', [UserProfileController::class, 'deleteUserProfileImg'])->name('deleteUserProfileImg');
 
-    Route::get('api/get/strength', [StravaAuthController::class, 'getUserStrength'])->name('getUserStrength');
+    Route::get('api/get/strength', [StravaController::class, 'getUserStrength'])->name('getUserStrength');
+
+    Route::get('api/strava/get/route/{page}', [StravaController::class, 'getUserRoute'])->name('getUserRoute');
 });
 
 

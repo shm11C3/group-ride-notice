@@ -16,6 +16,12 @@
                 ラインコース
             </label>
         </div>
+        <div class="form-check">
+            <input v-model="lap_status_request" value="3" class="form-check-input" type="radio">
+            <label class="form-check-label" for="lap_status_request">
+                STRAVAから取得
+            </label>
+        </div>
     </div>
     <div v-if="rideRoutes.length">
         <div v-for="(rr, i) in rideRoutes" class="shadow m-2 p-1">

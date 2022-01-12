@@ -44,6 +44,7 @@ new Vue({
         initialLoad: function(){
             this.rideRoutes = [];
             this.ride_route_page = 1;
+
             this.fetchRideRoutes();
         },
         addLoad: function (){
@@ -56,10 +57,13 @@ new Vue({
          */
         fetchRideRoutes: function(){
             this.isLoad = true;
+            let uri = `../api/get/ride-routes/${this.lap_status_request}?page=${this.ride_route_page}`;
 
-            const url = `../api/get/ride-routes/${this.lap_status_request}?page=${this.ride_route_page}`;
+            if(this.lap_status_request == 3){
+                uri = `../api/strava/get/route/${this.ride_route_page}`;
+            }
 
-            fetch(url)
+            fetch(uri)
             .then(response => {
                 return response.json();
 

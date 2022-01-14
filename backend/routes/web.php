@@ -138,6 +138,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('api/get/my-profile', [UserProfileController::class, 'getAuthUserProfile'])->name('getAuthUserProfile');
 
+    Route::get('api/get/strength', [StravaController::class, 'getUserStrength'])->name('getUserStrength');
+
+    Route::get('api/strava/get/route/{page}', [StravaController::class, 'getUserRoute'])->whereNumber('page')->name('getUserRoute');
+
 
     //POST API
     Route::post('api/post/meetingPlace', [MeetingPlaceController::class, 'createMeetingPlace'])->name('createMeetingPlace');
@@ -165,10 +169,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/post/upload/userProfileImg', [UserProfileController::class, 'uploadUserProfileImg'])->name('uploadUserProfileImg');
 
     Route::post('api/post/delete/userProfileImg', [UserProfileController::class, 'deleteUserProfileImg'])->name('deleteUserProfileImg');
-
-    Route::get('api/get/strength', [StravaController::class, 'getUserStrength'])->name('getUserStrength');
-
-    Route::get('api/strava/get/route/{page}', [StravaController::class, 'getUserRoute'])->name('getUserRoute');
 });
 
 

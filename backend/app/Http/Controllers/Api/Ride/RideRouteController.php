@@ -128,6 +128,7 @@ class RideRouteController extends Controller
         ->get([
             'ride_routes.uuid',
             'ride_routes.user_uuid',
+            'strava_route_id',
             'name',
             'elevation',
             'distance',

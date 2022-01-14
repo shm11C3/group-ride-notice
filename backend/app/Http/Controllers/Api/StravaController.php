@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ride;
 use CodeToad\Strava\StravaFacade;
 use Illuminate\Http\Request;
 use App\Models\StravaUser;
 
 class StravaController extends Controller
 {
-    public function __construct(StravaUser $stravaUser)
+    public function __construct(StravaUser $stravaUser, Ride $ride)
     {
         $this->stravaUser = $stravaUser;
+        $this->ride = $ride;
     }
 
     /**
@@ -31,9 +33,37 @@ class StravaController extends Controller
         if(!$stravaUser){
             return response()->json(['result' => null]);
         }
-        $result = StravaFacade::athleteRoutes($stravaUser->access_token, $stravaUser->strava_id, $page, $perPage=15);
+        $results = StravaFacade::athleteRoutes($stravaUser->access_token, $stravaUser->strava_id, $page, $perPage=15);
 
-        return response()->json($result);
+        // APIから取得したデータをride_routeの形式に合わせて加工
+        $ride_routes = [];
+
+        foreach($results as $i => $result){
+            $ride_routes[$i] = [
+                // DBに保存するデータとは異なる（保存時はstrava_route_idを送信）
+                'strava_route_id'  => $result->id,
+                'uuid'             => null,
+                'user_uuid'        => $stravaUser->user_uuid,
+                'name'             => $result->name,
+                'elevation'        => $result->elevation_gain,
+                'distance'         => $result->distance/1000,
+                'lap_status'       => false,                          // ([スタート地点の座標] === [ゴール地点の座標]) 現在はセグメントでしか座標が取得できない
+                'comment'          => $result->description,
+                'publish_status'   => (int) $result->private * 2,     // private => false なら 0 / private => true なら 2
+                'map_img_uri'      => $result->map_urls->url,
+                'summary_polyline' => $result->map->summary_polyline,
+            ];
+        }
+
+
+        $registered = false;
+
+        $data = [
+            'data' => $ride_routes,
+            'isRegistered' => $registered
+        ];
+
+        return response()->json($data);
     }
 
     /**

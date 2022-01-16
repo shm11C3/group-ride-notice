@@ -79,4 +79,25 @@ class StravaUser extends Model
 
         return $stravaUser;
     }
+
+    /**
+     * ride_routeで保存されているSTRAVAルートをarray $ride_routesに追加
+     *
+     * @param  array  $ride_routes
+     * @param  object $saved_ride_routes_list
+     * @return array  $ride_routes
+     */
+    public function addIsRegisteredToRide_routes(array $ride_routes, object $saved_ride_routes_list)
+    {
+        $saved_ride_routes_arr = []; // 保存済みルートの`strava_route_id`リスト
+
+        foreach($saved_ride_routes_list as $i => $saved_ride_route){
+            $saved_ride_routes_arr[$i] = (array)$saved_ride_route;
+        }
+        foreach($ride_routes as $i => $ride_route){
+            $ride_routes[$i] += ['is_registered' => in_array(['strava_route_id' => $ride_route['strava_route_id']], $saved_ride_routes_arr, /*$strict=*/ true)];
+        }
+
+        return $ride_routes;
+    }
 }

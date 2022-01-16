@@ -7,6 +7,7 @@ use App\Models\Ride;
 use CodeToad\Strava\StravaFacade;
 use Illuminate\Http\Request;
 use App\Models\StravaUser;
+use Illuminate\Support\Facades\DB;
 
 class StravaController extends Controller
 {
@@ -33,10 +34,12 @@ class StravaController extends Controller
         if(!$stravaUser){
             return response()->json(['result' => null]);
         }
+
         $results = StravaFacade::athleteRoutes($stravaUser->access_token, $stravaUser->strava_id, $page, $perPage=15);
 
         // APIから取得したデータをride_routeの形式に合わせて加工
-        $ride_routes = [];
+        $ride_routes = [];         // 取得したルート
+        $strava_route_id_arr = []; // ユーザの保存チェックに使用
 
         foreach($results as $i => $result){
             $ride_routes[$i] = [
@@ -53,17 +56,19 @@ class StravaController extends Controller
                 'map_img_uri'      => $result->map_urls->url,
                 'summary_polyline' => $result->map->summary_polyline,
             ];
+
+            $strava_route_id_arr[$i] = $result->id;
         }
 
+        $saved_ride_routes_list = DB::table('saved_ride_routes')
+            ->join('ride_routes', 'route_uuid', 'ride_routes.uuid')
+            ->where('saved_ride_routes.user_uuid', $stravaUser->user_uuid)
+            ->whereIn('strava_route_id', $strava_route_id_arr)
+            ->get('strava_route_id');
 
-        $registered = false;
+        $ride_routes = $this->stravaUser->addIsRegisteredToRide_routes($ride_routes, $saved_ride_routes_list);
 
-        $data = [
-            'data' => $ride_routes,
-            'isRegistered' => $registered
-        ];
-
-        return response()->json($data);
+        return response()->json($ride_routes);
     }
 
     /**

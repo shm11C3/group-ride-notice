@@ -46,7 +46,19 @@ class UserProfile extends Model
     public function encodeImage(object $original_img)
     {
         $uuid = (string)Str::uuid();
-        $path = "img/tmp/{$uuid}.jpg"; // 書き出し後の画像の一時パス
+        $tmp_directory = 'img/tmp';
+
+        if(!file_exists($tmp_directory)){
+            // ディレクトリが存在しない場合は作成
+            mkdir(
+                $tmp_directory,
+                $permissions = 0777,
+                $recursive = false,
+                $context = null
+            );
+        }
+
+        $path = "{$tmp_directory}/{$uuid}.jpg"; // 書き出し後の画像の一時パス
 
         $img = Image::make($original_img)
             ->encode('jpg');

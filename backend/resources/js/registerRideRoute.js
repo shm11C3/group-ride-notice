@@ -57,10 +57,12 @@ new Vue({
          */
         fetchRideRoutes: function(){
             this.isLoad = true;
-            let uri = `../api/get/ride-routes/${this.lap_status_request}?page=${this.ride_route_page}`;
 
+            let uri ='';
             if(this.lap_status_request == 3){
                 uri = `../api/strava/get/route/${this.ride_route_page}`;
+            }else{
+                uri = `../api/get/ride-routes/${this.lap_status_request}?page=${this.ride_route_page}`;
             }
 
             fetch(uri)
@@ -78,12 +80,19 @@ new Vue({
                     });
 
                     this.resIsExist = Boolean(data.next_page_url);
-
                     this.$forceUpdate();
+
+                }else if(data[0]['data'].strava_route_id){
+                    data.forEach(element => {
+                        this.rideRoutes.push(element);
+                    });
+
+                    this.resIsExist = Boolean(data[0]);
+                    this.$forceUpdate();
+
                 }else{
                     this.resIsExist = false;
                 }
-
 
             }).catch(error => {
                 this.isLoad = false;

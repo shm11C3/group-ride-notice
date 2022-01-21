@@ -42,14 +42,14 @@ class StravaController extends Controller
         $strava_route_id_arr = []; // ユーザの保存チェックに使用
 
         foreach($results as $i => $result){
-            $ride_routes[$i] = [
+            $ride_routes[$i]['data'] = [
                 // DBに保存するデータとは異なる（保存時はstrava_route_idを送信）
                 'strava_route_id'  => $result->id,
                 'uuid'             => null,
                 'user_uuid'        => $stravaUser->user_uuid,
                 'name'             => $result->name,
-                'elevation'        => $result->elevation_gain,
-                'distance'         => $result->distance/1000,
+                'elevation'        => floor_plus($result->elevation_gain),
+                'distance'         => floor_plus($result->distance/1000),
                 'lap_status'       => false,                          // ([スタート地点の座標] === [ゴール地点の座標]) 現在はセグメントでしか座標が取得できない
                 'comment'          => $result->description,
                 'publish_status'   => (int) $result->private * 2,     // private => false なら 0 / private => true なら 2
@@ -104,3 +104,4 @@ class StravaController extends Controller
         return response()->json($data);
     }
 }
+

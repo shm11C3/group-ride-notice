@@ -95,7 +95,7 @@ class StravaUser extends Model
             $saved_ride_routes_arr[$i] = (array)$saved_ride_route;
         }
         foreach($ride_routes as $i => $ride_route){
-            $ride_routes[$i] += ['is_registered' => in_array(['strava_route_id' => $ride_route['strava_route_id']], $saved_ride_routes_arr, /*$strict=*/ true)];
+            $ride_routes[$i] += ['is_registered' => in_array(['strava_route_id' => $ride_route['data']['strava_route_id']], $saved_ride_routes_arr, /*$strict=*/ true)];
         }
 
         return $ride_routes;

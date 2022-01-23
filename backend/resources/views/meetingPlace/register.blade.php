@@ -59,22 +59,6 @@
         </div>
     </div>
     <div v-if="meetingPlaces.length > 0">
-        <div v-if="saveMeetingPlaceStatus">
-            <div class="alert alert-info alert-dismissible fade show m-2" role="alert">
-                保存しました！
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-        <div v-if="!saveMeetingPlaceStatus && saveMeetingPlaceStatus.length != 0">
-            <div class="alert alert-info alert-dismissible fade show m-2" role="alert">
-                解除しました！
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
         <div v-for="(mp, i) in meetingPlaces" class="media shadow m-2">
             <div class="media-body m-2">
                 <div class="btn-toolbar">

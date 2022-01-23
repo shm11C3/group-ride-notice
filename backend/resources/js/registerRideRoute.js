@@ -152,6 +152,7 @@ new Vue({
          * @param {*} i
          */
         saveRideRoute: function(i){
+            this.rideRoutes[i].isRegistered = !this.rideRoutes[i].isRegistered;
             this.saveRideRouteStatus = '';
 
             const ride_route_uuid = this.rideRoutes[i].data.uuid;
@@ -176,8 +177,6 @@ new Vue({
                 })
                 .then(res => {
                     this.saveRideRouteStatus = res.status;
-                    this.rideRoutes[i].isRegistered = res.status;
-
 
                 })
                 .catch(e => {

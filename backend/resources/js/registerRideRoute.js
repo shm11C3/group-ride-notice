@@ -6,6 +6,9 @@ new Vue({
         ride_route_page: 0,
         rideRoutes: [],
 
+        strava_routes:[], // 一度取得したルート（APIリクエスト削減のため）
+        strava_route_page: 1, // 上データ取得時のペジネーション
+
         isLoad: false,
 
         lap_status_request: 1,
@@ -23,7 +26,7 @@ new Vue({
             const entry = entries[0];
 
             if (entry && entry.isIntersecting && this.resIsExist) {
-                this.addLoad();
+                this.callAddLoad();
             }
         });
 
@@ -40,31 +43,63 @@ new Vue({
     methods: {
         /**
          * ルート取得の呼び出し
+         * ページ読み込み時に呼び出し
          */
         initialLoad: function(){
             this.rideRoutes = [];
             this.ride_route_page = 1;
 
-            this.fetchRideRoutes();
+            this.callRideRoutes();
         },
-        addLoad: function (){
-            this.ride_route_page++;
-            this.fetchRideRoutes();
+        /**
+         * 2ページ以降のデータを取得する処理を呼び出す
+         */
+        callAddLoad: function (){
+            this.isLoad = true;
+
+            if(this.lap_status_request == 3){
+                // STRAVA追加ルート取得時
+                this.strava_route_page++;
+                this.fetchRideRoutes(`../api/strava/get/route/${this.strava_route_page}`);
+            }else{
+                // STRAVA以外追加ルート取得時
+                this.ride_route_page++;
+                this.callRideRoutes();
+            }
         },
 
         /**
          * ライドルートリストを取得
          */
-        fetchRideRoutes: function(){
-            this.isLoad = true;
-
-            let uri ='';
+        callRideRoutes: function(){
             if(this.lap_status_request == 3){
-                uri = `../api/strava/get/route/${this.ride_route_page}`;
-            }else{
-                uri = `../api/get/ride-routes/${this.lap_status_request}?page=${this.ride_route_page}`;
-            }
+                // STRAVAから取得のラジオボタン押下時
+                if(this.strava_routes.length){
+                    // 一度取得している場合
+                    this.rideRoutes = this.strava_routes;
 
+                    this.resIsExist = true;
+                    this.isLoad = false;
+
+                }else{
+                    // 初回取得時
+                    this.fetchRideRoutes('../api/strava/get/route/1')
+                }
+            }else{
+                this.fetchRideRoutes(`../api/get/ride-routes/${this.lap_status_request}?page=${this.ride_route_page}`);
+            }
+        },
+
+        /**
+         * ルートのデータ一覧をJSONでフェッチ
+         *
+         * @fetch backend/app/Http/Controllers/Api/Ride/RideRouteController.getAllRideRoutes()
+         * OR
+         * @fetch backend/app/Http/Controllers/Api/StravaController.getUserRoute()
+         *
+         * @param {string} uri
+         */
+        fetchRideRoutes: function(uri){
             fetch(uri)
             .then(response => {
                 return response.json();
@@ -73,6 +108,7 @@ new Vue({
                 this.isLoad = false;
 
                 if(data.auth_uuid){
+                    // レスポンスが`ride_routes`テーブルから取得したルートの場合
                     this.auth_uuid = data.auth_uuid;
 
                     data.ride_routes.forEach(element => {
@@ -82,15 +118,19 @@ new Vue({
                     this.resIsExist = Boolean(data.next_page_url);
                     this.$forceUpdate();
 
-                }else if(data[0]['data'].strava_route_id){
+                }else if(data[0]){
+                    // レスポンスがSTRAVA APIから取得したルートの場合
                     data.forEach(element => {
                         this.rideRoutes.push(element);
                     });
+
+                    this.strava_routes = this.rideRoutes; // stravaデータをクライアント側で一時保存
 
                     this.resIsExist = Boolean(data[0]);
                     this.$forceUpdate();
 
                 }else{
+                    // レスポンスが存在しない場合
                     this.resIsExist = false;
                 }
 
@@ -146,3 +186,5 @@ new Vue({
         }
     }
 })
+
+

@@ -17,6 +17,9 @@ new Vue({
         saveRideRouteStatus: '',
 
         lapStatus: ['active', ''],
+
+        isImgLoaded: [],
+        opacity: [],
     },
 
     mounted(){
@@ -48,6 +51,7 @@ new Vue({
         initialLoad: function(){
             this.rideRoutes = [];
             this.ride_route_page = 1;
+            this.isImgLoaded = [];
 
             this.callRideRoutes();
         },
@@ -55,8 +59,6 @@ new Vue({
          * 2ページ以降のデータを取得する処理を呼び出す
          */
         callAddLoad: function (){
-            this.isLoad = true;
-
             if(this.lap_status_request == 3){
                 // STRAVA追加ルート取得時
                 this.strava_route_page++;
@@ -100,6 +102,8 @@ new Vue({
          * @param {string} uri
          */
         fetchRideRoutes: function(uri){
+            this.isLoad = true;
+
             fetch(uri)
             .then(response => {
                 return response.json();
@@ -122,6 +126,8 @@ new Vue({
                     // レスポンスがSTRAVA APIから取得したルートの場合
                     data.forEach(element => {
                         this.rideRoutes.push(element);
+                        this.isImgLoaded.push(false);
+                        this.opacity.push('transparent');
                     });
 
                     this.strava_routes = this.rideRoutes; // stravaデータをクライアント側で一時保存
@@ -182,6 +188,12 @@ new Vue({
                 .catch(e => {
                     console.error(e);
                 });
+        },
+
+        load_img: function(i){
+            this.isImgLoaded[i] = true;
+            this.opacity[i] = '';
+            this.$forceUpdate();
         }
     }
 })

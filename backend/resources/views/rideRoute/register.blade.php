@@ -39,8 +39,31 @@
                         </div>
                     </div>
                 </div>
-                <p>@{{ rr.data.distance }}km</p>
-                <p>@{{ rr.data.elevation }}m up</p>
+                <div v-if="rr.data.map_img_uri" class="route-img-div">
+                    <img v-bind:src="rr.data.map_img_uri" v-on:load="load_img(i)" v-bind:class="'route-img '+opacity[0]" alt="ルートマップ">
+                    <div v-if="!isImgLoaded[i]">
+                        <div class="d-flex justify-content-center load-img">
+                            <div class="spinner-grow text-success mb-30" style="width: 3rem; height: 3rem; margin-top: 200px;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>
+                            <span class="text-muted additional-txt">走行距離</span><br>
+                            @{{ rr.data.distance }}km
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>
+                            <span class="text-muted additional-txt">獲得標高</span><br>
+                            @{{ rr.data.elevation }}m
+                        </p>
+                    </div>
+                </div>
+                <span class="text-muted additional-txt">ルートの説明</span>
                 <p style="white-space:pre-wrap; word-wrap:break-word;">@{{ rr.data.comment  }}</p>
             </div>
         </div>

@@ -53,7 +53,7 @@ class StravaController extends Controller
                 'lap_status'       => false,                          // ([スタート地点の座標] === [ゴール地点の座標]) 現在はセグメントでしか座標が取得できない
                 'comment'          => $result->description,
                 'publish_status'   => (int) $result->private * 2,     // private => false なら 0 / private => true なら 2
-                'map_img_uri'      => $result->map_urls->url,
+                'map_img_uri'      => $result->map_urls->retina_url,
                 'summary_polyline' => $result->map->summary_polyline,
             ];
 
@@ -67,7 +67,6 @@ class StravaController extends Controller
             ->get('strava_route_id');
 
         $ride_routes = $this->stravaUser->addIsRegisteredToRide_routes($ride_routes, $saved_ride_routes_list);
-
         return response()->json($ride_routes);
     }
 

@@ -162,7 +162,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('api/post/registerMeetingPlace', [MeetingPlaceController::class, 'registerMeetingPlace'])->name('registerMeetingPlace');
 
-    Route::post('api/post/registerRideRoute', [RideRouteController::class, 'registerMeetingPlace'])->name('registerRideRoute');
+    Route::post('api/post/registerRideRoute', [RideRouteController::class, 'registerRideRoute'])->name('registerRideRoute');
 
     Route::post('api/post/follow', [FollowController::class, 'follow'])->name('follow');
 

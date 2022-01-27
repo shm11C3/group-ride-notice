@@ -40,7 +40,9 @@ class RideRouteController extends Controller
                 'distance' => $request['distance'],
                 'lap_status' => $request['lap_status'],
                 'comment' => $request['comment'],
-                'publish_status' => $request['publish_status']
+                'publish_status' => $request['publish_status'],
+                'map_img_uri' => $request['map_img_uri'],
+                'strava_route_id' => $request['strava_route_id'],
             ]);
 
             if($request['save_status']){
@@ -69,7 +71,7 @@ class RideRouteController extends Controller
      * @param App\Http\Requests\RegisterRideRouteRequest
      * @return response
      */
-    public function registerMeetingPlace(RegisterRideRouteRequest $request)
+    public function registerRideRoute(RegisterRideRouteRequest $request)
     {
         $register = $this->saveRideRoute(Auth::user()->uuid, $request['ride_route_uuid'], false);
 

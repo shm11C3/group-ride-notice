@@ -87,17 +87,45 @@ class StravaUser extends Model
      * @param  object $saved_ride_routes_list
      * @return array  $ride_routes
      */
-    public function addIsRegisteredToRide_routes(array $ride_routes, object $saved_ride_routes_list)
+    public function addIsRegisteredToRide_routes(array $ride_routes, object $exist_ride_routes)
     {
-        $saved_ride_routes_arr = []; // 保存済みルートの`strava_route_id`リスト
+        $user_uuid = Auth::user()->uuid;
 
-        foreach($saved_ride_routes_list as $i => $saved_ride_route){
-            $saved_ride_routes_arr[$i] = (array)$saved_ride_route;
+        foreach($ride_routes as $i => $ride_route){
+            $strava_route_id = $ride_route['data']['strava_route_id']; // 取得したルートのstrava_route_id
+            $isRegistered = false; // ルート保存済みフラグ
+            foreach($exist_ride_routes as $exist_ride_route){ // 保存されたルートの数に応じて遅くなるため要改善
+                if($exist_ride_route->user_uuid === $user_uuid && $strava_route_id === $exist_ride_route->strava_route_id && $exist_ride_route->is_saved){
+                    $isRegistered = true;
+                    break;
+                }
+            }
+            $ride_routes[$i] += ['isRegistered' => $isRegistered];
+            $strava_route_id = (string) $strava_route_id;
+        }
+
+        return $ride_routes;
+    }
+
+    /**
+     * ride_routesにルートのUUIDを追加し返す
+     *
+     * @param  array  $ride_routes
+     * @param  object $exist_ride_routes
+     * @return array  $ride_routes
+     */
+    public function addUuidToRide_routes(array $ride_routes, object $exist_ride_routes)
+    {
+        $strava_route_id_list = [];
+        foreach($exist_ride_routes as $i => $exist_ride_route){ // array_searchで処理できるように配列に変換
+            $strava_route_id_list[] = $exist_ride_route->strava_route_id;
         }
         foreach($ride_routes as $i => $ride_route){
-            $ride_routes[$i] += ['isRegistered' => in_array(['strava_route_id' => $ride_route['data']['strava_route_id']], $saved_ride_routes_arr, /*$strict=*/ true)];
+            if($index = array_search($ride_route['data']['strava_route_id'], $strava_route_id_list)){
+                // 該当のstrava_route_idと一致する`exist_ride_routes`が存在する場合はそれに一致するuuidを代入
+                $ride_routes[$i]['data']['uuid'] = $exist_ride_routes[$index]->uuid;
+            }
         }
-
         return $ride_routes;
     }
 }

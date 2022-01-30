@@ -60,13 +60,21 @@ class StravaController extends Controller
             $strava_route_id_arr[$i] = $result->id;
         }
 
-        $saved_ride_routes_list = DB::table('saved_ride_routes')
-            ->join('ride_routes', 'route_uuid', 'ride_routes.uuid')
-            ->where('saved_ride_routes.user_uuid', $stravaUser->user_uuid)
-            ->whereIn('strava_route_id', $strava_route_id_arr)
-            ->get('strava_route_id');
 
-        $ride_routes = $this->stravaUser->addIsRegisteredToRide_routes($ride_routes, $saved_ride_routes_list);
+
+        $exist_ride_routes = DB::table('ride_routes')
+            ->leftJoin('saved_ride_routes', 'ride_routes.uuid', 'route_uuid')
+            ->whereIn('strava_route_id', $strava_route_id_arr)
+            ->get([
+                'saved_ride_routes.user_uuid',
+                'ride_routes.uuid',
+                'strava_route_id',
+                'saved_ride_routes.id as is_saved'
+            ]);
+
+        $ride_routes = $this->stravaUser->addIsRegisteredToRide_routes($ride_routes, $exist_ride_routes);
+        $ride_routes = $this->stravaUser->addUuidToRide_routes($ride_routes, $exist_ride_routes);
+
         return response()->json($ride_routes);
     }
 

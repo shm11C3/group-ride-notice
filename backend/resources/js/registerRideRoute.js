@@ -155,20 +155,38 @@ new Vue({
         /**
          * ride_routeを保存
          *
-         * @param {*} i
+         * @param {int} i
          */
         saveRideRoute: function(i){
-            this.rideRoutes[i].isRegistered = !this.rideRoutes[i].isRegistered;
             this.saveRideRouteStatus = '';
 
             const ride_route_uuid = this.rideRoutes[i].data.uuid;
-            const url = '../api/post/registerRideRoute';
 
-            const data = {
-                "ride_route_uuid" : ride_route_uuid
+            let uri = '';
+            let data = {};
+
+            if(this.lap_status_request == 3 && this.rideRoutes[i].isRegistered == false){
+                const rideRoutes = this.rideRoutes[i].data;
+                uri = '../api/post/rideRoute';
+                data = {
+                    "name"            : rideRoutes.name,
+                    "elevation"       : rideRoutes.elevation,
+                    "distance"        : rideRoutes.distance,
+                    "lap_status"      : false,
+                    "comment"         : rideRoutes.comment || 'STRAVAからインポート', // todo コメントがnullだと通らないので要対策
+                    "publish_status"  : rideRoutes.publish_status,
+                    "save_status"     : true,
+                    "map_img_uri"     : rideRoutes.map_img_uri,
+                    "strava_route_id" : rideRoutes.strava_route_id,
+                }
+            }else{
+                uri = '../api/post/registerRideRoute';
+                data = {"ride_route_uuid" : ride_route_uuid}
             }
 
-            fetch(url,
+            this.rideRoutes[i].isRegistered = !this.rideRoutes[i].isRegistered; // fetchの前に送信ボタンの見た目だけ変えておく
+
+            fetch(uri,
                 {
                     method: 'POST',
                     headers: {
@@ -184,6 +202,9 @@ new Vue({
                 .then(res => {
                     this.saveRideRouteStatus = res.status;
 
+                    if(this.lap_status_request == 3 && this.rideRoutes[i].isRegistered == false){
+                        this.rideRoutes[i].data.uuid = res.uuid;
+                    }
                 })
                 .catch(e => {
                     console.error(e);

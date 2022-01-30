@@ -26,6 +26,9 @@ class RideRouteController extends Controller
      */
     public function createRideRoute(CreateRideRouteRequest $request)
     {
+        if (!is_numeric($request['strava_route_id'])) {
+            return response()->json(['status' => false]);
+        }
         $ride_route_uuid = Str::uuid();
         $user_uuid = Auth::user()->uuid;
 
@@ -42,7 +45,7 @@ class RideRouteController extends Controller
                 'comment' => $request['comment'],
                 'publish_status' => $request['publish_status'],
                 'map_img_uri' => $request['map_img_uri'],
-                'strava_route_id' => $request['strava_route_id'],
+                'strava_route_id' => (int)$request['strava_route_id'],
             ]);
 
             if($request['save_status']){

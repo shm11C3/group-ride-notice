@@ -61,7 +61,6 @@ class StravaController extends Controller
         }
 
 
-
         $exist_ride_routes = DB::table('ride_routes')
             ->leftJoin('saved_ride_routes', 'ride_routes.uuid', 'route_uuid')
             ->whereIn('strava_route_id', $strava_route_id_arr)
@@ -72,8 +71,12 @@ class StravaController extends Controller
                 'saved_ride_routes.id as is_saved'
             ]);
 
-        $ride_routes = $this->stravaUser->addIsRegisteredToRide_routes($ride_routes, $exist_ride_routes);
         $ride_routes = $this->stravaUser->addUuidToRide_routes($ride_routes, $exist_ride_routes);
+        $ride_routes = $this->stravaUser->addIsRegisteredToRide_routes($ride_routes, $exist_ride_routes);
+
+        foreach($ride_routes as $i => $ride_route){
+            $ride_routes[$i]['data']['strava_route_id'] = strval($ride_routes[$i]['data']['strava_route_id']);
+        }
 
         return response()->json($ride_routes);
     }

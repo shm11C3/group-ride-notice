@@ -120,7 +120,8 @@ class StravaUser extends Model
             $strava_route_id_list[] = $exist_ride_route->strava_route_id;
         }
         foreach($ride_routes as $i => $ride_route){
-            if($index = array_search($ride_route['data']['strava_route_id'], $strava_route_id_list) !== false){ // ここが遅い
+            $index = array_search($ride_route['data']['strava_route_id'], $strava_route_id_list);
+            if($index !== false){ // ここが遅い
                 // 該当のstrava_route_idと一致する`exist_ride_routes`が存在する場合はそれに一致するuuidを代入
                 $ride_routes[$i]['data']['uuid'] = $exist_ride_routes[$index]->uuid;
             }

@@ -20,6 +20,8 @@ new Vue({
 
         isImgLoaded: [],
         opacity: [],
+
+        isPush: false,
     },
 
     mounted(){
@@ -158,6 +160,7 @@ new Vue({
          * @param {int} i
          */
         saveRideRoute: function(i){
+            this.isPush = true;
             this.saveRideRouteStatus = '';
 
             const ride_route_uuid = this.rideRoutes[i].data.uuid;
@@ -165,7 +168,8 @@ new Vue({
             let uri = '';
             let data = {};
 
-            if(this.lap_status_request == 3 && this.rideRoutes[i].isRegistered == false){
+            if(this.lap_status_request == 3 && !ride_route_uuid && this.rideRoutes[i].isRegistered == false){
+                // ルートが DBに登録されていない場合
                 const rideRoutes = this.rideRoutes[i].data;
                 uri = '../api/post/rideRoute';
                 data = {
@@ -180,8 +184,15 @@ new Vue({
                     "strava_route_id" : rideRoutes.strava_route_id,
                 }
             }else{
+                // すでに存在するルートの保存・解除
+
+                if(!ride_route_uuid){
+                    // 予期しないエラーでride_route_uuidが存在しなかった場合
+                    this.isPush = false;
+                    return;
+                }
                 uri = '../api/post/registerRideRoute';
-                data = {"ride_route_uuid" : ride_route_uuid}
+                data = {"ride_route_uuid" : ride_route_uuid};
             }
 
             this.rideRoutes[i].isRegistered = !this.rideRoutes[i].isRegistered; // fetchの前に送信ボタンの見た目だけ変えておく
@@ -202,11 +213,19 @@ new Vue({
                 .then(res => {
                     this.saveRideRouteStatus = res.status;
 
-                    if(this.lap_status_request == 3 && this.rideRoutes[i].isRegistered == false){
+                    // ルートのUUIDが存在しない場合値を代入
+                    if(!this.rideRoutes[i].data.uuid && res.uuid){
                         this.rideRoutes[i].data.uuid = res.uuid;
+                        this.$forceUpdate();
                     }
+
+                    this.rideRoutes[i].isRegistered = res.status;
+
+                    this.isPush = false;
                 })
                 .catch(e => {
+                    this.rideRoutes[i].isRegistered = !this.rideRoutes[i].isRegistered;
+                    this.isPush = false;
                     console.error(e);
                 });
         },

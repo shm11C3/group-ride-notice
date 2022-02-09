@@ -32,15 +32,14 @@
                     </div>
                     <div class="text-right ml-auto m-1">
                         <div v-if="rr.isRegistered">
-                            <button v-on:click="saveRideRoute(i)" type="button" class="btn btn-secondary">保存解除</button>
+                            <button v-on:click="saveRideRoute(i)" v-bind:disabled="isPush" type="button" class="btn btn-secondary">保存解除</button>
                         </div>
                         <div v-else>
-                            <button v-on:click="saveRideRoute(i)" type="button" class="btn btn-success">保存する</button>
+                            <button v-on:click="saveRideRoute(i)" v-bind:disabled="isPush" type="button" class="btn btn-success">保存する</button>
                         </div>
                     </div>
                 </div>
                 <div v-if="rr.data.map_img_uri" class="route-img-div">
-                    <img v-bind:src="rr.data.map_img_uri" v-on:load="load_img(i)" v-bind:class="'route-img '+opacity[0]" alt="ルートマップ">
                     <div v-if="!isImgLoaded[i]">
                         <div class="d-flex justify-content-center load-img">
                             <div class="spinner-grow text-success mb-30" style="width: 3rem; height: 3rem; margin-top: 200px;" role="status">
@@ -48,6 +47,7 @@
                             </div>
                         </div>
                     </div>
+                    <img v-bind:src="rr.data.map_img_uri" v-on:load="load_img(i)" v-bind:class="'route-img '+opacity[0]" alt="ルートマップ">
                 </div>
                 <div class="row">
                     <div class="col-sm-6">

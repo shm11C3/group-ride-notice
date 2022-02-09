@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRouteRequest;
 use App\Http\Requests\RegisterRideRouteRequest;
 use App\Models\Ride;
+use phpDocumentor\Reflection\Types\Null_;
 
 class RideRouteController extends Controller
 {
@@ -29,8 +30,26 @@ class RideRouteController extends Controller
         if (!is_numeric($request['strava_route_id'])) {
             return response()->json(['status' => false]);
         }
-        $ride_route_uuid = Str::uuid();
+
         $user_uuid = Auth::user()->uuid;
+
+        // STRAVAのroute_idと一致するルートがすでに作成されている場合
+        if($request['strava_route_id']){
+            $exist_ride_route_uuid = DB::table('ride_routes')->where('strava_route_id', $request['strava_route_id'])->get('uuid');
+            $exist_ride_route_uuid = $exist_ride_route_uuid[0]->uuid ?? false;
+
+            if($exist_ride_route_uuid){
+                $this->saveRideRoute($user_uuid, $exist_ride_route_uuid, true);
+                $data = [
+                    'status' => true,
+                    'uuid' => (string)$exist_ride_route_uuid,
+                ];
+
+                return response()->json($data);
+            }
+        }
+
+        $ride_route_uuid = Str::uuid();
 
         DB::beginTransaction();
         try{

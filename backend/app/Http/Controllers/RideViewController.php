@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class RideViewController extends Controller
 {
@@ -36,6 +37,9 @@ class RideViewController extends Controller
      */
     public function showRide(Request $request)
     {
+        if(!Str::isUuid($request->uuid)){
+            return abort(404);
+        }
         $ride = DB::table('rides')
             ->where('uuid', $request->uuid)
             ->get('name');

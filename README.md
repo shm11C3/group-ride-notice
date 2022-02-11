@@ -7,10 +7,9 @@ Bipokele は自転車乗りが走行会・練習会を主催、または走行�
 ### URL
 https://bipokele.com
 
-### ホーム画面
+### 実際の動作
 
-https://user-images.githubusercontent.com/78523393/145537613-6b27224b-b65b-48d2-bb37-980683b1c3b3.mp4
-
+https://user-images.githubusercontent.com/78523393/151932054-620b85b1-4e51-4a8f-9f8a-e031f9c349d1.mp4
 
 ## 使用技術
 
@@ -22,10 +21,10 @@ https://user-images.githubusercontent.com/78523393/145537613-6b27224b-b65b-48d2-
   - JavaScript (Vue.js 2.6, JQuery)
   - SCSS (Bootstrap-honoka 4.4)
 
-- インフラ
-  - Nginx (Docker 20.10 / Docker-Compose 2.2)
-  - MySQL (ローカル：Docker 20.10 / Docker-Compose 2.2/本番：AWS RDS)
-  - PHPMyAdmin(ローカル環境時)
+- インフラ 
+  - Nginx
+  - MySQL
+  - PHPMyAdmin(開発環境時)
   - AWS 以下インフラ構成図参照
   
   
@@ -33,7 +32,9 @@ https://user-images.githubusercontent.com/78523393/145537613-6b27224b-b65b-48d2-
 
 
 - 開発環境・その他使用ツール
-  - OS:        Ubuntu 18.04 (WSL2)
-  - エディタ:   Visual Studio Code
+  - OS:      Ubuntu Server 20.04 (ESXi 7.0.2)※ローカル上でSSHログイン
+  - エディタ: Visual Studio Code
   - draw.io
   - Postman
+
+開発環境は現在再構築中です。

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import LoadImage from './methods/loadImage';
 
 new Vue({
     el: '#app',
@@ -25,6 +26,8 @@ new Vue({
     },
 
     mounted(){
+        this.loadImage = new LoadImage();
+
         this.initialLoad();
 
         this.observer = new IntersectionObserver((entries) => {
@@ -129,7 +132,7 @@ new Vue({
                     data.forEach(element => {
                         this.rideRoutes.push(element);
                         this.isImgLoaded.push(false);
-                        this.opacity.push('transparent');
+                        this.opacity.push(this.loadImage.default_ride_opacity);
                     });
 
                     this.strava_routes = this.rideRoutes; // stravaデータをクライアント側で一時保存

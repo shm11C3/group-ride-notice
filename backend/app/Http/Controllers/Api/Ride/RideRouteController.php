@@ -159,6 +159,7 @@ class RideRouteController extends Controller
             'lap_status',
             'comment',
             'publish_status',
+            'ride_routes.map_img_uri',
         ]);
 
         $data = ['data'=>$dbData, 'key'=>'saved_ride_routes'];

@@ -10,13 +10,14 @@ use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRouteRequest;
 use App\Http\Requests\RegisterRideRouteRequest;
 use App\Models\Ride;
-use phpDocumentor\Reflection\Types\Null_;
+use App\Models\RideRoute;
 
 class RideRouteController extends Controller
 {
-    public function __construct(Ride $ride)
+    public function __construct(Ride $ride, RideRoute $rideRoute)
     {
         $this->ride = $ride;
+        $this->rideRoute = $rideRoute;
     }
 
     /**
@@ -29,6 +30,16 @@ class RideRouteController extends Controller
     {
         if (!is_numeric($request['strava_route_id'])) {
             return response()->json(['status' => false]);
+        }
+
+        if($request['map_img_uri']){
+            // 正しいURLかチェック
+            if(array_search(get_nonStrict_domain_by_hostname(parse_url($request['map_img_uri'], PHP_URL_HOST)), $this->rideRoute->allowHostList) === false){
+                return response()->json([
+                    'status' => false,
+                    'uuid' => NULL,
+                ]);
+            }
         }
 
         $user_uuid = Auth::user()->uuid;

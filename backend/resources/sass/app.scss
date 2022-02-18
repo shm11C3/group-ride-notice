@@ -19,3 +19,7 @@ $user_profile-img-border-color: #c0c0c0;
 @import 'profile-img-setting.scss';
 
 @import './login-btn.scss';
+
+[v-cloak] {
+    display: none;
+}

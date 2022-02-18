@@ -234,6 +234,7 @@ class RideController extends Controller
             'ride_routes.comment as rr_comment',
             'users.name as user_name',
             'user_profile_img_path',
+            'ride_routes.map_img_uri',
         ])
         ->simplePaginate(100);
 
@@ -275,7 +276,8 @@ class RideController extends Controller
             'prefecture_code',
             'ride_routes.name as rr_name',
             'elevation',
-            'distance'
+            'distance',
+            'ride_routes.map_img_uri',
         ])
         ->simplePaginate($paginate);
 
@@ -324,6 +326,7 @@ class RideController extends Controller
             'elevation',
             'distance',
             'ride_routes.comment as rr_comment',
+            'ride_routes.map_img_uri',
         ]);
 
         foreach($ride[0]->rideParticipants as $rideParticipant){
@@ -371,6 +374,7 @@ class RideController extends Controller
             'elevation',
             'distance',
             'ride_routes.comment as rr_comment',
+            'ride_routes.map_img_uri',
         ]);
 
         return response()->json($ride);
@@ -429,7 +433,8 @@ class RideController extends Controller
                 'elevation',
                 'distance',
                 'ride_routes.comment as rr_comment',
-                'users.name as user_name'
+                'users.name as user_name',
+                'ride_routes.map_img_uri',
             ])
             ->simplePaginate(100);
 

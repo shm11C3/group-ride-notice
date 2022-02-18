@@ -92,6 +92,7 @@ class SearchController extends Controller
             'ride_routes.comment as rr_comment',
             'users.name as user_name',
             'user_profile_img_path' ?? asset($this->user->userDefaultImgPath[75]),
+            'ride_routes.map_img_uri',
         ])
         ->simplePaginate($per_page_rides);
 

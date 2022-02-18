@@ -88,6 +88,16 @@
                     </div>
                 </div>
             </div>
+            <div v-if="ride.map_img_uri" class="route-img-div">
+                <div v-if="!isImgLoaded">
+                    <div class="d-flex justify-content-center load-img">
+                        <div class="spinner-grow text-success mb-30" style="width: 3rem; height: 3rem; margin-top: 200px;" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <img v-bind:src="ride.map_img_uri" v-on:load="load_img" v-bind:class="'route-img '+opacity[0]" alt="ルートマップ">
+            </div>
             <div style="border-bottom: 1px solid rgb(219, 219, 219); margin-right: 5.2rem; margin-top: 3rem;">
                 <!--border-line-->
             </div>

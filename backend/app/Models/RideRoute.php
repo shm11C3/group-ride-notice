@@ -10,4 +10,8 @@ class RideRoute extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    public $allowHostList = [
+        'cloudfront.net'
+    ];
 }

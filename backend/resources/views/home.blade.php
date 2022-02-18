@@ -71,6 +71,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div v-if="next_ride.map_img_uri" class="route-img-div">
+                            <div v-if="!next_ride_isImgLoaded">
+                                <div class="d-flex justify-content-center load-img">
+                                    <div class="spinner-grow text-success mb-30" style="width: 3rem; height: 3rem; margin-top: 200px;" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <img v-bind:src="next_ride.map_img_uri" v-on:load="next_ride_load_img" v-bind:class="'route-img '+next_ride_opacity" alt="ルートマップ">
+                        </div>
                         <div  style="border-bottom: 1px solid rgb(219, 219, 219); margin-right: 5.2rem; margin-top: 3rem;"></div>
                         <div class="row mt-5">
                             <div class="col-sm-5 col-lg-2">
@@ -305,7 +315,7 @@
             </div>
             @endauth
             <!---->
-            <div v-for="(ride, index) in rides" class="media ride shadow mt-4">
+            <div v-for="(ride, i) in rides" class="media ride shadow mt-4">
                 <a v-bind:href="'/user/'+ride.host_user_uuid">
                     <img class="bd-placeholder-img user_profile_img_s" v-bind:src="ride.user_profile_img_path">
                 </a>
@@ -325,10 +335,10 @@
                                 </div>
                                 <div v-else>
                                     <div v-if="ride.rideParticipant_user">
-                                        <button class="btn btn-success mb-1 mt-1" v-on:click="openCancelParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加をキャンセル</button>
+                                        <button class="btn btn-success mb-1 mt-1" v-on:click="openCancelParticipateModal(i)" data-toggle="modal" data-target="#participateModal">参加をキャンセル</button>
                                     </div>
                                     <div v-else>
-                                        <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(index)" data-toggle="modal" data-target="#participateModal">参加する</button>
+                                        <button class="btn btn-success mb-1 mt-1" v-on:click="openParticipateModal(i)" data-toggle="modal" data-target="#participateModal">参加する</button>
                                     </div>
                                 </div>
                                 @endauth
@@ -384,6 +394,16 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div v-if="ride.map_img_uri" class="route-img-div">
+                            <div v-if="!isImgLoaded[i]">
+                                <div class="d-flex justify-content-center load-img">
+                                    <div class="spinner-grow text-success mb-30" style="width: 3rem; height: 3rem; margin-top: 200px;" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <img v-bind:src="ride.map_img_uri" v-on:load="load_img(i)" v-bind:class="'route-img '+opacity[0]" alt="ルートマップ">
                         </div>
                         <div  style="border-bottom: 1px solid rgb(219, 219, 219); margin-right: 5.2rem; margin-top: 3rem;"></div>
                         <div class="row mt-5">

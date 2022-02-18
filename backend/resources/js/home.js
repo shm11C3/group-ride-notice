@@ -1,6 +1,8 @@
 import Vue from 'vue';
-import jQuery, { data } from 'jquery'
-import {prefecture} from './constants/constant'
+import jQuery, { data } from 'jquery';
+import {prefecture} from './constants/constant';
+import LoadImage from './methods/loadImage';
+
 global.jquery = jQuery
 global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -31,7 +33,8 @@ new Vue({
         next_isLoad: true,
         participateModal: false,
         pt_isPush: false,
-
+        next_ride_isImgLoaded: false,
+        isImgLoaded: [],
 
         //エラー表示
         httpErrors: [],
@@ -42,9 +45,17 @@ new Vue({
         resNextIsExist: false,
 
         authUser: '',
+
+        // CSS 操作
+        next_ride_opacity: '',
+        opacity: [],
+
     },
 
     mounted() {
+        this.loadImage = new LoadImage();
+        this.next_ride_opacity = this.loadImage.default_ride_opacity;
+
         this.initialLoad();
 
         this.observer = new IntersectionObserver((entries) => {
@@ -97,6 +108,8 @@ new Vue({
                             // プロフィール画像が設定されていない場合にデフォルトのパスを代入
                             ride.user_profile_img_path = '../img/user_profiles/default_profile_75.png';
                         }
+                        this.opacity.push(this.loadImage.default_ride_opacity);
+
                         this.rides.push(ride)
                     });
                 }
@@ -134,6 +147,12 @@ new Vue({
 
                 this.authUser = res.data.user_uuid;
                 this.next_ride = data[0];
+
+                if(!res.map_img_uri){
+                    // マップ画像が存在しない場合
+                    this.next_ride_isImgLoaded = true;
+                    this.next_ride_opacity = '';
+                }
             });
         },
 
@@ -247,6 +266,17 @@ new Vue({
                 this.closeParticipateModal();
                 this.pt_isPush = false;
             });
+        },
+
+        next_ride_load_img: function(){
+            this.next_ride_isImgLoaded = true;
+            this.next_ride_opacity = '';
+            this.$forceUpdate();
+        },
+        load_img: function(i){
+            this.isImgLoaded[i] = true;
+            this.opacity[i] = '';
+            this.$forceUpdate();
         },
     },
 });

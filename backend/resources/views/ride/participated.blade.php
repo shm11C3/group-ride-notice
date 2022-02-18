@@ -14,7 +14,7 @@
         </div>
     </div>
     <div v-if="rides.length!=0">
-        <div v-for="(ride, index) in rides" class="media ride shadow p-2 mt-4 mb-2">
+        <div v-for="(ride, i in rides" class="media ride shadow p-2 mt-4 mb-2">
             <div class="media-body p-2">
                 <div class="btn-toolbar">
                     <div class="ride-title">
@@ -27,7 +27,7 @@
                             <a class="btn btn-success mb-1 mt-1" v-bind:href="'../my-ride?uuid=' + ride.uuid">ライド管理</a>
                         </div>
                         <div v-else>
-                            <p class="btn btn-outline-success mb-1 mt-1" v-bind:href="'../ride?uuid=' + ride.uuid">参加ライド</p>
+                            <a class="btn btn-outline-success mb-1 mt-1" v-bind:href="'../ride?uuid=' + ride.uuid">詳細を見る</a>
                         </div>
                     </div>
                 </div>
@@ -78,6 +78,16 @@
                             </div>
                         </div>
                     </div>
+                    <div v-if="ride.map_img_uri" class="route-img-div">
+                        <div v-if="!isImgLoaded[i]">
+                            <div class="d-flex justify-content-center load-img">
+                                <div class="spinner-grow text-success mb-30" style="width: 3rem; height: 3rem; margin-top: 200px;" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <img v-bind:src="ride.map_img_uri" v-on:load="load_img(i)" v-bind:class="'route-img '+opacity[0]" alt="ルートマップ">
+                    </div>
                     <div  style="border-bottom: 1px solid rgb(219, 219, 219); margin-right: 5.2rem; margin-top: 3rem;"></div>
                     <div class="row mt-5">
                         <div class="col-sm-5 col-lg-2">
@@ -93,7 +103,7 @@
                             </p>
                         </div>
                         <div class="col-sm-2 col-lg-8">
-                            
+
                         </div>
                     </div>
                     <p class="mb-0 mt-3">強度：@{{ ride.intensity }}</p>

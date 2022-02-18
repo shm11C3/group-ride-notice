@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import jQuery, { data } from 'jquery'
 import {prefecture} from './constants/constant'
+import LoadImage from './methods/loadImage';
+
 global.jquery = jQuery
 global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -31,9 +33,13 @@ new Vue({
         observer: null,
 
         resIsExist: false,
+
+        isImgLoaded: [],
+        opacity: [],
     },
 
     mounted() {
+        this.loadImage = new LoadImage();
         this.initialLoad();
 
         this.observer = new IntersectionObserver((entries) => {
@@ -52,19 +58,18 @@ new Vue({
         initialLoad: function(){
             this.rides = [];
             this.page = 1;
-            this.getRides();
+            this.fetchRides();
         },
         addLoad: function (){
             this.page++;
-            this.getRides();
+            this.fetchRides();
         },
 
         /**
          * ライドの取得
          */
-         getRides: function(){
+        fetchRides: function(){
             this.isLoad = true;
-            const self = this;
 
             let url = `/api/get/my-rides/1?page=${this.page}`;
 
@@ -77,12 +82,22 @@ new Vue({
             }).then(res =>{
                 let data = res.data;
 
-                data.rides.data.forEach(element => this.rides.push(element));
+                data.rides.data.forEach(element => {
+                    this.rides.push(element);
+                    this.opacity.push(this.loadImage.default_ride_opacity);
+                    this.isImgLoaded.push(false);
+                });
                 this.authUser = data.user_uuid;
 
                 this.isLoad = false;
                 this.resIsExist = Boolean(data.rides.next_page_url);
             });
+        },
+
+        load_img: function(i){
+            this.isImgLoaded[i] = true;
+            this.opacity[i] = '';
+            this.$forceUpdate();
         },
     }
 });

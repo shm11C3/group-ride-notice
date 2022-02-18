@@ -1,6 +1,7 @@
 import Vue from 'vue';
-import jQuery, { data } from 'jquery'
-import {prefecture, intensityStyle, intensityComment} from './constants/constant'
+import jQuery, { data } from 'jquery';
+import {prefecture, intensityStyle, intensityComment} from './constants/constant';
+import LoadImage from './methods/loadImage';
 global.jquery = jQuery
 global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -47,9 +48,17 @@ new Vue({
         //送信データ
         participateIndex: '',
         participateComment: '',
+
+
+        // ライドルート画像
+        isImgLoaded: false,
+        opacity: '',
     },
 
     mounted(){
+        this.loadImage = new LoadImage();
+        this.opacity = this.loadImage.default_ride_opacity;
+
         const param = this.getQueryParam();
         this.getRide(param);
     },
@@ -248,6 +257,12 @@ new Vue({
                 this.closeParticipateModal();
                 this.pt_isPush = false;
             });
+        },
+
+        load_img: function(){
+            this.isImgLoaded = true;
+            this.opacity = '';
+            this.$forceUpdate();
         },
 
     },

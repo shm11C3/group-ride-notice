@@ -130,7 +130,8 @@
                             <td>@{{ ride_participant.comment }}</td>
                           </tr>
                         </tbody>
-                      </table>
+                    </table>
+                    <img v-bind:src="ride[0].map_img_uri" v-on:load="load_img" v-bind:class="'route-img-half '+opacity" alt="ルートマップ">
                 </div>
             </div>
             <p>
@@ -138,7 +139,7 @@
                 @{{ ride[0].ride_comment }}
             </p>
             <span class="text-muted additional-txt">公開設定を変更</span><br>
-            <div class="btn-toolbar" role="toolbar">          
+            <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group btn-group-toggle status-radio-group mt-2" data-toggle="buttons">
                     <label v-bind:class="'btn btn-outline-primary status-radio '+publish_status_class[0]">
                         <input type="radio" name="publish_status" autocomplete="off" v-on:click="updatePublishStatus('0')">公開
@@ -228,7 +229,7 @@
                         <div class="spinner-grow spinner-grow-sm text-success" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             </div>
             <div class="form-group mt-2">
@@ -265,7 +266,7 @@
                   <button type="submit" class="btn btn-success" v-on:click="submit" v-bind:disabled="disableSubmitBtn">送信</button>
                 </div>
             </div>
-        </div>     
+        </div>
     </div>
 </div>
 <script src="{{ mix('js/rideAdmin.js') }}"></script>

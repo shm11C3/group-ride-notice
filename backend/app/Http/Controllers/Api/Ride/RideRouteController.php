@@ -10,12 +10,14 @@ use Illuminate\Support\Str;
 use App\Http\Requests\CreateRideRouteRequest;
 use App\Http\Requests\RegisterRideRouteRequest;
 use App\Models\Ride;
+use App\Models\RideRoute;
 
 class RideRouteController extends Controller
 {
-    public function __construct(Ride $ride)
+    public function __construct(Ride $ride, RideRoute $rideRoute)
     {
         $this->ride = $ride;
+        $this->rideRoute = $rideRoute;
     }
 
     /**
@@ -26,8 +28,39 @@ class RideRouteController extends Controller
      */
     public function createRideRoute(CreateRideRouteRequest $request)
     {
-        $ride_route_uuid = Str::uuid();
+        if (!is_numeric($request['strava_route_id'])) {
+            return response()->json(['status' => false]);
+        }
+
+        if($request['map_img_uri']){
+            // 正しいURLかチェック
+            if(array_search(get_nonStrict_domain_by_hostname(parse_url($request['map_img_uri'], PHP_URL_HOST)), $this->rideRoute->allowHostList) === false){
+                return response()->json([
+                    'status' => false,
+                    'uuid' => NULL,
+                ]);
+            }
+        }
+
         $user_uuid = Auth::user()->uuid;
+
+        // STRAVAのroute_idと一致するルートがすでに作成されている場合
+        if($request['strava_route_id']){
+            $exist_ride_route_uuid = DB::table('ride_routes')->where('strava_route_id', $request['strava_route_id'])->get('uuid');
+            $exist_ride_route_uuid = $exist_ride_route_uuid[0]->uuid ?? false;
+
+            if($exist_ride_route_uuid){
+                $this->saveRideRoute($user_uuid, $exist_ride_route_uuid, true);
+                $data = [
+                    'status' => true,
+                    'uuid' => (string)$exist_ride_route_uuid,
+                ];
+
+                return response()->json($data);
+            }
+        }
+
+        $ride_route_uuid = Str::uuid();
 
         DB::beginTransaction();
         try{
@@ -40,7 +73,9 @@ class RideRouteController extends Controller
                 'distance' => $request['distance'],
                 'lap_status' => $request['lap_status'],
                 'comment' => $request['comment'],
-                'publish_status' => $request['publish_status']
+                'publish_status' => $request['publish_status'],
+                'map_img_uri' => $request['map_img_uri'],
+                'strava_route_id' => (int)$request['strava_route_id'],
             ]);
 
             if($request['save_status']){
@@ -69,7 +104,7 @@ class RideRouteController extends Controller
      * @param App\Http\Requests\RegisterRideRouteRequest
      * @return response
      */
-    public function registerMeetingPlace(RegisterRideRouteRequest $request)
+    public function registerRideRoute(RegisterRideRouteRequest $request)
     {
         $register = $this->saveRideRoute(Auth::user()->uuid, $request['ride_route_uuid'], false);
 
@@ -128,12 +163,14 @@ class RideRouteController extends Controller
         ->get([
             'ride_routes.uuid',
             'ride_routes.user_uuid',
+            'strava_route_id',
             'name',
             'elevation',
             'distance',
             'lap_status',
             'comment',
             'publish_status',
+            'ride_routes.map_img_uri',
         ]);
 
         $data = ['data'=>$dbData, 'key'=>'saved_ride_routes'];

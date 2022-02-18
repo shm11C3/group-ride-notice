@@ -30,7 +30,9 @@ class CreateRideRouteRequest extends FormRequest
             'lap_status' => 'required|boolean',
             'comment' => 'required|string|min:0|max:512',
             'publish_status' => 'required|numeric|min:0|max:2',
-            'save_status' => 'required|boolean'
+            'save_status' => 'required|boolean',
+            'map_img_uri' => 'active_url',
+            'strava_route_id' => 'max:19',
         ];
     }
 }

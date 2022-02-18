@@ -99,6 +99,7 @@ new Vue({
          * @param {*} i
          */
         saveMeetingPlace: function(i){
+            this.meetingPlaces[i].isRegistered = !this.meetingPlaces[i].isRegistered;
             this.saveMeetingPlaceStatus = '';
 
             const meeting_place_uuid = this.meetingPlaces[i].data.uuid;
@@ -119,7 +120,6 @@ new Vue({
 
             }).then(res => {
                 this.saveMeetingPlaceStatus = res.data.status;
-                this.meetingPlaces[i].isRegistered = res.data.status;
             });
         }
     }

@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddIndexToRideParticipantsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('ride_participants', function (Blueprint $table) {
+            $table->index('user_uuid');
+            $table->index('ride_uuid');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('ride_participants', function (Blueprint $table) {
+            $table->dropIndex(['user_uuid']);
+            $table->dropIndex(['ride_uuid']);
+        });
+    }
+}

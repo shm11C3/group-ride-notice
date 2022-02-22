@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
     public $ride_participant_uuid = 'c36727e4-bb22-0724-a847-b11dac7f0e19';
 
-    public $numberOfUsers = 100;
+    public $numberOfUsers = 1000;
 
     public $numberOfRides = 10000;
 
@@ -47,5 +47,7 @@ class DatabaseSeeder extends Seeder
         RideParticipant::factory($this->numberOfRideParticipants)->create();
         RideRoute::factory(100)->create();
         MeetingPlace::factory(100)->create();
+
+        $this->call(RideParticipantSeeder::class);
     }
 }

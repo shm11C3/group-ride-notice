@@ -513,6 +513,11 @@ new Vue({
 
             const url = 'api/post/meetingPlace';
 
+            if(!this.mp_save_status){
+                // 集合場所情報を保存しない場合に公開ステータスを非公開に修正
+                this.mp_publish_status = 2;
+            }
+
             const data = {
                 "name":this.mp_name,
                 "prefecture_code":this.mp_prefecture_code,
@@ -565,6 +570,11 @@ new Vue({
             this.rr_isPush = true;
 
             const url = 'api/post/rideRoute';
+
+            if(!this.rr_save_status){
+                // ルート情報を保存しない場合に公開ステータスを非公開に修正
+                this.rr_publish_status = 2;
+            }
 
             const data = {
                 "name":this.rr_name,

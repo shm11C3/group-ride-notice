@@ -2,6 +2,9 @@ import Vue from 'vue';
 import jQuery, { data } from 'jquery'
 import {intensityStyle, intensityComment} from './constants/constant'
 import {commentRule, nameRule, lapRule} from './constants/ride'
+import OutputError from './validations/outputError'
+import CreateRideValidation from './validations/createRide'
+
 global.jquery = jQuery
 global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -83,6 +86,8 @@ new Vue({
     },
 
     mounted() {
+        this.outputError = new OutputError();
+        this.createRideValidation = new CreateRideValidation();
         this.fetchMeetingPlaces();
         this.fetchRideRoutes();
     },
@@ -99,6 +104,7 @@ new Vue({
                 return true;
 
             }else if(this.selectedMeetingPlace.length == 0){
+                this.resetErrors();
                 return false;
 
             }else{
@@ -116,6 +122,7 @@ new Vue({
                 return false;
 
             }else if(this.selectedRideRouteKey === 'create'){
+                this.resetErrors();
                 return 'create';
 
             }else{
@@ -465,8 +472,6 @@ new Vue({
          * ライドの登録
          */
         submit: function() {
-            const self = this;
-
             this.isPush = true;
 
             const url = 'api/post/createRide';
@@ -505,15 +510,21 @@ new Vue({
 
         /**
          * 集合場所の登録
+         *
+         * @fetch api/post/meetingPlace
          */
         mp_submit: function(){
-            const self = this;
-
             this.mp_isPush = true;
+            this.mp_httpErrors = [];
 
             const url = 'api/post/meetingPlace';
 
-            let data = {
+            if(!this.mp_save_status){
+                // 集合場所情報を保存しない場合に公開ステータスを非公開に修正
+                this.mp_publish_status = 2;
+            }
+
+            const data = {
                 "name":this.mp_name,
                 "prefecture_code":this.mp_prefecture_code,
                 "address":this.mp_address,
@@ -521,49 +532,65 @@ new Vue({
                 "save_status":Boolean(this.mp_save_status)
             }
 
-            let axiosPost = axios.create({
+            this.mp_httpErrors = this.createRideValidation.validationMeetingPlace(data);
+            if(this.mp_httpErrors){
+                // 入力内容にエラーが存在する場合
+                this.mp_isPush = false;
+
+                return;
+            }
+
+            const axiosPost = axios.create({
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 withCredentials: true
             });
 
             axiosPost.post(url, data)
+            .catch(({response}) => {
+                const error_arr = this.outputError.convert_to_array(response.data.errors);
 
-            .catch(error => {
-                console.log(error);
-
-                this.mp_httpErrors.push(error);
-
+                this.mp_httpErrors = error_arr;
                 this.mp_isPush = false;
 
             }).then(res => {
+                this.mp_isPush = false;
+                if(!res){
+                    return;
+                }
+
+                // 集合場所の作成が成功した場合
                 const uuid = res.data.uuid;
-
-                let data = {
-                    "uuid":uuid,
-                    "name":this.mp_name,
-                    "address":this.mp_address,
-                    "prefecture_code":this.mp_prefecture_code,
+                const data = {
+                    "uuid"            : uuid,
+                    "name"            : this.mp_name,
+                    "address"         : this.mp_address,
+                    "prefecture_code" : this.mp_prefecture_code,
                 };
-
                 this.meetingPlaces.data.push(data);
-
-                this.resetModals();
-
                 this.selectedMeetingPlace = uuid;
 
+                // モーダルのリセット
+                this.resetModals()
                 $('#meetingPlaceModal').modal('hide');
-                this.mp_isPush = false;
             });
         },
 
+        /**
+         * ライドルートを登録
+         *
+         * @fetch api/post/rideRoute
+         */
         rr_submit: function(){
-            const self = this;
-
             this.rr_isPush = true;
 
             const url = 'api/post/rideRoute';
 
-            let data = {
+            if(!this.rr_save_status){
+                // ルート情報を保存しない場合に公開ステータスを非公開に修正
+                this.rr_publish_status = 2;
+            }
+
+            const data = {
                 "name":this.rr_name,
                 "elevation":this.rr_elevation,
                 "distance":this.rr_distance,
@@ -573,38 +600,45 @@ new Vue({
                 "save_status":Boolean(this.rr_save_status),
             }
 
-            let axiosPost = axios.create({
+            this.rr_httpErrors = this.createRideValidation.validationRideRoute(data);
+            if(this.rr_httpErrors){
+                // 入力内容にエラーが存在する場合
+                this.rr_isPush = false;
+
+                return;
+            }
+
+            const axiosPost = axios.create({
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 withCredentials: true
             });
-
             axiosPost.post(url, data)
+            .catch(({response}) => {
+                const error_arr = this.outputError.convert_to_array(response.data.errors);
 
-            .catch(error => {
-                console.log(error);
-
-                this.rr_httpErrors.push(error);
-
+                this.rr_httpErrors = error_arr;
                 this.rr_isPush = false;
 
             }).then(res => {
-                const uuid = res.data.uuid;
+                this.rr_isPush = false;
+                if(!res){
+                    return;
+                }
 
-                let data = {
+                const uuid = res.data.uuid;
+                const data = {
                     "name":this.rr_name,
                     "uuid":uuid,
                     "lap_status":this.rr_lap_status
                 };
 
-                let rideRoutesLength = this.rideRoutes.data.length;
-                this.selectedRideRouteKey = rideRoutesLength;
-
+                //
                 this.rideRoutes.data.push(data);
+                this.selectedRideRouteKey = this.rideRoutes.data.length;
 
+                // モーダルのリセット
                 this.resetModals();
-
                 $('#rideRouteModal').modal('hide');
-                this.rr_isPush = false;
             });
         },
 
@@ -621,8 +655,12 @@ new Vue({
             this.rr_publish_status = '';
             this.rr_save_status = '';
 
+            this.resetErrors();
+        },
+
+        resetErrors: function(){
             this.mp_httpErrors = [];
             this.rr_httpErrors = [];
-        },
+        }
     },
 });

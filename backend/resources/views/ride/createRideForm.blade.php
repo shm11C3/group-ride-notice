@@ -3,9 +3,9 @@
 @section('content')
 <h2>ライドを作成</h2>
 <div id="app" v-cloak>
-  
+
   <!--modal-->
-  <div class="modal fade" id="rideRouteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="rideRouteModal" tabindex="-1" role="dialog" aria-labelledby="rideRouteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -79,12 +79,9 @@
           </div>
 
           <div v-if="rr_httpErrors">
-            <div v-for="(rr_httpError, index) in rr_httpErrors">
+            <div v-for="(rr_httpError, index) in rr_httpErrors" class="mt-2">
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 @{{ rr_httpError }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
               </div>
             </div>
           </div>
@@ -107,7 +104,7 @@
     </div>
   </div>
 
-  <div class="modal fade" id="meetingPlaceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="meetingPlaceModal" tabindex="-1" role="dialog" aria-labelledby="maatingPlaceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -204,12 +201,9 @@
           </div>
 
           <div v-if="mp_httpErrors">
-            <div v-for="(mp_httpError, index) in mp_httpErrors">
+            <div v-for="(mp_httpError, index) in mp_httpErrors" class="mt-2">
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 @{{ mp_httpError }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
               </div>
             </div>
           </div>

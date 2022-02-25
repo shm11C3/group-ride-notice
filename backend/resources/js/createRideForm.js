@@ -2,7 +2,9 @@ import Vue from 'vue';
 import jQuery, { data } from 'jquery'
 import {intensityStyle, intensityComment} from './constants/constant'
 import {commentRule, nameRule, lapRule} from './constants/ride'
-import OutputError from './methods/outputError'
+import OutputError from './validations/outputError'
+import CreateRideValidation from './validations/createRide'
+
 global.jquery = jQuery
 global.$ = jQuery
 window.$ = window.jQuery = require('jquery')
@@ -85,6 +87,7 @@ new Vue({
 
     mounted() {
         this.outputError = new OutputError();
+        this.createRideValidation = new CreateRideValidation();
         this.fetchMeetingPlaces();
         this.fetchRideRoutes();
     },
@@ -101,6 +104,7 @@ new Vue({
                 return true;
 
             }else if(this.selectedMeetingPlace.length == 0){
+                this.resetErrors();
                 return false;
 
             }else{
@@ -118,6 +122,7 @@ new Vue({
                 return false;
 
             }else if(this.selectedRideRouteKey === 'create'){
+                this.resetErrors();
                 return 'create';
 
             }else{
@@ -510,6 +515,7 @@ new Vue({
          */
         mp_submit: function(){
             this.mp_isPush = true;
+            this.mp_httpErrors = [];
 
             const url = 'api/post/meetingPlace';
 
@@ -524,6 +530,14 @@ new Vue({
                 "address":this.mp_address,
                 "publish_status":this.mp_publish_status,
                 "save_status":Boolean(this.mp_save_status)
+            }
+
+            this.mp_httpErrors = this.createRideValidation.validationMeetingPlace(data);
+            if(this.mp_httpErrors){
+                // 入力内容にエラーが存在する場合
+                this.mp_isPush = false;
+
+                return;
             }
 
             const axiosPost = axios.create({
@@ -556,7 +570,7 @@ new Vue({
                 this.selectedMeetingPlace = uuid;
 
                 // モーダルのリセット
-                this.resetModals();
+                this.resetModals()
                 $('#meetingPlaceModal').modal('hide');
             });
         },
@@ -584,6 +598,14 @@ new Vue({
                 "comment":this.rr_comment,
                 "publish_status":this.rr_publish_status,
                 "save_status":Boolean(this.rr_save_status),
+            }
+
+            this.rr_httpErrors = this.createRideValidation.validationRideRoute(data);
+            if(this.rr_httpErrors){
+                // 入力内容にエラーが存在する場合
+                this.rr_isPush = false;
+
+                return;
             }
 
             const axiosPost = axios.create({
@@ -633,8 +655,12 @@ new Vue({
             this.rr_publish_status = '';
             this.rr_save_status = '';
 
+            this.resetErrors();
+        },
+
+        resetErrors: function(){
             this.mp_httpErrors = [];
             this.rr_httpErrors = [];
-        },
+        }
     },
 });

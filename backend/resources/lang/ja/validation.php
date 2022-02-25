@@ -164,8 +164,13 @@ return [
         'user_intro' => '自己紹介',
         'user_url' => 'ホームページ',
         'time appoint' => '現在時刻',
-        'today' => '今日'
-
+        'today' => '今日',
+        'prefecture_code' => '都道府県',
+        'address' => '場所の詳細',
+        'elevation' => '獲得標高',
+        'distance' => '距離',
+        'comment' => 'コメント',
+        'publish_status' => '公開設定',
     ],
 
 ];

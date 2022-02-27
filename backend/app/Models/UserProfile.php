@@ -23,7 +23,7 @@ class UserProfile extends Model
     public function putUserImage(string $path)
     {
         $path = Storage::disk('s3')->putFile('img/user_profiles', $path, 'public');
-        return Storage::disk('s3')->url($path);
+        return 'https://image.bipokele.com/'.$path;
     }
 
     /**

@@ -533,7 +533,7 @@ new Vue({
             }
 
             this.mp_httpErrors = this.createRideValidation.validationMeetingPlace(data);
-            if(this.mp_httpErrors){
+            if(this.mp_httpErrors[0]){
                 // 入力内容にエラーが存在する場合
                 this.mp_isPush = false;
 

@@ -632,9 +632,8 @@ new Vue({
                     "lap_status":this.rr_lap_status
                 };
 
-                //
-                this.rideRoutes.data.push(data);
                 this.selectedRideRouteKey = this.rideRoutes.data.length;
+                this.rideRoutes.data.push(data);
 
                 // モーダルのリセット
                 this.resetModals();

@@ -600,11 +600,11 @@ new Vue({
                 "save_status":Boolean(this.rr_save_status),
             }
 
-            this.rr_httpErrors = this.createRideValidation.validationRideRoute(data);
-            if(this.rr_httpErrors){
+            const validationResult = this.createRideValidation.validationRideRoute(data)
+            if(validationResult.length){
                 // 入力内容にエラーが存在する場合
+                this.rr_httpErrors = validationResult;
                 this.rr_isPush = false;
-
                 return;
             }
 
@@ -632,9 +632,8 @@ new Vue({
                     "lap_status":this.rr_lap_status
                 };
 
-                //
-                this.rideRoutes.data.push(data);
                 this.selectedRideRouteKey = this.rideRoutes.data.length;
+                this.rideRoutes.data.push(data);
 
                 // モーダルのリセット
                 this.resetModals();

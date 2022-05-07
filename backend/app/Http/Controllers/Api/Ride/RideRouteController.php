@@ -28,7 +28,7 @@ class RideRouteController extends Controller
      */
     public function createRideRoute(CreateRideRouteRequest $request)
     {
-        if (!is_numeric($request['strava_route_id'])) {
+        if ($request['strava_route_id'] !== null && !is_numeric($request['strava_route_id'])) {
             return response()->json(['status' => false]);
         }
 

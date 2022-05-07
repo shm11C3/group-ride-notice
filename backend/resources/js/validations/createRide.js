@@ -47,7 +47,7 @@ export default class CreateRideValidation {
         if(!inputData.comment){
             error_arr.push('ルートの説明を入力してください');
         }
-        if(inputData.publish_status == ''){
+        if(inputData.publish_status === ''){
             error_arr.push('公開設定を選択してください');
         }
 

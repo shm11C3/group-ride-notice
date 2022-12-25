@@ -15,7 +15,7 @@ services:
       - type: bind
         source: ./backend
         target: /work/backend
-
+    restart: always
   web:
     build:
       context: .
@@ -34,3 +34,4 @@ services:
       - type: bind
         source: ./backend
         target: /work/backend
+    restart: always
